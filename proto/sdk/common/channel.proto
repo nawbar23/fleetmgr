@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package com.fleetmgr.interfaces;
+
+option java_multiple_files = true;
+
+message Channel {
+    int64 id = 1;
+    string ip = 2;
+    int32 port = 3;
+    string routeKey = 4;
+}

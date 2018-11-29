@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package com.fleetmgr.interfaces;
+
+option java_multiple_files = true;
+
+message AttachResponse {
+    string host = 1;
+    int32 port = 2;
+    string key = 3;
+}

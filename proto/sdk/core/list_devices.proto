@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package com.fleetmgr.interfaces;
+
+option java_multiple_files = true;
+
+import "client/common/connection_state.proto";
+
+message Device {
+    int64 id = 1;
+    string name = 2;
+    ConnectionState connectionState = 3;
+    string type = 4;
+}
+
+message ListDevicesResponse {
+    repeated Device devices = 1;
+}

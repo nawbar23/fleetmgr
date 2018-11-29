@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package com.fleetmgr.interfaces;
+
+option java_multiple_files = true;
+
+import "client/common/role.proto";
+
+message OperateRequest {
+    uint64 requestedDeviceId = 1;
+}
+
+message OperateResponse {
+    string host = 1;
+    int32 port = 2;
+    string key = 3;
+    Role role = 4;
+}
+

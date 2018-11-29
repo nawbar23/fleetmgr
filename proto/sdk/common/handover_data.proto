@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package com.fleetmgr.interfaces;
+
+option java_multiple_files = true;
+
+message HandoverData {
+    string handoverData = 1;
+}

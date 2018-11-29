@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package com.fleetmgr.interfaces;
+
+option java_multiple_files = true;
+
+import "client/common/channel.proto";
+
+message AttachChannelsRequest {
+    repeated Channel channels = 1;
+}
+
+message ChannelsResponse {
+    repeated uint64 attachedChannels = 1;
+}

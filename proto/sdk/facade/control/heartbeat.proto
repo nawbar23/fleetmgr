@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package com.fleetmgr.interfaces.facade.control;
+
+option java_multiple_files = true;
+
+import "client/common/location.proto";
+
+message HeartbeatRequest {
+    int64 key = 1;
+}
+
+message HeartbeatResponse {
+    int64 key = 1;
+    Location location = 2;
+}

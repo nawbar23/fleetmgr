@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package com.fleetmgr.interfaces.facade.control;
+
+option java_multiple_files = true;
+
+message SetupRequest {
+    string key = 1;
+}
+
+message SetupResponse {
+}

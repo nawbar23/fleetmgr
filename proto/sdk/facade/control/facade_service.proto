@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package com.fleetmgr.interfaces.facade.control;
+
+option java_multiple_files = true;
+
+import "client/common/add_channels.proto";
+import "client/common/attach_channels.proto";
+import "client/common/handover_data.proto";
+
+import "client/facade/control/setup.proto";
+import "client/facade/control/heartbeat.proto";
+
+enum Command {
+    UNDEFINED_CMD = 0;
+
+    HEARTBEAT = 1;
+    SETUP = 2;
+    RELEASE = 3;
+
+    ADD_CHANNELS = 11;
+    REMOVE_CHANNELS = 12;
+    ATTACH_CHANNELS = 13;
+    RELEASE_CHANNELS = 14;
+    CHANNELS_READY = 15;
+
+    REQUEST_CONTROL = 21;
+    RELEASE_CONTROL = 22;
+    CONTROL_RELEASED = 23;
+    CONTROL_READY = 24;
+
+    OPERATION_ENDED = 31;
+
+
+    DEVICE_UNREACHABLE = 41;
+    LEADER_UNREACHABLE = 42;
+    RECOVERY = 43;
+    DEVICE_RECOVERED = 44;
+}
+
+enum Response {
+    UNDEFINED_RSP = 0;
+    ACCEPTED = 1;
+    REJECTED = 2;
+}
+
+message ClientMessage {
+    Command command = 1;
+    Response response = 2;
+    string message = 3;
+
+    // requests, defined by Command/Response fields
+    SetupRequest attach = 50;
+    AddChannelsRequest requestChannels = 51;
+
+    // responses, defined by Command/Response fields
+    ChannelsResponse attachChannels = 100;
+    HandoverData handoverData = 101;
+    HeartbeatResponse heartbeat = 102;
+}
+
+message ControlMessage {
+    Command command = 1;
+    Response response = 2;
+    string message = 3;
+
+    // responses, defined by Command/Response fields
+    SetupResponse attach = 50;
+    AddChannelsResponse requestChannels = 51;
+    HandoverData handoverData = 52;
+
+    // requests, defined by Command/Response fields
+    AttachChannelsRequest attachChannels = 100;
+    ChannelsResponse channels = 101;
+    HeartbeatRequest heartbeat = 102;
+}
+
+service FacadeService {
+    rpc control(stream ClientMessage) returns (stream ControlMessage);
+}

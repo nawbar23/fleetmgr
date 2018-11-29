@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package com.fleetmgr.interfaces;
+
+option java_multiple_files = true;
+
+enum ConnectionState {
+    UNDEFINED_CONNECTION_STATE = 0;
+    CONNECTING = 1;
+    CONNECTED = 2;
+    UNREACHABLE = 3;
+    DISCONNECTED = 4;
+}
