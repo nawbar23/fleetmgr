@@ -1,4 +1,4 @@
-package com.fleetmgr.client.sdk.traffic.socket;
+package com.fleetmgr.java.sdk.traffic.socket;
 
 /**
  * Created by: Bartosz Nawrot

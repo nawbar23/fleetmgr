@@ -1,12 +1,12 @@
-package com.fleetmgr.client.sdk.state.pilot.connected;
+package com.fleetmgr.java.sdk.state.pilot.connected;
 
-import com.fleetmgr.client.sdk.event.input.connection.ConnectionEvent;
-import com.fleetmgr.client.sdk.event.input.connection.Received;
-import com.fleetmgr.client.sdk.event.output.facade.FacadeEvent;
-import com.fleetmgr.client.sdk.event.input.user.ReleaseRejected;
-import com.fleetmgr.client.sdk.event.input.user.ReleaseAccepted;
-import com.fleetmgr.client.sdk.event.input.user.UserEvent;
-import com.fleetmgr.client.sdk.state.State;
+import com.fleetmgr.java.sdk.event.input.connection.ConnectionEvent;
+import com.fleetmgr.java.sdk.event.input.connection.Received;
+import com.fleetmgr.java.sdk.event.output.facade.FacadeEvent;
+import com.fleetmgr.java.sdk.event.input.user.ReleaseRejected;
+import com.fleetmgr.java.sdk.event.input.user.ReleaseAccepted;
+import com.fleetmgr.java.sdk.event.input.user.UserEvent;
+import com.fleetmgr.java.sdk.state.State;
 import com.fleetmgr.interfaces.HandoverData;
 import com.fleetmgr.interfaces.facade.control.ClientMessage;
 import com.fleetmgr.interfaces.facade.control.Command;

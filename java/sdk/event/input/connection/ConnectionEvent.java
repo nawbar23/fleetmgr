@@ -1,6 +1,6 @@
-package com.fleetmgr.client.sdk.event.input.connection;
+package com.fleetmgr.java.sdk.event.input.connection;
 
-import com.fleetmgr.client.sdk.event.input.Event;
+import com.fleetmgr.java.sdk.event.input.Event;
 
 /**
  * Created by: Bartosz Nawrot

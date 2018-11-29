@@ -1,12 +1,12 @@
-package com.fleetmgr.client.sdk.state.device;
+package com.fleetmgr.java.sdk.state.device;
 
-import com.fleetmgr.client.sdk.event.input.connection.ConnectionEvent;
-import com.fleetmgr.client.sdk.event.output.facade.FacadeEvent;
-import com.fleetmgr.client.sdk.event.input.user.UserEvent;
-import com.fleetmgr.client.sdk.state.State;
-import com.fleetmgr.client.sdk.state.device.connected.Ready;
-import com.fleetmgr.client.sdk.state.device.connected.Recovering;
-import com.fleetmgr.client.sdk.state.device.connected.Released;
+import com.fleetmgr.java.sdk.event.input.connection.ConnectionEvent;
+import com.fleetmgr.java.sdk.event.output.facade.FacadeEvent;
+import com.fleetmgr.java.sdk.event.input.user.UserEvent;
+import com.fleetmgr.java.sdk.state.State;
+import com.fleetmgr.java.sdk.state.device.connected.Ready;
+import com.fleetmgr.java.sdk.state.device.connected.Recovering;
+import com.fleetmgr.java.sdk.state.device.connected.Released;
 
 /**
  * Created by: Bartosz Nawrot

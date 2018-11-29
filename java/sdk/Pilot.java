@@ -1,6 +1,6 @@
-package com.fleetmgr.client.sdk;
+package com.fleetmgr.java.sdk;
 
-import com.fleetmgr.client.sdk.state.pilot.Disconnected;
+import com.fleetmgr.java.sdk.state.pilot.Disconnected;
 import com.fleetmgr.interfaces.ConnectionState;
 import com.fleetmgr.interfaces.Device;
 import com.fleetmgr.interfaces.ListDevicesResponse;

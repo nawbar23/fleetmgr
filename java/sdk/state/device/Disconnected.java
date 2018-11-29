@@ -1,10 +1,10 @@
-package com.fleetmgr.client.sdk.state.device;
+package com.fleetmgr.java.sdk.state.device;
 
-import com.fleetmgr.client.sdk.Client;
-import com.fleetmgr.client.sdk.core.CoreClient;
-import com.fleetmgr.client.sdk.event.input.connection.ConnectionEvent;
-import com.fleetmgr.client.sdk.event.input.user.UserEvent;
-import com.fleetmgr.client.sdk.state.State;
+import com.fleetmgr.java.sdk.Client;
+import com.fleetmgr.java.sdk.core.CoreClient;
+import com.fleetmgr.java.sdk.event.input.connection.ConnectionEvent;
+import com.fleetmgr.java.sdk.event.input.user.UserEvent;
+import com.fleetmgr.java.sdk.state.State;
 
 import java.util.concurrent.ExecutorService;
 

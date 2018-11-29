@@ -1,4 +1,4 @@
-package com.fleetmgr.client.sdk.core;
+package com.fleetmgr.java.sdk.core;
 
 import com.fleetmgr.interfaces.AttachResponse;
 import com.fleetmgr.interfaces.ListDevicesResponse;

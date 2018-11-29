@@ -1,9 +1,9 @@
-package com.fleetmgr.client.sdk.state.pilot;
+package com.fleetmgr.java.sdk.state.pilot;
 
-import com.fleetmgr.client.sdk.event.input.connection.ConnectionEvent;
-import com.fleetmgr.client.sdk.event.output.facade.FacadeEvent;
-import com.fleetmgr.client.sdk.event.input.user.UserEvent;
-import com.fleetmgr.client.sdk.state.State;
+import com.fleetmgr.java.sdk.event.input.connection.ConnectionEvent;
+import com.fleetmgr.java.sdk.event.output.facade.FacadeEvent;
+import com.fleetmgr.java.sdk.event.input.user.UserEvent;
+import com.fleetmgr.java.sdk.state.State;
 
 /**
  * Created by: Bartosz Nawrot

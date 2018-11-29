@@ -1,4 +1,4 @@
-package com.fleetmgr.client.sdk.event.output.facade;
+package com.fleetmgr.java.sdk.event.output.facade;
 
 import java.util.Collection;
 

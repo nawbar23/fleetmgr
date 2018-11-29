@@ -1,12 +1,12 @@
-package com.fleetmgr.client.sdk.state;
+package com.fleetmgr.java.sdk.state;
 
-import com.fleetmgr.client.sdk.Client;
-import com.fleetmgr.client.sdk.core.CoreClient;
-import com.fleetmgr.client.sdk.event.input.Event;
-import com.fleetmgr.client.sdk.event.input.connection.ConnectionEvent;
-import com.fleetmgr.client.sdk.event.input.user.UserEvent;
-import com.fleetmgr.client.sdk.traffic.Channel;
-import com.fleetmgr.client.sdk.traffic.UdpChannel;
+import com.fleetmgr.java.sdk.Client;
+import com.fleetmgr.java.sdk.core.CoreClient;
+import com.fleetmgr.java.sdk.event.input.Event;
+import com.fleetmgr.java.sdk.event.input.connection.ConnectionEvent;
+import com.fleetmgr.java.sdk.event.input.user.UserEvent;
+import com.fleetmgr.java.sdk.traffic.Channel;
+import com.fleetmgr.java.sdk.traffic.UdpChannel;
 import com.fleetmgr.interfaces.facade.control.ClientMessage;
 import com.fleetmgr.interfaces.facade.control.Command;
 import com.fleetmgr.interfaces.facade.control.ControlMessage;

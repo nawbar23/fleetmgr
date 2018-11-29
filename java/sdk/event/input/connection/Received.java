@@ -1,4 +1,4 @@
-package com.fleetmgr.client.sdk.event.input.connection;
+package com.fleetmgr.java.sdk.event.input.connection;
 
 import com.fleetmgr.interfaces.facade.control.ControlMessage;
 

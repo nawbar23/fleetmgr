@@ -1,12 +1,12 @@
-package com.fleetmgr.client.sdk.state.pilot;
+package com.fleetmgr.java.sdk.state.pilot;
 
-import com.fleetmgr.client.sdk.event.input.connection.ConnectionEvent;
-import com.fleetmgr.client.sdk.event.input.user.UserEvent;
-import com.fleetmgr.client.sdk.event.output.facade.OperationStarted;
-import com.fleetmgr.client.sdk.state.State;
-import com.fleetmgr.client.sdk.state.pilot.connected.Recovering;
-import com.fleetmgr.client.sdk.state.pilot.connected.Released;
-import com.fleetmgr.client.sdk.state.pilot.connected.ValidatingChannels;
+import com.fleetmgr.java.sdk.event.input.connection.ConnectionEvent;
+import com.fleetmgr.java.sdk.event.input.user.UserEvent;
+import com.fleetmgr.java.sdk.event.output.facade.OperationStarted;
+import com.fleetmgr.java.sdk.state.State;
+import com.fleetmgr.java.sdk.state.pilot.connected.Recovering;
+import com.fleetmgr.java.sdk.state.pilot.connected.Released;
+import com.fleetmgr.java.sdk.state.pilot.connected.ValidatingChannels;
 import com.fleetmgr.interfaces.Channel;
 import com.fleetmgr.interfaces.Role;
 

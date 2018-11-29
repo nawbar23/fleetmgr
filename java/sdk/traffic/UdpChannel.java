@@ -1,4 +1,4 @@
-package com.fleetmgr.client.sdk.traffic;
+package com.fleetmgr.java.sdk.traffic;
 
 import com.fleetmgr.interfaces.Result;
 import com.fleetmgr.interfaces.ValidateChannelRequest;

@@ -1,7 +1,7 @@
-package com.fleetmgr.client.sdk.state;
+package com.fleetmgr.java.sdk.state;
 
-import com.fleetmgr.client.sdk.Client;
-import com.fleetmgr.client.sdk.event.input.connection.ConnectionEvent;
+import com.fleetmgr.java.sdk.Client;
+import com.fleetmgr.java.sdk.event.input.connection.ConnectionEvent;
 import com.fleetmgr.interfaces.facade.control.*;
 import com.fleetmgr.system.Timer;
 

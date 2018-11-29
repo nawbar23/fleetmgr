@@ -1,6 +1,6 @@
-package com.fleetmgr.client.sdk;
+package com.fleetmgr.java.sdk;
 
-import com.fleetmgr.client.sdk.state.device.Disconnected;
+import com.fleetmgr.java.sdk.state.device.Disconnected;
 
 import java.util.concurrent.ExecutorService;
 

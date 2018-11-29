@@ -1,4 +1,4 @@
-package com.fleetmgr.client.sdk.event.input.user;
+package com.fleetmgr.java.sdk.event.input.user;
 
 import java.util.Collection;
 

@@ -1,6 +1,6 @@
-package com.fleetmgr.client.sdk.event.output.facade;
+package com.fleetmgr.java.sdk.event.output.facade;
 
-import com.fleetmgr.client.sdk.traffic.Channel;
+import com.fleetmgr.java.sdk.traffic.Channel;
 
 import java.util.Collection;
 

@@ -1,9 +1,9 @@
-package com.fleetmgr.client.sdk.state.pilot;
+package com.fleetmgr.java.sdk.state.pilot;
 
-import com.fleetmgr.client.sdk.event.input.connection.ConnectionEvent;
-import com.fleetmgr.client.sdk.event.input.connection.Received;
-import com.fleetmgr.client.sdk.event.input.user.UserEvent;
-import com.fleetmgr.client.sdk.state.State;
+import com.fleetmgr.java.sdk.event.input.connection.ConnectionEvent;
+import com.fleetmgr.java.sdk.event.input.connection.Received;
+import com.fleetmgr.java.sdk.event.input.user.UserEvent;
+import com.fleetmgr.java.sdk.state.State;
 import com.fleetmgr.interfaces.AddChannelsRequest;
 import com.fleetmgr.interfaces.OperateRequest;
 import com.fleetmgr.interfaces.OperateResponse;

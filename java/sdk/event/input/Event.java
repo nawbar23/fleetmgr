@@ -1,4 +1,4 @@
-package com.fleetmgr.client.sdk.event.input;
+package com.fleetmgr.java.sdk.event.input;
 
 /**
  * Created by: Bartosz Nawrot
