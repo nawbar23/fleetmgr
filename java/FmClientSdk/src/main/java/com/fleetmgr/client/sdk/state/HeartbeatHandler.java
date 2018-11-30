@@ -3,7 +3,7 @@ package com.fleetmgr.client.sdk.state;
 import com.fleetmgr.client.sdk.Client;
 import com.fleetmgr.client.sdk.event.input.connection.ConnectionEvent;
 import com.fleetmgr.interfaces.facade.control.*;
-import com.fleetmgr.system.Timer;
+import com.fleetmgr.client.sdk.system.capsule.Timer;
 
 import java.util.concurrent.atomic.AtomicLong;
 

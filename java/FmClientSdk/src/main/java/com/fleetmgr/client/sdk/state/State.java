@@ -23,7 +23,7 @@ import java.util.concurrent.ExecutorService;
  * Description:
  */
 public abstract class State implements
-        com.fleetmgr.system.machine.State<Event> {
+        com.fleetmgr.client.sdk.system.machine.State<Event> {
 
     protected final String key;
 

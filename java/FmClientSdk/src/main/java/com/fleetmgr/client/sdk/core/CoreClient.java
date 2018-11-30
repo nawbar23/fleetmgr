@@ -4,7 +4,7 @@ import com.fleetmgr.interfaces.AttachResponse;
 import com.fleetmgr.interfaces.ListDevicesResponse;
 import com.fleetmgr.interfaces.OperateRequest;
 import com.fleetmgr.interfaces.OperateResponse;
-import com.fleetmgr.system.https.client.HttpsClient;
+import com.fleetmgr.client.sdk.core.https.HttpsClient;
 import com.google.protobuf.util.JsonFormat;
 import org.json.JSONArray;
 import org.json.JSONObject;

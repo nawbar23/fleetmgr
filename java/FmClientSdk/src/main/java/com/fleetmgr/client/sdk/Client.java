@@ -9,7 +9,7 @@ import com.fleetmgr.interfaces.Location;
 import com.fleetmgr.interfaces.facade.control.ClientMessage;
 import com.fleetmgr.interfaces.facade.control.ControlMessage;
 import com.fleetmgr.interfaces.facade.control.FacadeServiceGrpc;
-import com.fleetmgr.system.machine.StateMachine;
+import com.fleetmgr.client.sdk.system.machine.StateMachine;
 import io.grpc.ManagedChannel;
 import io.grpc.netty.shaded.io.grpc.netty.GrpcSslContexts;
 import io.grpc.netty.shaded.io.grpc.netty.NegotiationType;
