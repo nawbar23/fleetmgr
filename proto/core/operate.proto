@@ -4,7 +4,7 @@ package com.fleetmgr.interfaces;
 
 option java_multiple_files = true;
 
-import "client/common/role.proto";
+import "common/role.proto";
 
 message OperateRequest {
     uint64 requestedDeviceId = 1;

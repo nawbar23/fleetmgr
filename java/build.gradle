@@ -35,7 +35,7 @@ dependencies {
 sourceSets {
     main {
         proto {
-            srcDir '../../proto'
+            srcDir "$projectDir/../proto"
         }
         java {
             srcDirs 'src/main/grpc'

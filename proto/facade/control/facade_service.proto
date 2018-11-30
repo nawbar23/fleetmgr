@@ -4,12 +4,12 @@ package com.fleetmgr.interfaces.facade.control;
 
 option java_multiple_files = true;
 
-import "client/common/add_channels.proto";
-import "client/common/attach_channels.proto";
-import "client/common/handover_data.proto";
+import "common/add_channels.proto";
+import "common/attach_channels.proto";
+import "common/handover_data.proto";
 
-import "client/facade/control/setup.proto";
-import "client/facade/control/heartbeat.proto";
+import "facade/control/setup.proto";
+import "facade/control/heartbeat.proto";
 
 enum Command {
     UNDEFINED_CMD = 0;

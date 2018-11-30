@@ -4,7 +4,7 @@ package com.fleetmgr.interfaces.facade.control;
 
 option java_multiple_files = true;
 
-import "client/common/location.proto";
+import "common/location.proto";
 
 message HeartbeatRequest {
     int64 key = 1;

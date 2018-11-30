@@ -4,7 +4,7 @@ package com.fleetmgr.interfaces;
 
 option java_multiple_files = true;
 
-import "client/common/channel.proto";
+import "common/channel.proto";
 
 message AttachChannelsRequest {
     repeated Channel channels = 1;
