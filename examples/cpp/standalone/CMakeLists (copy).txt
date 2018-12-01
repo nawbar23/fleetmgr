@@ -1,0 +1,54 @@
+cmake_minimum_required(VERSION 3.3)
+project(fm_sdk)
+
+find_package(Protobuf REQUIRED)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+
+include_directories(/usr/local/include)
+link_directories(/usr/local/lib)
+
+set(PROTO_PATH "${CMAKE_SOURCE_DIR}../proto")
+set(GENERATED_PROTOBUF_PATH "${CMAKE_BINARY_DIR}/generated")
+file(MAKE_DIRECTORY ${GENERATED_PROTOBUF_PATH})
+
+# TODO For God's sake! Is there a way to do it automatically?
+set(ADDCHANNELS_PROTO "${PROTO_PATH}/common/add_channels.proto")
+set(ATTACHCHANNELS_PROTO "${PROTO_PATH}/common/attach_channels.proto")
+set(CHANNEL_PROTO "${PROTO_PATH}/common/channel.proto")
+set(CHANNELVALIDATION_PROTO "${PROTO_PATH}/common/channel_validation.proto")
+set(CONNECTIONSTATE_PROTO "${PROTO_PATH}/common/connection_state.proto")
+set(HANDOVERDATA_PROTO "${PROTO_PATH}/common/handover_data.proto")
+set(LOCATION_PROTO "${PROTO_PATH}/common/location.proto")
+set(ROLE_PROTO "${PROTO_PATH}/common/role.proto")
+set(ATTACH_PROTO "${PROTO_PATH}/core/attach.proto")
+set(LISTDEVICES_PROTO "${PROTO_PATH}/core/list_devices.proto")
+set(OPERATE_PROTO "${PROTO_PATH}/core/operate.proto")
+set(FACADESERVICE_PROTO "${PROTO_PATH}/facade/control/facade_service.proto")
+set(HEARTBEAT_PROTO "${PROTO_PATH}/facade/control/heartbeat.proto")
+set(SETUP_PROTO "${PROTO_PATH}/facade/control/setup.proto")
+
+set(HELLOWORLD_PB_CPP_FILE "${GENERATED_PROTOBUF_PATH}/helloworld.pb.cc")
+set(HELLOWORLD_PB_H_FILE "${GENERATED_PROTOBUF_PATH}/helloworld.pb.h")
+set(HELLOWORLD_GRPC_PB_CPP_FILE "${GENERATED_PROTOBUF_PATH}/helloworld.grpc.pb.cc")
+set(HELLOWORLD_GRPC_PB_H_FILE "${GENERATED_PROTOBUF_PATH}/helloworld.grpc.pb.h")
+add_custom_command(
+    OUTPUT "${HELLOWORLD_PB_H_FILE}"
+           "${HELLOWORLD_PB_CPP_FILE}"
+           "${HELLOWORLD_GRPC_PB_H_FILE}"
+           "${HELLOWORLD_GRPC_PB_CPP_FILE}"
+    COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
+    ARGS "--proto_path=${PROTO_PATH}"
+         "--cpp_out=${GENERATED_PROTOBUF_PATH}"
+         "${HELLOWORLD_PROTO}"
+    COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
+    ARGS "--proto_path=${PROTO_PATH}"
+         "--grpc_out=${GENERATED_PROTOBUF_PATH}"
+         "--plugin=protoc-gen-grpc=/usr/local/bin/GRPC_CPP_PLUGIN"
+         "${HELLOWORLD_PROTO}"
+    )
+set(GENERATED_PROTOBUF_FILES ${HELLOWORLD_PB_H_FILE} ${HELLOWORLD_PB_CPP_FILE}
+    ${HELLOWORLD_GRPC_PB_H_FILE} ${HELLOWORLD_GRPC_PB_CPP_FILE})
+
+include_directories(${GENERATED_PROTOBUF_PATH})
+link_libraries(grpc++_unsecure grpc gpr ${PROTOBUF_LIBRARY})

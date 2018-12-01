@@ -1,0 +1,76 @@
+project(FmCppDeviceSim)
+cmake_minimum_required(VERSION 3.2)
+
+add_compile_options(-std=c++11)
+
+# GRPC and Protocol Buffers libraries location
+list(APPEND CMAKE_PREFIX_PATH
+    "/home/nawbar/skydive/grpc"
+    "/home/nawbar/skydive/grpc/third_party/protobuf")
+
+# Cmake find modules
+list(APPEND CMAKE_MODULE_PATH
+    "${CMAKE_CURRENT_LIST_DIR}/cmake")
+
+find_package(Protobuf REQUIRED)
+find_package(GRPC REQUIRED)
+
+set(PROTO_PATH "${CMAKE_SOURCE_DIR}../proto")
+set(GENERATED_PROTOBUF_PATH "${CMAKE_BINARY_DIR}/generated")
+
+file(MAKE_DIRECTORY ${GENERATED_PROTOBUF_PATH})
+
+set(PROTOS
+    "common/add_channels"
+    "common/attach_channels"
+    "common/channel"
+    "common/channel_validation"
+    "common/connection_state"
+    "common/handover_data"
+    "common/location"
+    "common/role"
+    "core/attach"
+    "core/list_devices"
+    "core/operate"
+    "facade/control/facade_service"
+    "facade/control/heartbeat"
+    "facade/control/setup"
+)
+
+set(GENERATED_PROTOBUF_FILES)
+
+foreach(FIL ${PROTOS})
+    message(STATUS "Gen: ${FIL}")
+
+    list(APPEND ${GENERATED_PROTOBUF_FILES}
+            "${GENERATED_PROTOBUF_PATH}/${FIL}.pb.h"
+            "${GENERATED_PROTOBUF_PATH}/${FIL}.pb.cc"
+            "${GENERATED_PROTOBUF_PATH}/${FIL}.grpc.pb.cc"
+            "${GENERATED_PROTOBUF_PATH}/${FIL}.grpc.pb.h")
+
+    add_custom_command(
+        OUTPUT "${GENERATED_PROTOBUF_PATH}/${FIL}.pb.h"
+               "${GENERATED_PROTOBUF_PATH}/${FIL}.pb.cc"
+               "${GENERATED_PROTOBUF_PATH}/${FIL}.grpc.pb.cc"
+               "${GENERATED_PROTOBUF_PATH}/${FIL}.grpc.pb.h"
+        COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
+        ARGS "--proto_path=${PROTO_PATH}"
+             "--cpp_out=${GENERATED_PROTOBUF_PATH}"
+             "${PROTO_PATH}/${FIL}.proto"
+        COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
+        ARGS "--proto_path=${PROTO_PATH}"
+             "--grpc_out=${GENERATED_PROTOBUF_PATH}"
+             "--plugin=protoc-gen-grpc=/usr/local/bin/GRPC_CPP_PLUGIN"
+             "${HELLOWORLD_PROTO}"
+        COMMENT "Generating: ${FIL}"
+        )
+endforeach()
+
+add_executable(greeter_server
+    ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+    ${GENERATED_PROTOBUF_FILES}
+)
+target_link_libraries(greeter_server
+    gRPC::grpc++_reflection
+    protobuf::libprotobuf
+)
