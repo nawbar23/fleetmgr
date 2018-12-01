@@ -125,3 +125,7 @@ gradle-app.setting
 
 
 # End of https://www.gitignore.io/api/java,gradle,intellij
+
+## Protobuf generated files
+/src/main/grpc/
+/src/main/java/com/fleetmgr/interfaces/
