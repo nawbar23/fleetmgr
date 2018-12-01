@@ -51,7 +51,7 @@ public:
     virtual std::string toString() const = 0;
 
 protected:
-    IClient(std::unique_ptr<state::IState>, Listener&, https::IHttpsClient&);
+    IClient(std::unique_ptr<state::IState>, Listener&, core::https::IHttpsClient&);
 
 private:
     IClient() = delete;

@@ -1,10 +1,13 @@
-#ifndef FM_HTTPS_IHTTPSCLIENT_HPP
-#define FM_HTTPS_IHTTPSCLIENT_HPP
+#ifndef FM_CORE_HTTPS_IHTTPSCLIENT_HPP
+#define FM_CORE_HTTPS_IHTTPSCLIENT_HPP
 
 #include <string>
 #include <exception>
 
 namespace fm
+{
+
+namespace core
 {
 
 namespace https {
@@ -38,6 +41,8 @@ protected:
 
 } // https
 
+} // core
+
 } // fm
 
-#endif // FM_HTTPS_IHTTPSCLIENT_HPP
+#endif // FM_CORE_HTTPS_IHTTPSCLIENT_HPP

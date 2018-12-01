@@ -27,7 +27,7 @@ void IClient::start()
 {
 }
 
-IClient::IClient(std::unique_ptr<state::IState> initialState, Listener& _listener, https::IHttpsClient& coreClient) :
+IClient::IClient(std::unique_ptr<state::IState> initialState, Listener& _listener, core::https::IHttpsClient& coreClient) :
     listener(_listener),
     coreClient(coreClient),
     state(initialState.release())
