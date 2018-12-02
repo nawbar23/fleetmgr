@@ -1,22 +1,83 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.2)
 
 project(FmSdk)
 
 # set gRPC repo directory
-set(_GRPC_DIR ../../../../grpc)
+set(_GRPC_DIR ${PROJECT_SOURCE_DIR}/../../../../grpc)
 
 add_subdirectory(${_GRPC_DIR} ${CMAKE_CURRENT_BINARY_DIR}/grpc EXCLUDE_FROM_ALL)
 message(STATUS "Using gRPC via add_subdirectory.")
 
 set(_PROTOBUF_LIBPROTOBUF libprotobuf)
 set(_PROTOBUF_PROTOC $<TARGET_FILE:protoc>)
-set(_GRPC_GRPCPP grpsc++)
+set(_GRPC_GRPCPP grpc++)
 set(_GRPC_CPP_PLUGIN_EXECUTABLE $<TARGET_FILE:grpc_cpp_plugin>)
 
 add_compile_options(-std=c++11)
 
 include_directories(include)
 include_directories(generated)
+
+#[[
+# Protocol Buffers root directory
+set(PROTO_PATH "${CMAKE_SOURCE_DIR}/../proto")
+
+# Protocol Buffers objects to be generated
+set(PROTOS
+    "common/add_channels"
+    "common/attach_channels"
+    "common/channel"
+    "common/channel_validation"
+    "common/connection_state"
+    "common/handover_data"
+    "common/location"
+    "common/role"
+    "core/attach"
+    "core/list_devices"
+    "core/operate"
+    "facade/control/facade_service"
+    "facade/control/heartbeat"
+    "facade/control/setup"
+)
+
+find_package(Protobuf REQUIRED)
+
+set(GENERATED_PROTOBUF_PATH "${CMAKE_BINARY_DIR}/generated")
+file(MAKE_DIRECTORY ${GENERATED_PROTOBUF_PATH})
+include_directories(${GENERATED_PROTOBUF_PATH})
+
+set(GENERATED_PROTOBUF_SOURCES)
+set(GENERATED_PROTOBUF_HEADERS)
+
+foreach(FIL ${PROTOS})
+        list(APPEND ${GENERATED_PROTOBUF_SOURCES}
+                "${GENERATED_PROTOBUF_PATH}/${FIL}.pb.cc"
+                "${GENERATED_PROTOBUF_PATH}/${FIL}.grpc.pb.cc")
+
+        list(APPEND ${GENERATED_PROTOBUF_HEADERS}
+                "${GENERATED_PROTOBUF_PATH}/${FIL}.pb.h"
+                "${GENERATED_PROTOBUF_PATH}/${FIL}.grpc.pb.h")
+
+        message(STATUS "To gen: ${PROTO_PATH}/${FIL}.proto")
+
+        add_custom_command(
+            OUTPUT "${GENERATED_PROTOBUF_PATH}/${FIL}.pb.h"
+                   "${GENERATED_PROTOBUF_PATH}/${FIL}.pb.cc"
+                   "${GENERATED_PROTOBUF_PATH}/${FIL}.grpc.pb.cc"
+                   "${GENERATED_PROTOBUF_PATH}/${FIL}.grpc.pb.h"
+            COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
+            ARGS "--proto_path=${PROTO_PATH}"
+                 "--cpp_out=${GENERATED_PROTOBUF_PATH}"
+                 "${PROTO_PATH}/${FIL}.proto"
+            COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
+            ARGS "--proto_path=${PROTO_PATH}"
+                 "--grpc_out=${GENERATED_PROTOBUF_PATH}"
+                 "--plugin=protoc-gen-grpc=/usr/local/bin/GRPC_CPP_PLUGIN"
+                 "${PROTO_PATH}/${FIL}.proto"
+            COMMENT "Generating: ${FIL}"
+            )
+endforeach()
+]]
 
 set(SOURCES
     ${PROJECT_SOURCE_DIR}/source/IClient.cpp
