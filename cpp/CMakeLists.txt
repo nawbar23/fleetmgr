@@ -2,17 +2,6 @@ cmake_minimum_required(VERSION 3.2)
 
 project(FmSdk)
 
-# set gRPC repo directory
-set(_GRPC_DIR ${PROJECT_SOURCE_DIR}/../../../../grpc)
-
-add_subdirectory(${_GRPC_DIR} ${CMAKE_CURRENT_BINARY_DIR}/grpc EXCLUDE_FROM_ALL)
-message(STATUS "Using gRPC via add_subdirectory.")
-
-set(_PROTOBUF_LIBPROTOBUF libprotobuf)
-set(_PROTOBUF_PROTOC $<TARGET_FILE:protoc>)
-set(_GRPC_GRPCPP grpc++)
-set(_GRPC_CPP_PLUGIN_EXECUTABLE $<TARGET_FILE:grpc_cpp_plugin>)
-
 add_compile_options(-std=c++11)
 
 include_directories(include)

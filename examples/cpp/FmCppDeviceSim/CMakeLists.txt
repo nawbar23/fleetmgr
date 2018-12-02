@@ -3,9 +3,15 @@ cmake_minimum_required(VERSION 3.2)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/../../../cpp ${PROJECT_SOURCE_DIR}/../../../cpp/lib)
+# set FM SDK directory
+set(_FM_SDK_DIR ${PROJECT_SOURCE_DIR}/../../../cpp)
+add_subdirectory(${_FM_SDK_DIR} ${_FM_SDK_DIR}/lib)
 
-include_directories(${PROJECT_SOURCE_DIR}/../../../cpp/include)
+# set gRPC directory
+set(_GRPC_DIR ${PROJECT_SOURCE_DIR}/../../../../../../grpc)
+add_subdirectory(${_GRPC_DIR} ${CMAKE_CURRENT_BINARY_DIR}/grpc EXCLUDE_FROM_ALL)
+
+include_directories(${_FM_SDK_DIR}/include)
 include_directories(${PROJECT_SOURCE_DIR}/example)
 
 set(FILES
