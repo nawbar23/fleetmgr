@@ -62,7 +62,7 @@ foreach(FIL ${PROTOS})
 	    ARGS "--proto_path=${PROTO_PATH}"
 		 "--grpc_out=${GENERATED_PROTOBUF_PATH}"
 		 "--plugin=protoc-gen-grpc=/usr/local/bin/GRPC_CPP_PLUGIN"
-		 "${HELLOWORLD_PROTO}"
+                 "${PROTO_PATH}/${FIL}.proto"
 	    COMMENT "Generating: ${FIL}"
 	    )
 endforeach()
