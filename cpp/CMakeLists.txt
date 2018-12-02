@@ -2,12 +2,18 @@ cmake_minimum_required(VERSION 2.8)
 
 project(FmSdk)
 
-find_package(Protobuf REQUIRED)
+# set gRPC repo directory
+set(_GRPC_DIR ../../../../grpc)
+
+add_subdirectory(${_GRPC_DIR} ${CMAKE_CURRENT_BINARY_DIR}/grpc EXCLUDE_FROM_ALL)
+message(STATUS "Using gRPC via add_subdirectory.")
+
+set(_PROTOBUF_LIBPROTOBUF libprotobuf)
+set(_PROTOBUF_PROTOC $<TARGET_FILE:protoc>)
+set(_GRPC_GRPCPP grpsc++)
+set(_GRPC_CPP_PLUGIN_EXECUTABLE $<TARGET_FILE:grpc_cpp_plugin>)
 
 add_compile_options(-std=c++11)
-
-include_directories(/usr/local/include)
-link_directories(/usr/local/lib)
 
 include_directories(include)
 include_directories(generated)
@@ -26,7 +32,7 @@ set(SOURCES
     ${PROJECT_SOURCE_DIR}/source/timer/ITimer.cpp
     ${PROJECT_SOURCE_DIR}/source/traffic/Channel.cpp
     ${PROJECT_SOURCE_DIR}/source/traffic/socket/ISocket.cpp
-    # TODO auto genetated files should be automatically generated and added to sources :)
+    # TODO genetated files should be automatically generated and added to sources :)
     ${PROJECT_SOURCE_DIR}/generated/common/add_channels.pb.cc
     ${PROJECT_SOURCE_DIR}/generated/common/add_channels.grpc.pb.cc
     ${PROJECT_SOURCE_DIR}/generated/common/attach_channels.pb.cc
@@ -70,7 +76,10 @@ set(HEADERS
     ${PROJECT_SOURCE_DIR}/include/state/pilot/Disconnected.hpp
     ${PROJECT_SOURCE_DIR}/include/timer/ITimer.hpp
     ${PROJECT_SOURCE_DIR}/include/traffic/Channel.hpp
-    ${PROJECT_SOURCE_DIR}/include/traffic/socket/ISocket.hpp)
+    ${PROJECT_SOURCE_DIR}/include/traffic/socket/ISocket.hpp
+    )
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
+
 add_library(fm_sdk STATIC ${SOURCES} ${HEADERS})
+link_libraries(${_GRPC_GRPCPP} ${_PROTOBUF_LIBPROTOBUF})

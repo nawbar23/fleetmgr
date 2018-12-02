@@ -8,10 +8,6 @@
 
 using namespace fm;
 
-using grpc::Channel;
-using grpc::ClientContext;
-using grpc::Status;
-
 IClient::Listener::~Listener()
 {
 }
@@ -37,7 +33,7 @@ void IClient::start()
 {
     using grpc::Channel;
     using com::fleetmgr::interfaces::facade::control::FacadeService;
-    std::shared_ptr<Channel> channel = grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials());
+    std::shared_ptr<Channel> channel(grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials()));
     std::unique_ptr<FacadeService::Stub> stub(FacadeService::NewStub(channel));
 }
 
