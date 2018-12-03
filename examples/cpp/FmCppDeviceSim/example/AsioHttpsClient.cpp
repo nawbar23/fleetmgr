@@ -27,25 +27,18 @@ AsioHttpsClient::AsioHttpsClient(std::string _coreAddress, std::string _apiKey, 
 
 std::string AsioHttpsClient::execute(std::string, Method, std::string)
 {
-    std::cout << "aaa" << std::endl;
     try
     {
         auto const host = "192.168.56.1";
         auto const port = "14010";
-        auto const target = "/devices";
+        auto const target = "/gateway/devices/attach";
         int version = 11;
-
-        std::cout << "bbb" << std::endl;
 
         // The io_context is required for all I/O
         net::io_context ioc;
 
-        std::cout << "ccc" << std::endl;
-
         // The SSL context is required, and holds certificates
         ssl::context ctx(ssl::context::sslv23_client);
-
-        std::cout << "ddd" << std::endl;
 
         // Verify the remote server's certificate
         ctx.set_verify_mode(ssl::verify_none);
