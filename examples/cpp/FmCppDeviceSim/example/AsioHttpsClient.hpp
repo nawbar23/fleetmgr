@@ -3,7 +3,8 @@
 
 #include "core/https/IHttpsClient.hpp"
 
-#include <memory>
+#include <boost/asio.hpp>
+#include <boost/asio/ssl.hpp>
 
 class AsioHttpsClient : public fm::core::https::IHttpsClient
 {

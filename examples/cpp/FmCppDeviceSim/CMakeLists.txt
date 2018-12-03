@@ -40,4 +40,5 @@ target_link_libraries(FmCppDeviceSim
     OpenSSL::SSL
     OpenSSL::Crypto
     libprotobuf
-    grpc++)
+    grpc++
+    )
