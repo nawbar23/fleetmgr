@@ -99,10 +99,8 @@ std::string AsioHttpsClient::execute(std::string, Method, std::string)
     }
     catch(std::exception const& e)
     {
-        std::cout << "Error" << std::endl;
+        std::cout << "Error: " << e.what() << std::endl;
     }
-
-    std::cout << "Success!" << std::endl;
 
     return "";
 }
