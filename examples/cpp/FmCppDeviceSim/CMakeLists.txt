@@ -1,7 +1,10 @@
 project(FmCppDeviceSim)
 cmake_minimum_required(VERSION 3.2)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
+
+find_package(Boost REQUIRED COMPONENTS system)
+find_package(OpenSSL REQUIRED)
 
 # set FM SDK directory
 set(_FM_SDK_DIR ${PROJECT_SOURCE_DIR}/../../../cpp)
@@ -31,4 +34,10 @@ set(FILES
     )
 
 add_executable(FmCppDeviceSim ${FILES})
-target_link_libraries(FmCppDeviceSim fm_sdk libprotobuf grpc++)
+target_link_libraries(FmCppDeviceSim
+    fm_sdk
+    ${Boost_LIBRARIES}
+    OpenSSL::SSL
+    OpenSSL::Crypto
+    libprotobuf
+    grpc++)
