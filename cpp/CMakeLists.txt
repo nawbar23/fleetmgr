@@ -141,6 +141,13 @@ set(HEADERS
     ${PROJECT_SOURCE_DIR}/include/traffic/socket/ISocket.hpp
     )
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
+if(${CMAKE_GENERATOR} MATCHES "Unix Makefiles")
+    message(STATUS ${CMAKE_BUILD_TOOL})
+    set(CMAKE_MAKE_PROGRAM "${CMAKE_MAKE_PROGRAM} -j2")
+    message(STATUS "Added arguments to CMAKE_BUILD_TOOL: ${CMAKE_MAKE_PROGRAM}")
+elseif(MSVC)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
+    message(STATUS "Added parallel build arguments to CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
+endif()
 
 add_library(fm_sdk STATIC ${SOURCES} ${HEADERS})
