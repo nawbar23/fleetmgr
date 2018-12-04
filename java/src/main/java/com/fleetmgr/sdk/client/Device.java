@@ -14,6 +14,6 @@ public class Device extends Client {
     public Device(String coreAddress, String key,
                   Listener listener, ExecutorService executor) {
         super(coreAddress, key, listener, executor);
-        setState(new Disconnected(key,this, coreClient, listener, executor));
+        setState(new Disconnected(this, coreClient, listener, executor));
     }
 }

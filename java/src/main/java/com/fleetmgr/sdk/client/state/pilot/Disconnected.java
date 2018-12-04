@@ -16,12 +16,11 @@ import java.util.concurrent.ExecutorService;
  */
 public class Disconnected extends State {
 
-    public Disconnected(String key,
-                        Client client,
+    public Disconnected(Client client,
                         CoreClient coreClient,
                         Client.Listener listener,
                         ExecutorService executor) {
-        super(key, client, coreClient, listener, executor);
+        super(client, coreClient, listener, executor);
     }
 
     Disconnected(State state) {

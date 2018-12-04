@@ -25,8 +25,6 @@ import java.util.concurrent.ExecutorService;
 public abstract class State implements
         com.fleetmgr.sdk.system.machine.State<Event> {
 
-    protected final String key;
-
     protected Client client;
     protected Client.Listener listener;
 
@@ -37,12 +35,10 @@ public abstract class State implements
 
     protected HeartbeatHandler heartbeatHandler;
 
-    public State(String key,
-                 Client client,
+    public State(Client client,
                  CoreClient coreClient,
                  Client.Listener listener,
                  ExecutorService executor) {
-        this.key = key;
         this.client = client;
         this.coreClient = coreClient;
         this.listener = listener;
@@ -53,7 +49,6 @@ public abstract class State implements
     }
 
     public State(State state) {
-        this.key = state.key;
         this.client = state.client;
         this.coreClient = state.coreClient;
         this.listener = state.listener;
@@ -66,8 +61,10 @@ public abstract class State implements
     public State handleEvent(Event event) {
         if (event instanceof ConnectionEvent) {
             return notifyConnection((ConnectionEvent)event);
+
         } else if (event instanceof UserEvent) {
             return notifyEvent((UserEvent)event);
+
         } else {
             trace("Unexpected event type");
             return null;
@@ -130,7 +127,7 @@ public abstract class State implements
             heartbeatHandler.handleHeartbeat(message);
 
         } else {
-            trace("Unexpected ClientMessage received:\n" + message + " @ " + toString());
+            trace("Unexpected ControlMessage received:\n" + message + " @ " + toString());
         }
         return null;
     }

@@ -18,7 +18,7 @@ public class Pilot extends Client {
     public Pilot(String coreAddress, String key, Listener listener,
                  ExecutorService executor) {
         super(coreAddress, key, listener, executor);
-        setState(new Disconnected(key, this, coreClient, listener, executor));
+        setState(new Disconnected(this, coreClient, listener, executor));
     }
 
     public ListDevicesResponse listDevices() throws IOException {
