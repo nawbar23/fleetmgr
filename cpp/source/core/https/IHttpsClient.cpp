@@ -3,8 +3,10 @@
 using namespace fm;
 using namespace fm::core::https;
 
-IHttpsClient::IHttpsClient(std::string _coreAddress, std::string _apiKey) :
-    coreAddress(_coreAddress), apiKey(_apiKey)
+IHttpsClient::IHttpsClient(const std::string& _host, const int _port, const std::string& _apiKey) :
+    host(_host),
+    port(_port),
+    apiKey(_apiKey)
 {
 }
 

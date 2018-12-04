@@ -5,9 +5,9 @@
 using namespace fm;
 using namespace fm::state;
 
-Device::Device(Listener& _listener, core::https::IHttpsClient& _coreClient) :
+Device::Device(Listener& listener, core::https::IHttpsClient& coreClient) :
     // TODO Bartek: replace new with std::make_unique when supported
-    IClient(std::unique_ptr<IState>(new ::device::Disconnected(*this)), _listener, _coreClient)
+    IClient(std::unique_ptr<IState>(new ::device::Disconnected(*this, listener, coreClient)), listener)
 {
 }
 

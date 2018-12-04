@@ -9,9 +9,9 @@
 class AsioHttpsClient : public fm::core::https::IHttpsClient
 {
 public:
-    AsioHttpsClient(std::string _coreAddress, std::string _apiKey, std::string _certPath);
+    AsioHttpsClient(const std::string&, const int, const std::string&);
 
-    std::string execute(std::string path, Method method, std::string body) override;
+    std::string execute(const std::string&, Method, const std::string&) override;
 
 private:
 };

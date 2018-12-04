@@ -1,14 +1,15 @@
 #ifndef FM_STATE_ISTATE_HPP
 #define FM_STATE_ISTATE_HPP
 
+#include "core/CoreClient.hpp"
+#include "IClient.hpp"
+
 #include "event/input/UserEvent.hpp"
 
 #include <memory>
 
 namespace fm
 {
-
-class IClient;
 
 namespace state
 {
@@ -25,16 +26,25 @@ public:
 
     virtual std::unique_ptr<IState> start() = 0;
 
-    virtual std::unique_ptr<IState> handleEvent(std::shared_ptr<const event::input::UserEvent>) = 0;
+    virtual std::unique_ptr<IState> handleEvent(const std::shared_ptr<const event::input::UserEvent>) = 0;
 
     virtual std::string toString() const = 0;
 
 protected:
     IState(IState&);
 
-    IState(IClient&);
+    IState(IClient&, IClient::Listener&, core::https::IHttpsClient&);
 
     IClient& client;
+    IClient::Listener& listener;
+
+    core::CoreClient core;
+
+    std::unique_ptr<IState> defaultEventHandle(const std::string& eventName);
+
+    std::unique_ptr<IState> defaultMessageHandle();
+
+    void trace(const std::string& message);
 };
 
 } // state

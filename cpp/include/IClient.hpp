@@ -4,8 +4,6 @@
 #include "event/input/UserEvent.hpp"
 #include "event/output/FacadeEvent.hpp"
 
-#include "state/IState.hpp"
-
 #include "core/CoreClient.hpp"
 
 #include "traffic/socket/ISocket.hpp"
@@ -17,6 +15,11 @@
 
 namespace fm
 {
+
+namespace state
+{
+    class IState;
+}
 
 /**
  * Created by: Bartosz Nawrot
@@ -44,22 +47,22 @@ public:
 
     virtual ~IClient();
 
-    void notifyEvent(std::shared_ptr<const event::input::UserEvent> );
+    void notifyEvent(const std::shared_ptr<const event::input::UserEvent>);
 
     void start();
+
+    void trace(const std::string& message);
 
     virtual std::string toString() const = 0;
 
 protected:
-    IClient(std::unique_ptr<state::IState>, Listener&, core::https::IHttpsClient&);
+    IClient(std::unique_ptr<state::IState>, Listener&);
 
 private:
     IClient() = delete;
     IClient(IClient&) = delete;
 
     Listener& listener;
-
-    core::CoreClient coreClient;
 
     std::mutex stateLock;
     std::unique_ptr<state::IState> state;

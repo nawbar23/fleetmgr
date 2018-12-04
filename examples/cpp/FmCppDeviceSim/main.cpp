@@ -4,14 +4,18 @@
 
 int main(int, char**)
 {
+    const std::string host = "192.168.56.1";
+    const int port = 14010;
+
+    const std::string apiKey = "";
+
     AsioListener listener;
-    AsioHttpsClient core("", "", "");
+    AsioHttpsClient core(host, port, apiKey);
 
     fm::Device device(listener, core);
 
-    device.start();
-
-    core.execute("", fm::core::https::IHttpsClient::GET, "");
+    using fm::event::input::UserEvent;
+    device.notifyEvent(std::make_shared<const UserEvent>(UserEvent::ATTACH));
 
     return 0;
 }

@@ -1,5 +1,5 @@
-#ifndef FM_STATE_PILOT_DISCONNECTED_HPP
-#define FM_STATE_PILOT_DISCONNECTED_HPP
+#ifndef FM_STATE_DEVICE_CONNECTING_HPP
+#define FM_STATE_DEVICE_CONNECTING_HPP
 
 #include "state/IState.hpp"
 
@@ -9,7 +9,7 @@ namespace fm
 namespace state
 {
 
-namespace pilot
+namespace device
 {
 
 /**
@@ -17,12 +17,10 @@ namespace pilot
  * Date: 2018-11-25
  * Description:
  */
-class Disconnected : public IState
+class Connecting : public IState
 {
 public:
-    Disconnected(IState&);
-
-    Disconnected(IClient&, IClient::Listener&, core::https::IHttpsClient&);
+    Connecting(IState&);
 
     std::unique_ptr<IState> start() override;
 
@@ -31,10 +29,10 @@ public:
     std::string toString() const override;
 };
 
-} // pilot
+} // device
 
 } // state
 
 } // fm
 
-#endif // FM_STATE_PILOT_DISCONNECTED_HPP
+#endif // FM_STATE_DEVICE_CONNECTING_HPP

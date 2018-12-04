@@ -1,5 +1,7 @@
 #include "IClient.hpp"
 
+#include "state/IState.hpp"
+
 #include "facade/control/facade_service.grpc.pb.h"
 
 #include <grpc++/grpc++.h>
@@ -16,7 +18,7 @@ IClient::~IClient()
 {
 }
 
-void IClient::notifyEvent(std::shared_ptr<const event::input::UserEvent> event)
+void IClient::notifyEvent(const std::shared_ptr<const event::input::UserEvent> event)
 {
     std::lock_guard<std::mutex> lockGuard(stateLock);
     listener.trace("Handling: " + event->toString() + " @ " + state->toString());
@@ -25,7 +27,7 @@ void IClient::notifyEvent(std::shared_ptr<const event::input::UserEvent> event)
     {
         listener.trace("Transition: " + state->toString() + " -> " + newState->toString());
         state.swap(newState);
-        newState.swap(state->start());
+        newState.reset(state->start().release());
     }
 }
 
@@ -37,9 +39,13 @@ void IClient::start()
     std::unique_ptr<FacadeService::Stub> stub(FacadeService::NewStub(channel));
 }
 
-IClient::IClient(std::unique_ptr<state::IState> initialState, Listener& _listener, core::https::IHttpsClient& coreClient) :
+void IClient::trace(const std::string& message)
+{
+    listener.trace(message);
+}
+
+IClient::IClient(std::unique_ptr<state::IState> initialState, Listener& _listener) :
     listener(_listener),
-    coreClient(coreClient),
     state(initialState.release())
 {
 }

@@ -78,7 +78,13 @@ set(SOURCES
     ${PROJECT_SOURCE_DIR}/source/event/output/FacadeEvent.cpp
     ${PROJECT_SOURCE_DIR}/source/state/IState.cpp
     ${PROJECT_SOURCE_DIR}/source/state/device/Disconnected.cpp
+    ${PROJECT_SOURCE_DIR}/source/state/device/Connecting.cpp
+    ${PROJECT_SOURCE_DIR}/source/state/device/Connected.cpp
+    ${PROJECT_SOURCE_DIR}/source/state/device/Disconnecting.cpp
     ${PROJECT_SOURCE_DIR}/source/state/pilot/Disconnected.cpp
+    ${PROJECT_SOURCE_DIR}/source/state/pilot/Connecting.cpp
+    ${PROJECT_SOURCE_DIR}/source/state/pilot/Connected.cpp
+    ${PROJECT_SOURCE_DIR}/source/state/pilot/Disconnecting.cpp
     ${PROJECT_SOURCE_DIR}/source/timer/ITimer.cpp
     ${PROJECT_SOURCE_DIR}/source/traffic/Channel.cpp
     ${PROJECT_SOURCE_DIR}/source/traffic/socket/ISocket.cpp
@@ -123,7 +129,13 @@ set(HEADERS
     ${PROJECT_SOURCE_DIR}/include/event/output/FacadeEvent.hpp
     ${PROJECT_SOURCE_DIR}/include/state/IState.hpp
     ${PROJECT_SOURCE_DIR}/include/state/device/Disconnected.hpp
+    ${PROJECT_SOURCE_DIR}/include/state/device/Connecting.hpp
+    ${PROJECT_SOURCE_DIR}/include/state/device/Connected.hpp
+    ${PROJECT_SOURCE_DIR}/include/state/device/Disconnecting.hpp
     ${PROJECT_SOURCE_DIR}/include/state/pilot/Disconnected.hpp
+    ${PROJECT_SOURCE_DIR}/include/state/pilot/Connecting.hpp
+    ${PROJECT_SOURCE_DIR}/include/state/pilot/Connected.hpp
+    ${PROJECT_SOURCE_DIR}/include/state/pilot/Disconnecting.hpp
     ${PROJECT_SOURCE_DIR}/include/timer/ITimer.hpp
     ${PROJECT_SOURCE_DIR}/include/traffic/Channel.hpp
     ${PROJECT_SOURCE_DIR}/include/traffic/socket/ISocket.hpp

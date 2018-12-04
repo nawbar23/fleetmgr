@@ -28,14 +28,16 @@ public:
         DELETE,
     };
 
-    IHttpsClient(std::string, std::string);
+    IHttpsClient(const std::string&, const int, const std::string&);
 
     virtual ~IHttpsClient();
 
-    virtual std::string execute(std::string, Method, std::string) = 0;
+    virtual std::string execute(const std::string&, const Method, const std::string&) = 0;
 
 protected:
-    const std::string coreAddress;
+    const std::string host;
+    const int port;
+
     const std::string apiKey;
 };
 

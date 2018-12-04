@@ -19,13 +19,12 @@ namespace net = boost::asio;    // from <boost/asio.hpp>
 namespace ssl = net::ssl;       // from <boost/asio/ssl.hpp>
 using tcp = net::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
 
-AsioHttpsClient::AsioHttpsClient(std::string _coreAddress, std::string _apiKey, std::string _certPath) :
-    fm::core::https::IHttpsClient(_coreAddress, _apiKey)
+AsioHttpsClient::AsioHttpsClient(const std::string& host, const int port, const std::string& apiKey) :
+    fm::core::https::IHttpsClient(host, port, apiKey)
 {
-    std::cout << "AsioHttpsClient" << std::endl;
 }
 
-std::string AsioHttpsClient::execute(std::string, Method, std::string)
+std::string AsioHttpsClient::execute(const std::string& path, Method method, const std::string& body)
 {
     try
     {

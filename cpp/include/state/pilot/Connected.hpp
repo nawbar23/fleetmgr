@@ -1,5 +1,5 @@
-#ifndef FM_STATE_PILOT_DISCONNECTED_HPP
-#define FM_STATE_PILOT_DISCONNECTED_HPP
+#ifndef FM_STATE_PILOT_CONNECTED_HPP
+#define FM_STATE_PILOT_CONNECTED_HPP
 
 #include "state/IState.hpp"
 
@@ -17,12 +17,10 @@ namespace pilot
  * Date: 2018-11-25
  * Description:
  */
-class Disconnected : public IState
+class Connected : public IState
 {
 public:
-    Disconnected(IState&);
-
-    Disconnected(IClient&, IClient::Listener&, core::https::IHttpsClient&);
+    Connected(IState&);
 
     std::unique_ptr<IState> start() override;
 
@@ -37,4 +35,4 @@ public:
 
 } // fm
 
-#endif // FM_STATE_PILOT_DISCONNECTED_HPP
+#endif // FM_STATE_PILOT_CONNECTED_HPP

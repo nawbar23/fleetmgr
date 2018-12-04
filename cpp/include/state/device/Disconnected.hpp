@@ -22,11 +22,11 @@ class Disconnected : public IState
 public:
     Disconnected(IState&);
 
-    Disconnected(IClient&);
+    Disconnected(IClient&, IClient::Listener&, core::https::IHttpsClient&);
 
     std::unique_ptr<IState> start() override;
 
-    std::unique_ptr<IState> handleEvent(std::shared_ptr<const event::input::UserEvent>) override;
+    std::unique_ptr<IState> handleEvent(const std::shared_ptr<const event::input::UserEvent>) override;
 
     std::string toString() const override;
 };
