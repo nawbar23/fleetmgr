@@ -7,6 +7,8 @@
 #include "core/operate.pb.h"
 #include "core/list_devices.pb.h"
 
+#include "google/protobuf/util/json_util.h"
+
 namespace fm
 {
 
@@ -31,6 +33,8 @@ public:
 
 private:
    https::IHttpsClient& client;
+
+   google::protobuf::util::JsonParseOptions options;
 };
 
 } // core
