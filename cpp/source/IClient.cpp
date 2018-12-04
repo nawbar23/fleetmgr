@@ -25,7 +25,7 @@ void IClient::notifyEvent(std::shared_ptr<const event::input::UserEvent> event)
     {
         listener.trace("Transition: " + state->toString() + " -> " + newState->toString());
         state.swap(newState);
-        newState.reset(state->start().release());
+        newState.swap(state->start());
     }
 }
 
