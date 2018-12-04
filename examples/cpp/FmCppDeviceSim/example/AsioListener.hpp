@@ -19,7 +19,7 @@ public:
 
     ~AsioListener() override;
 
-    void onEvent(std::shared_ptr<const fm::event::output::FacadeEvent> event) override;
+    void onEvent(const std::shared_ptr<const fm::event::output::FacadeEvent> event) override;
 
     void execute(std::function<void(void)> task) override;
 

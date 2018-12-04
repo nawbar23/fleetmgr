@@ -90,33 +90,20 @@ set(SOURCES
     ${PROJECT_SOURCE_DIR}/source/traffic/socket/ISocket.cpp
     # TODO genetated files should be automatically generated and added to sources :)
     ${PROJECT_SOURCE_DIR}/generated/common/add_channels.pb.cc
-    ${PROJECT_SOURCE_DIR}/generated/common/add_channels.grpc.pb.cc
     ${PROJECT_SOURCE_DIR}/generated/common/attach_channels.pb.cc
-    ${PROJECT_SOURCE_DIR}/generated/common/attach_channels.grpc.pb.cc
     ${PROJECT_SOURCE_DIR}/generated/common/channel.pb.cc
-    ${PROJECT_SOURCE_DIR}/generated/common/channel.grpc.pb.cc
     ${PROJECT_SOURCE_DIR}/generated/common/channel_validation.pb.cc
-    ${PROJECT_SOURCE_DIR}/generated/common/channel_validation.grpc.pb.cc
     ${PROJECT_SOURCE_DIR}/generated/common/connection_state.pb.cc
-    ${PROJECT_SOURCE_DIR}/generated/common/connection_state.grpc.pb.cc
     ${PROJECT_SOURCE_DIR}/generated/common/handover_data.pb.cc
-    ${PROJECT_SOURCE_DIR}/generated/common/handover_data.grpc.pb.cc
     ${PROJECT_SOURCE_DIR}/generated/common/location.pb.cc
-    ${PROJECT_SOURCE_DIR}/generated/common/location.grpc.pb.cc
     ${PROJECT_SOURCE_DIR}/generated/common/role.pb.cc
-    ${PROJECT_SOURCE_DIR}/generated/common/role.grpc.pb.cc
     ${PROJECT_SOURCE_DIR}/generated/core/attach.pb.cc
-    ${PROJECT_SOURCE_DIR}/generated/core/attach.grpc.pb.cc
     ${PROJECT_SOURCE_DIR}/generated/core/operate.pb.cc
-    ${PROJECT_SOURCE_DIR}/generated/core/operate.grpc.pb.cc
     ${PROJECT_SOURCE_DIR}/generated/core/list_devices.pb.cc
-    ${PROJECT_SOURCE_DIR}/generated/core/list_devices.grpc.pb.cc
+    ${PROJECT_SOURCE_DIR}/generated/facade/control/heartbeat.pb.cc
+    ${PROJECT_SOURCE_DIR}/generated/facade/control/setup.pb.cc
     ${PROJECT_SOURCE_DIR}/generated/facade/control/facade_service.pb.cc
     ${PROJECT_SOURCE_DIR}/generated/facade/control/facade_service.grpc.pb.cc
-    ${PROJECT_SOURCE_DIR}/generated/facade/control/heartbeat.pb.cc
-    ${PROJECT_SOURCE_DIR}/generated/facade/control/heartbeat.grpc.pb.cc
-    ${PROJECT_SOURCE_DIR}/generated/facade/control/setup.pb.cc
-    ${PROJECT_SOURCE_DIR}/generated/facade/control/setup.grpc.pb.cc
     )
 
 set(HEADERS

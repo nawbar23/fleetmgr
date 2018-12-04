@@ -12,8 +12,6 @@ public:
     AsioHttpsClient(const std::string&, const int, const std::string&);
 
     std::string execute(const std::string&, Method, const std::string&) override;
-
-private:
 };
 
 #endif // ASIOHTTPSCLIENT_HPP

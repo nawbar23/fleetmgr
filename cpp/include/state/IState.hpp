@@ -6,6 +6,8 @@
 
 #include "event/input/UserEvent.hpp"
 
+#include "facade/control/facade_service.pb.h"
+
 #include <memory>
 
 namespace fm
@@ -39,6 +41,8 @@ protected:
     IClient::Listener& listener;
 
     core::CoreClient core;
+
+    void send(const com::fleetmgr::interfaces::facade::control::ClientMessage&);
 
     std::unique_ptr<IState> defaultEventHandle(const std::string& eventName);
 

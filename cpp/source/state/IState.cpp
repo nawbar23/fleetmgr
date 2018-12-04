@@ -5,6 +5,8 @@
 using namespace fm;
 using namespace fm::state;
 
+using namespace com::fleetmgr::interfaces::facade::control;
+
 IState::~IState()
 {
 }
@@ -21,6 +23,11 @@ IState::IState(IClient& _client, IClient::Listener& _listener, core::https::IHtt
     listener(_listener),
     core(coreClient)
 {
+}
+
+void IState::send(const ClientMessage& message)
+{
+    client.send(message);
 }
 
 std::unique_ptr<IState> IState::defaultEventHandle(const std::string& eventName)

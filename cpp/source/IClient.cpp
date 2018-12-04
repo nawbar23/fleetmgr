@@ -2,13 +2,11 @@
 
 #include "state/IState.hpp"
 
-#include "facade/control/facade_service.grpc.pb.h"
-
-#include <grpc++/grpc++.h>
-
 #include <memory>
 
 using namespace fm;
+
+using namespace com::fleetmgr::interfaces::facade::control;
 
 IClient::Listener::~Listener()
 {
@@ -31,12 +29,24 @@ void IClient::notifyEvent(const std::shared_ptr<const event::input::UserEvent> e
     }
 }
 
-void IClient::start()
+void IClient::openFacadeConnection(const std::string& host, const int port)
 {
-    using grpc::Channel;
-    using com::fleetmgr::interfaces::facade::control::FacadeService;
-    std::shared_ptr<Channel> channel(grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials()));
-    std::unique_ptr<FacadeService::Stub> stub(FacadeService::NewStub(channel));
+    trace("Opening facade channel at: " + host + ":" + std::to_string(port));
+
+}
+
+//void IClient::start()
+//{
+//    using grpc::Channel;
+//    using com::fleetmgr::interfaces::facade::control::FacadeService;
+//    std::shared_ptr<Channel> channel(grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials()));
+//    std::unique_ptr<FacadeService::Stub> stub(FacadeService::NewStub(channel));
+//}
+
+void IClient::send(const ClientMessage& message)
+{
+    trace("Sending: " + message.DebugString() + " @ " + state->toString());
+    // TODO send message to Facade over gRPC
 }
 
 void IClient::trace(const std::string& message)

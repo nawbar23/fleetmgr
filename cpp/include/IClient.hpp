@@ -10,6 +10,9 @@
 
 #include "timer/ITimer.hpp"
 
+#include "facade/control/facade_service.grpc.pb.h"
+#include <grpc++/grpc++.h>
+
 #include <memory>
 #include <mutex>
 
@@ -34,7 +37,7 @@ public:
     public:
         virtual ~Listener();
 
-        virtual void onEvent(std::shared_ptr<const event::output::FacadeEvent>) = 0;
+        virtual void onEvent(const std::shared_ptr<const event::output::FacadeEvent>) = 0;
 
         virtual void execute(std::function<void(void)>) = 0;
 
@@ -49,8 +52,11 @@ public:
 
     void notifyEvent(const std::shared_ptr<const event::input::UserEvent>);
 
-    void start();
+    void openFacadeConnection(const std::string&, const int);
 
+    void send(const com::fleetmgr::interfaces::facade::control::ClientMessage& message);
+
+    // TODO Bartek argument should be changed to recursive template for optimization
     void trace(const std::string& message);
 
     virtual std::string toString() const = 0;

@@ -3,10 +3,15 @@
 
 #include "https/IHttpsClient.hpp"
 
+#include "core/attach.pb.h"
+#include "core/operate.pb.h"
+#include "core/list_devices.pb.h"
+
 namespace fm
 {
 
-namespace core {
+namespace core
+{
 
 /**
  * Created by: Bartosz Nawrot
@@ -18,11 +23,11 @@ class CoreClient
 public:
     CoreClient(https::IHttpsClient& _client);
 
-    void attach();
+    com::fleetmgr::interfaces::AttachResponse attach();
 
-    void operate();
+    com::fleetmgr::interfaces::OperateResponse operate(const com::fleetmgr::interfaces::OperateRequest&);
 
-    void listDevices();
+    com::fleetmgr::interfaces::ListDevicesResponse listDevices();
 
 private:
    https::IHttpsClient& client;

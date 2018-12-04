@@ -3,22 +3,30 @@
 using namespace fm;
 using namespace fm::core;
 
+using namespace com::fleetmgr::interfaces;
+
 CoreClient::CoreClient(https::IHttpsClient& _client) :
     client(_client)
 {
 }
 
-void CoreClient::attach()
+AttachResponse CoreClient::attach()
 {
-
+    std::string responseString = client.execute("/gateway/devices/attach", https::IHttpsClient::POST, "");
+    AttachResponse response;
+    return response;
 }
 
-void CoreClient::operate()
+OperateResponse CoreClient::operate(const OperateRequest& operateRequest)
 {
-
+    std::string responseString = client.execute("/gateway/pilots/operate", https::IHttpsClient::POST, "");
+    OperateResponse response;
+    return response;
 }
 
-void CoreClient::listDevices()
+ListDevicesResponse CoreClient::listDevices()
 {
-
+    std::string responseString = client.execute("/pilots", https::IHttpsClient::GET, "");
+    ListDevicesResponse response;
+    return response;
 }
