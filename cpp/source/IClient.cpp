@@ -32,16 +32,22 @@ void IClient::notifyEvent(const std::shared_ptr<const event::input::UserEvent> e
 void IClient::openFacadeConnection(const std::string& host, const int port)
 {
     trace("Opening facade channel at: " + host + ":" + std::to_string(port));
+    trace(std::string("Using trusted SSL certificate: ") + "grpc_facade.crt");
 
+    std::string address = host + ":" + std::to_string(port);
+
+    grpc::SslCredentialsOptions sslOpts;
+    sslOpts.pem_root_certs = "";
+
+    std::shared_ptr<grpc::ChannelCredentials> creds = grpc::SslCredentials(sslOpts);
+
+    channel = grpc::CreateChannel(address, creds);
+    stub = FacadeService::NewStub(channel);
+
+    grpc::ClientContext context;
+
+    stream = stub->control(&context);
 }
-
-//void IClient::start()
-//{
-//    using grpc::Channel;
-//    using com::fleetmgr::interfaces::facade::control::FacadeService;
-//    std::shared_ptr<Channel> channel(grpc::CreateChannel("localhost:50051", grpc::InsecureChannelCredentials()));
-//    std::unique_ptr<FacadeService::Stub> stub(FacadeService::NewStub(channel));
-//}
 
 void IClient::send(const ClientMessage& message)
 {
@@ -56,6 +62,9 @@ void IClient::trace(const std::string& message)
 
 IClient::IClient(std::unique_ptr<state::IState> initialState, Listener& _listener) :
     listener(_listener),
-    state(initialState.release())
+    state(initialState.release()),
+    channel(nullptr),
+    stub(nullptr),
+    stream(nullptr)
 {
 }

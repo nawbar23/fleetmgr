@@ -72,6 +72,16 @@ private:
 
     std::mutex stateLock;
     std::unique_ptr<state::IState> state;
+
+    std::shared_ptr<
+    grpc::Channel> channel;
+
+    std::unique_ptr<
+    com::fleetmgr::interfaces::facade::control::FacadeService::Stub> stub;
+
+    std::unique_ptr<grpc::ClientReaderWriter<
+    com::fleetmgr::interfaces::facade::control::ClientMessage,
+    com::fleetmgr::interfaces::facade::control::ControlMessage>> stream;
 };
 
 } // fm
