@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.2)
 
 project(FmSdk)
 
-add_compile_options(-std=c++11)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -pthread")
 
 include_directories(include)
 include_directories(generated)
@@ -27,7 +27,7 @@ set(PROTOS
     "facade/control/facade_service"
     "facade/control/heartbeat"
     "facade/control/setup"
-)
+    )
 
 find_package(Protobuf REQUIRED)
 
@@ -39,32 +39,32 @@ set(GENERATED_PROTOBUF_SOURCES)
 set(GENERATED_PROTOBUF_HEADERS)
 
 foreach(FIL ${PROTOS})
-        list(APPEND ${GENERATED_PROTOBUF_SOURCES}
-                "${GENERATED_PROTOBUF_PATH}/${FIL}.pb.cc"
-                "${GENERATED_PROTOBUF_PATH}/${FIL}.grpc.pb.cc")
+    list(APPEND ${GENERATED_PROTOBUF_SOURCES}
+        "${GENERATED_PROTOBUF_PATH}/${FIL}.pb.cc"
+        "${GENERATED_PROTOBUF_PATH}/${FIL}.grpc.pb.cc")
 
-        list(APPEND ${GENERATED_PROTOBUF_HEADERS}
-                "${GENERATED_PROTOBUF_PATH}/${FIL}.pb.h"
-                "${GENERATED_PROTOBUF_PATH}/${FIL}.grpc.pb.h")
+    list(APPEND ${GENERATED_PROTOBUF_HEADERS}
+        "${GENERATED_PROTOBUF_PATH}/${FIL}.pb.h"
+        "${GENERATED_PROTOBUF_PATH}/${FIL}.grpc.pb.h")
 
-        message(STATUS "To gen: ${PROTO_PATH}/${FIL}.proto")
+    message(STATUS "To gen: ${PROTO_PATH}/${FIL}.proto")
 
-        add_custom_command(
-            OUTPUT "${GENERATED_PROTOBUF_PATH}/${FIL}.pb.h"
-                   "${GENERATED_PROTOBUF_PATH}/${FIL}.pb.cc"
-                   "${GENERATED_PROTOBUF_PATH}/${FIL}.grpc.pb.cc"
-                   "${GENERATED_PROTOBUF_PATH}/${FIL}.grpc.pb.h"
-            COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
-            ARGS "--proto_path=${PROTO_PATH}"
-                 "--cpp_out=${GENERATED_PROTOBUF_PATH}"
-                 "${PROTO_PATH}/${FIL}.proto"
-            COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
-            ARGS "--proto_path=${PROTO_PATH}"
-                 "--grpc_out=${GENERATED_PROTOBUF_PATH}"
-                 "--plugin=protoc-gen-grpc=/usr/local/bin/GRPC_CPP_PLUGIN"
-                 "${PROTO_PATH}/${FIL}.proto"
-            COMMENT "Generating: ${FIL}"
-            )
+    add_custom_command(
+        OUTPUT "${GENERATED_PROTOBUF_PATH}/${FIL}.pb.h"
+        "${GENERATED_PROTOBUF_PATH}/${FIL}.pb.cc"
+        "${GENERATED_PROTOBUF_PATH}/${FIL}.grpc.pb.cc"
+        "${GENERATED_PROTOBUF_PATH}/${FIL}.grpc.pb.h"
+        COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
+        ARGS "--proto_path=${PROTO_PATH}"
+        "--cpp_out=${GENERATED_PROTOBUF_PATH}"
+        "${PROTO_PATH}/${FIL}.proto"
+        COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
+        ARGS "--proto_path=${PROTO_PATH}"
+        "--grpc_out=${GENERATED_PROTOBUF_PATH}"
+        "--plugin=protoc-gen-grpc=/usr/local/bin/GRPC_CPP_PLUGIN"
+        "${PROTO_PATH}/${FIL}.proto"
+        COMMENT "Generating: ${FIL}"
+        )
 endforeach()
 ]]
 
@@ -74,7 +74,10 @@ set(SOURCES
     ${PROJECT_SOURCE_DIR}/source/Pilot.cpp
     ${PROJECT_SOURCE_DIR}/source/core/CoreClient.cpp
     ${PROJECT_SOURCE_DIR}/source/core/https/IHttpsClient.cpp
-    ${PROJECT_SOURCE_DIR}/source/event/input/UserEvent.cpp
+    ${PROJECT_SOURCE_DIR}/source/event/input/IInputEvent.cpp
+    ${PROJECT_SOURCE_DIR}/source/event/input/user/UserEvent.cpp
+    ${PROJECT_SOURCE_DIR}/source/event/input/connection/ConnectionEvent.cpp
+    ${PROJECT_SOURCE_DIR}/source/event/input/connection/Received.cpp
     ${PROJECT_SOURCE_DIR}/source/event/output/FacadeEvent.cpp
     ${PROJECT_SOURCE_DIR}/source/state/IState.cpp
     ${PROJECT_SOURCE_DIR}/source/state/device/Disconnected.cpp
@@ -112,7 +115,10 @@ set(HEADERS
     ${PROJECT_SOURCE_DIR}/include/Pilot.hpp
     ${PROJECT_SOURCE_DIR}/include/core/CoreClient.hpp
     ${PROJECT_SOURCE_DIR}/include/core/https/IHttpsClient.hpp
-    ${PROJECT_SOURCE_DIR}/include/event/input/UserEvent.hpp
+    ${PROJECT_SOURCE_DIR}/include/event/input/IInputEvent.hpp
+    ${PROJECT_SOURCE_DIR}/include/event/input/user/UserEvent.hpp
+    ${PROJECT_SOURCE_DIR}/include/event/input/connection/ConnectionEvent.hpp
+    ${PROJECT_SOURCE_DIR}/include/event/input/connection/Received.hpp
     ${PROJECT_SOURCE_DIR}/include/event/output/FacadeEvent.hpp
     ${PROJECT_SOURCE_DIR}/include/state/IState.hpp
     ${PROJECT_SOURCE_DIR}/include/state/device/Disconnected.hpp

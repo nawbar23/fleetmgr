@@ -4,7 +4,8 @@
 #include "core/CoreClient.hpp"
 #include "IClient.hpp"
 
-#include "event/input/UserEvent.hpp"
+#include "event/input/user/UserEvent.hpp"
+#include "event/input/connection/ConnectionEvent.hpp"
 
 #include "facade/control/facade_service.pb.h"
 
@@ -28,7 +29,11 @@ public:
 
     virtual std::unique_ptr<IState> start() = 0;
 
-    virtual std::unique_ptr<IState> handleEvent(const std::shared_ptr<const event::input::UserEvent>) = 0;
+    std::unique_ptr<IState> handleEvent(const std::shared_ptr<const event::input::IInputEvent>);
+
+    virtual std::unique_ptr<IState> handleUserEvent(const event::input::user::UserEvent&) = 0;
+
+    virtual std::unique_ptr<IState> handleConnectionEvent(const event::input::connection::ConnectionEvent&) = 0;
 
     virtual std::string toString() const = 0;
 

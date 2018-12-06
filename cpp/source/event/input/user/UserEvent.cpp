@@ -1,9 +1,10 @@
-#include "event/input/UserEvent.hpp"
+#include "event/input/user/UserEvent.hpp"
 
 using namespace fm;
-using namespace fm::event::input;
+using namespace fm::event::input::user;
 
 UserEvent::UserEvent(Type _type) :
+    IInputEvent(USER_EVENT),
     type(_type)
 {
 }

@@ -14,7 +14,7 @@ namespace fm
 class Device : public IClient
 {
 public:
-    Device(Listener&, core::https::IHttpsClient&);
+    Device(Listener&, core::https::IHttpsClient&, const std::string&);
 
     std::string toString() const override;
 };

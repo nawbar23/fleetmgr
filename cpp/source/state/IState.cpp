@@ -4,11 +4,25 @@
 
 using namespace fm;
 using namespace fm::state;
+using namespace fm::event::input::user;
+using namespace fm::event::input::connection;
 
 using namespace com::fleetmgr::interfaces::facade::control;
 
 IState::~IState()
 {
+}
+
+std::unique_ptr<IState> IState::handleEvent(const std::shared_ptr<const event::input::IInputEvent> event)
+{
+    switch (event->getInputEventType())
+    {
+    case event::input::IInputEvent::USER_EVENT:
+        return handleUserEvent(reinterpret_cast<const UserEvent&>(*(event.get())));
+
+    case event::input::IInputEvent::CONNECTION_EVENT:
+        return handleConnectionEvent(reinterpret_cast<const ConnectionEvent&>(*(event.get())));
+    }
 }
 
 IState::IState(IState& state) :

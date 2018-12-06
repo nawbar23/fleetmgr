@@ -4,7 +4,10 @@ using namespace fm;
 using namespace fm::state;
 using namespace fm::state::device;
 
-using event::input::UserEvent;
+using event::input::user::UserEvent;
+using event::input::connection::ConnectionEvent;
+
+using event::output::FacadeEvent;
 
 Connected::Connected(IState& state) :
     IState(state)
@@ -16,9 +19,14 @@ std::unique_ptr<IState> Connected::start()
     return nullptr;
 }
 
-std::unique_ptr<IState> Connected::handleEvent(const std::shared_ptr<const UserEvent> event)
+std::unique_ptr<IState> Connected::handleUserEvent(const UserEvent& event)
 {
-    return defaultEventHandle(event->toString());
+    return defaultEventHandle(event.toString());
+}
+
+std::unique_ptr<IState> Connected::handleConnectionEvent(const ConnectionEvent& event)
+{
+    return defaultEventHandle(event.toString());
 }
 
 std::string Connected::toString() const

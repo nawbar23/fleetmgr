@@ -14,7 +14,7 @@ namespace fm
 class Pilot : public IClient
 {
 public:
-    Pilot(Listener&, core::https::IHttpsClient&);
+    Pilot(Listener&, core::https::IHttpsClient&, const std::string&);
 
     std::string toString() const override;
 };

@@ -6,7 +6,10 @@ using namespace fm;
 using namespace fm::state;
 using namespace fm::state::device;
 
-using event::input::UserEvent;
+using event::input::user::UserEvent;
+using event::input::connection::ConnectionEvent;
+
+using event::output::FacadeEvent;
 
 Disconnected::Disconnected(IState& state) :
     IState(state)
@@ -23,16 +26,21 @@ std::unique_ptr<IState> Disconnected::start()
     return nullptr;
 }
 
-std::unique_ptr<IState> Disconnected::handleEvent(const std::shared_ptr<const UserEvent> event)
+std::unique_ptr<IState> Disconnected::handleUserEvent(const UserEvent& event)
 {
-    switch (event->getType())
+    switch (event.getType())
     {
     case UserEvent::ATTACH:
-        return std::unique_ptr<IState>(new Connecting(*this));
+        return std::make_unique<Connecting>(*this);
 
     default:
-        return defaultEventHandle(event->toString());
+        return defaultEventHandle(event.toString());
     }
+}
+
+std::unique_ptr<IState> Disconnected::handleConnectionEvent(const ConnectionEvent& event)
+{
+    return defaultEventHandle(event.toString());
 }
 
 std::string Disconnected::toString() const

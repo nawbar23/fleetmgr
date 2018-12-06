@@ -1,7 +1,8 @@
 #ifndef FM_ICLIENT_HPP
 #define FM_ICLIENT_HPP
 
-#include "event/input/UserEvent.hpp"
+#include "event/input/IInputEvent.hpp"
+
 #include "event/output/FacadeEvent.hpp"
 
 #include "core/CoreClient.hpp"
@@ -15,6 +16,8 @@
 
 #include <memory>
 #include <mutex>
+#include <thread>
+#include <atomic>
 
 namespace fm
 {
@@ -50,9 +53,11 @@ public:
 
     virtual ~IClient();
 
-    void notifyEvent(const std::shared_ptr<const event::input::UserEvent>);
+    void notifyEvent(const std::shared_ptr<const event::input::IInputEvent>);
 
     void openFacadeConnection(const std::string&, const int);
+
+    void closeFacadeConnection();
 
     void send(const com::fleetmgr::interfaces::facade::control::ClientMessage& message);
 
@@ -62,7 +67,7 @@ public:
     virtual std::string toString() const = 0;
 
 protected:
-    IClient(std::unique_ptr<state::IState>, Listener&);
+    IClient(std::unique_ptr<state::IState>, Listener&, const std::string&);
 
 private:
     IClient() = delete;
@@ -73,15 +78,23 @@ private:
     std::mutex stateLock;
     std::unique_ptr<state::IState> state;
 
-    std::shared_ptr<
-    grpc::Channel> channel;
+    const std::string certPath;
+
+    std::shared_ptr<grpc::Channel> channel;
 
     std::unique_ptr<
     com::fleetmgr::interfaces::facade::control::FacadeService::Stub> stub;
 
+    grpc::ClientContext context;
+
     std::unique_ptr<grpc::ClientReaderWriter<
     com::fleetmgr::interfaces::facade::control::ClientMessage,
     com::fleetmgr::interfaces::facade::control::ControlMessage>> stream;
+
+    std::atomic<bool> keepReader;
+    std::thread reader;
+
+    void readCert(const std::string&, std::string&);
 };
 
 } // fm
