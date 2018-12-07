@@ -1,4 +1,4 @@
-package com.fleetmgr.sdk.client.state;
+package com.fleetmgr.sdk.client.backend;
 
 import com.fleetmgr.sdk.client.Client;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
@@ -18,13 +18,15 @@ public class HeartbeatHandler {
     private static final int MAX_SILENT_INTERVAL = 15; // [s]
 
     private Client client;
+    private ClientBackend backend;
 
     private Timer timer;
 
     private AtomicLong lastReception;
 
-    HeartbeatHandler(Client client) {
+    HeartbeatHandler(Client client, ClientBackend backend) {
         this.client = client;
+        this.backend = backend;
 
         this.lastReception = new AtomicLong(0);
     }
@@ -47,14 +49,14 @@ public class HeartbeatHandler {
         }
     }
 
-    void handleHeartbeat(ControlMessage message) {
+    public void handleHeartbeat(ControlMessage message) {
         lastReception.set(System.currentTimeMillis());
-        client.send(ClientMessage.newBuilder()
+        backend.send(ClientMessage.newBuilder()
                 .setCommand(Command.HEARTBEAT)
                 .setResponse(Response.ACCEPTED)
                 .setHeartbeat(HeartbeatResponse.newBuilder()
                         .setKey(message.getHeartbeat().getKey())
-                        .setLocation(client.getLocation())
+                        .setLocation(backend.getLocation())
                         .build())
                 .build());
     }

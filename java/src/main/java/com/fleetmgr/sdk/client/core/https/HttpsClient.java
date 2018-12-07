@@ -59,8 +59,8 @@ public class HttpsClient {
             wr.close();
         }
 
-        con.setConnectTimeout(5000);
-        con.setReadTimeout(5000);
+        con.setConnectTimeout(8000);
+        con.setReadTimeout(8000);
 
         int result = con.getResponseCode();
         if (result >= HttpURLConnection.HTTP_OK && result < HttpURLConnection.HTTP_MULT_CHOICE) {

@@ -25,7 +25,7 @@ public class Connecting extends State {
     public State start() {
         try {
             AttachResponse attachResponse = coreClient.attach();
-            client.openFacadeConnection(
+            backend.openFacadeConnection(
                     attachResponse.getHost(),
                     attachResponse.getPort());
             send(ClientMessage.newBuilder()

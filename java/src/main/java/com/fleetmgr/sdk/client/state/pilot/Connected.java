@@ -32,7 +32,7 @@ public class Connected extends State {
     @Override
     public State start() {
         internalState.start();
-        heartbeatHandler.start();
+        backend.getHeartbeatHandler().start();
         listener.onEvent(new OperationStarted(initialRole));
         initialRole = null;
         return null;

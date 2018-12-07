@@ -38,7 +38,7 @@ public class Connecting extends State {
                     OperateRequest.newBuilder()
                     .setRequestedDeviceId(deviceRefId)
                     .build());
-            client.openFacadeConnection(
+            backend.openFacadeConnection(
                     operateResponse.getHost(),
                     operateResponse.getPort());
             role = operateResponse.getRole();

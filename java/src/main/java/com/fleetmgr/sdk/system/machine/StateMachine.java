@@ -35,7 +35,7 @@ public abstract class StateMachine<Event> extends Capsule {
         this.state.start();
     }
 
-    protected String getStateName() {
+    public String getStateName() {
         return state.toString();
     }
 

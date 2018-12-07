@@ -1,6 +1,8 @@
 package com.fleetmgr.sdk.client.state;
 
 import com.fleetmgr.sdk.client.Client;
+import com.fleetmgr.sdk.client.backend.ClientBackend;
+import com.fleetmgr.sdk.client.backend.HeartbeatHandler;
 import com.fleetmgr.sdk.client.core.CoreClient;
 import com.fleetmgr.sdk.client.event.input.Event;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
@@ -28,33 +30,34 @@ public abstract class State implements
     protected Client client;
     protected Client.Listener listener;
 
+    protected ClientBackend backend;
+
     private ExecutorService executor;
     protected HashMap<Long, Channel> sockets;
 
     protected CoreClient coreClient;
 
-    protected HeartbeatHandler heartbeatHandler;
-
     public State(Client client,
+                 ClientBackend backend,
                  CoreClient coreClient,
                  Client.Listener listener,
                  ExecutorService executor) {
         this.client = client;
         this.coreClient = coreClient;
+        this.backend = backend;
         this.listener = listener;
         this.executor = executor;
 
         this.sockets = new HashMap<>();
-        this.heartbeatHandler = new HeartbeatHandler(client);
     }
 
     public State(State state) {
         this.client = state.client;
-        this.coreClient = state.coreClient;
         this.listener = state.listener;
+        this.backend = state.backend;
+        this.coreClient = state.coreClient;
         this.executor = state.executor;
         this.sockets = state.sockets;
-        this.heartbeatHandler = state.heartbeatHandler;
     }
 
     @Override
@@ -76,7 +79,7 @@ public abstract class State implements
     protected abstract State notifyEvent(UserEvent event);
 
     public void send(ClientMessage message) {
-        client.send(message);
+        backend.send(message);
     }
 
     protected Map<Long, Channel> validateChannels(Collection<com.fleetmgr.interfaces.Channel> channels) {
@@ -122,7 +125,7 @@ public abstract class State implements
 
     protected State defaultMessageHandle(ControlMessage message) {
         if (message.getCommand() == Command.HEARTBEAT && message.hasHeartbeat()) {
-            heartbeatHandler.handleHeartbeat(message);
+            backend.getHeartbeatHandler().handleHeartbeat(message);
 
         } else {
             trace("Unexpected ControlMessage received:\n" + message + " @ " + toString());

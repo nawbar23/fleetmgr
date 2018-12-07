@@ -25,7 +25,7 @@ public class Connected extends State {
     @Override
     public State start() {
         internalState.start();
-        heartbeatHandler.start();
+        backend.getHeartbeatHandler().start();
         listener.onEvent(new FacadeEvent(FacadeEvent.Type.ATTACHED));
         return null;
     }

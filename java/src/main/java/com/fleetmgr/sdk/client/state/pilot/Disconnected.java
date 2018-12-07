@@ -1,6 +1,7 @@
 package com.fleetmgr.sdk.client.state.pilot;
 
 import com.fleetmgr.sdk.client.Client;
+import com.fleetmgr.sdk.client.backend.ClientBackend;
 import com.fleetmgr.sdk.client.core.CoreClient;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.user.Operate;
@@ -17,10 +18,11 @@ import java.util.concurrent.ExecutorService;
 public class Disconnected extends State {
 
     public Disconnected(Client client,
+                        ClientBackend backend,
                         CoreClient coreClient,
                         Client.Listener listener,
                         ExecutorService executor) {
-        super(client, coreClient, listener, executor);
+        super(client, backend, coreClient, listener, executor);
     }
 
     Disconnected(State state) {
