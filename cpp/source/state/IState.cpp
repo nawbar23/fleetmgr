@@ -71,7 +71,7 @@ std::unique_ptr<IState> IState::defaultMessageHandle(const ControlMessage& messa
     }
     else
     {
-        trace("Unexpected ControlMessage received:\n" + message + " @ " + toString());
+        trace("Unexpected ControlMessage received:\n" + message.DebugString() + " @ " + toString());
     }
     return nullptr;
 }

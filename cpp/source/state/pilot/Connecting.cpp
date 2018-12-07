@@ -1,7 +1,7 @@
 #include "state/pilot/Connecting.hpp"
 
-#include "state/device/Disconnected.hpp"
-#include "state/device/Connected.hpp"
+#include "state/pilot/Disconnected.hpp"
+#include "state/pilot/Connected.hpp"
 
 #include "event/input/connection/Received.hpp"
 
@@ -9,8 +9,11 @@ using namespace fm;
 using namespace fm::state;
 using namespace fm::state::pilot;
 
+using namespace com::fleetmgr::interfaces::facade::control;
+
 using event::input::user::UserEvent;
 using event::input::connection::ConnectionEvent;
+using event::input::connection::Received;
 
 using event::output::FacadeEvent;
 

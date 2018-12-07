@@ -7,6 +7,8 @@ using namespace fm::state;
 using namespace fm::state::device;
 using namespace fm::state::device::connected;
 
+using namespace com::fleetmgr::interfaces::facade::control;
+
 using event::input::user::UserEvent;
 using event::input::connection::ConnectionEvent;
 using event::input::connection::Received;
