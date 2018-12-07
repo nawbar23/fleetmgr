@@ -34,7 +34,7 @@ public class Connecting extends State {
     @Override
     public State start() {
         try {
-            OperateResponse operateResponse = coreClient.operate(
+            OperateResponse operateResponse = backend.getCore().operate(
                     OperateRequest.newBuilder()
                     .setRequestedDeviceId(deviceRefId)
                     .build());

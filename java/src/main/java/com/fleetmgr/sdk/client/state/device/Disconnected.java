@@ -18,10 +18,8 @@ public class Disconnected extends State {
 
     public Disconnected(Client client,
                         ClientBackend backend,
-                        CoreClient coreClient,
-                        Client.Listener listener,
-                        ExecutorService executor) {
-        super(client, backend, coreClient, listener, executor);
+                        Client.Listener listener) {
+        super(client, backend, listener);
     }
 
     Disconnected(State state) {

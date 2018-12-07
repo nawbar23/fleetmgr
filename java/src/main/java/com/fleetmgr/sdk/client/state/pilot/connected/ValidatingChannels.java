@@ -36,7 +36,7 @@ public class ValidatingChannels extends State {
 
     @Override
     public State start() {
-        validated = validateChannels(channels);
+        validated = backend.validateChannels(channels);
         send(ClientMessage.newBuilder()
                 .setCommand(Command.CHANNELS_READY)
                 .setAttachChannels(ChannelsResponse.newBuilder()

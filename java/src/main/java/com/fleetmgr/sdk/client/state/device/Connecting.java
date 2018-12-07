@@ -24,7 +24,7 @@ public class Connecting extends State {
     @Override
     public State start() {
         try {
-            AttachResponse attachResponse = coreClient.attach();
+            AttachResponse attachResponse = backend.getCore().attach();
             backend.openFacadeConnection(
                     attachResponse.getHost(),
                     attachResponse.getPort());

@@ -32,32 +32,18 @@ public abstract class State implements
 
     protected ClientBackend backend;
 
-    private ExecutorService executor;
-    protected HashMap<Long, Channel> sockets;
-
-    protected CoreClient coreClient;
-
     public State(Client client,
                  ClientBackend backend,
-                 CoreClient coreClient,
-                 Client.Listener listener,
-                 ExecutorService executor) {
+                 Client.Listener listener) {
         this.client = client;
-        this.coreClient = coreClient;
         this.backend = backend;
         this.listener = listener;
-        this.executor = executor;
-
-        this.sockets = new HashMap<>();
     }
 
     public State(State state) {
         this.client = state.client;
         this.listener = state.listener;
         this.backend = state.backend;
-        this.coreClient = state.coreClient;
-        this.executor = state.executor;
-        this.sockets = state.sockets;
     }
 
     @Override
@@ -82,42 +68,6 @@ public abstract class State implements
         backend.send(message);
     }
 
-    protected Map<Long, Channel> validateChannels(Collection<com.fleetmgr.interfaces.Channel> channels) {
-        Map<Long, Channel> opened = new HashMap<>();
-        for (com.fleetmgr.interfaces.Channel c : channels) {
-            try {
-                trace("Opening channel id: " + c.getId());
-                UdpChannel socket = new UdpChannel(executor,
-                        c.getIp(), c.getPort(), c.getId(), createDefaultSocketListener());
-                socket.initialize(c.getRouteKey());
-                sockets.put(c.getId(), socket);
-                opened.put(c.getId(), socket);
-                trace("Channel id: " + c.getId() + " VALIDATED");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return opened;
-    }
-
-    protected void closeChannels(Collection<Long> channels) {
-        for (Long c : channels) {
-            trace("Closing channel id: " + c);
-            Channel s = sockets.remove(c);
-            if (s != null) {
-                s.close();
-            }
-        }
-    }
-
-    protected void closeAllChannels() {
-        for (Channel s : sockets.values()) {
-            trace("Closing channel id: " + s.getChannelId());
-            s.close();
-        }
-        sockets.clear();
-    }
-
     protected State defaultEventHandle(String eventName) {
         trace("Unexpected: " + eventName + " @ " + toString());
         return null;
@@ -131,22 +81,6 @@ public abstract class State implements
             trace("Unexpected ControlMessage received:\n" + message + " @ " + toString());
         }
         return null;
-    }
-
-    private Channel.Listener createDefaultSocketListener() {
-        return new Channel.Listener() {
-            @Override
-            public void onReceived(Channel channel, byte[] data, int size) {
-            }
-
-            @Override
-            public void onClosed(Channel channel) {
-            }
-
-            @Override
-            public void trace(String message) {
-            }
-        };
     }
 
     protected void trace(String message) {

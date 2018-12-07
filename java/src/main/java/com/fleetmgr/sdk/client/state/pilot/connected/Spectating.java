@@ -60,7 +60,7 @@ public class Spectating extends State {
 
             case CLOSE_CHANNELS:
                 CloseChannels closeChannels = (CloseChannels)event;
-                closeChannels(closeChannels.getChannels());
+                backend.closeChannels(closeChannels.getChannels());
                 send(ClientMessage.newBuilder()
                         .setCommand(Command.REMOVE_CHANNELS)
                         .setRequestChannels(AddChannelsRequest.newBuilder()
@@ -105,8 +105,8 @@ public class Spectating extends State {
                 return null;
 
             case OPERATION_ENDED:
-                listener.onEvent(new OperationEnded(new LinkedList<>(sockets.keySet())));
-                closeAllChannels();
+                listener.onEvent(new OperationEnded(new LinkedList<>(backend.getSockets().keySet())));
+                backend.closeAllChannels();
                 send(ClientMessage.newBuilder()
                         .setCommand(Command.OPERATION_ENDED)
                         .setResponse(Response.ACCEPTED)

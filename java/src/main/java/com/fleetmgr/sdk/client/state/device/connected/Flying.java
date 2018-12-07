@@ -74,7 +74,7 @@ public class Flying extends State {
 
             case OPERATION_ENDED:
                 releaseChannels(
-                        new LinkedList<>(sockets.keySet()),
+                        new LinkedList<>(backend.getSockets().keySet()),
                         message.getCommand());
                 listener.onEvent(new FacadeEvent(FacadeEvent.Type.OPERATION_ENDED));
                 return new Ready(this);
@@ -85,7 +85,7 @@ public class Flying extends State {
     }
 
     private void attachChannels(List<com.fleetmgr.interfaces.Channel> channels) {
-        Map<Long, Channel> validated = validateChannels(channels);
+        Map<Long, Channel> validated = backend.validateChannels(channels);
         listener.onEvent(new ChannelsOpened(validated.values()));
         send(ClientMessage.newBuilder()
                 .setCommand(Command.ATTACH_CHANNELS)
@@ -98,7 +98,7 @@ public class Flying extends State {
 
     private void releaseChannels(List<Long> channels, Command request) {
         listener.onEvent(new ChannelsClosed(channels));
-        closeChannels(channels);
+        backend.closeChannels(channels);
         send(ClientMessage.newBuilder()
                 .setCommand(request)
                 .setResponse(Response.ACCEPTED)

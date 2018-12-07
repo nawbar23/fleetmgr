@@ -60,7 +60,7 @@ public class Controlling extends State {
 
             case CLOSE_CHANNELS:
                 CloseChannels closeChannels = (CloseChannels)event;
-                closeChannels(closeChannels.getChannels());
+                backend.closeChannels(closeChannels.getChannels());
                 send(ClientMessage.newBuilder()
                         .setCommand(Command.REMOVE_CHANNELS)
                         .setRequestChannels(AddChannelsRequest.newBuilder()
