@@ -4,6 +4,8 @@
 #include "core/CoreClient.hpp"
 #include "IClient.hpp"
 
+#include "HeartbeatHandler.hpp"
+
 #include "event/input/user/UserEvent.hpp"
 #include "event/input/connection/ConnectionEvent.hpp"
 
@@ -38,6 +40,8 @@ protected:
     IClient::Listener& listener;
 
     core::CoreClient core;
+
+    HeartbeatHandler heartbeatHandler;
 
     IState(IState&);
 

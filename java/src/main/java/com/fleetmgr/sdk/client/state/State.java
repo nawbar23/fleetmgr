@@ -115,8 +115,6 @@ public abstract class State implements
         sockets.clear();
     }
 
-
-
     protected State defaultEventHandle(String eventName) {
         trace("Unexpected: " + eventName + " @ " + toString());
         return null;

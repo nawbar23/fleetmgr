@@ -29,14 +29,16 @@ std::unique_ptr<IState> IState::handleEvent(const std::shared_ptr<const event::i
 IState::IState(IState& state) :
     client(state.client),
     listener(state.listener),
-    core(state.core)
+    core(state.core),
+    heartbeatHandler(state.heartbeatHandler)
 {
 }
 
 IState::IState(IClient& _client, IClient::Listener& _listener, core::https::IHttpsClient& coreClient) :
     client(_client),
     listener(_listener),
-    core(coreClient)
+    core(coreClient),
+    heartbeatHandler(_client)
 {
 }
 
@@ -57,13 +59,20 @@ void IState::send(const ClientMessage& message)
 
 std::unique_ptr<IState> IState::defaultEventHandle(const std::string& eventName)
 {
-    trace("Unexpected event: " + eventName + " @ " + toString());
+    trace("Unexpected: " + eventName + " @ " + toString());
     return nullptr;
 }
 
 std::unique_ptr<IState> IState::defaultMessageHandle(const ControlMessage& message)
 {
-    trace("Unexpected ControlMessage:/n" + message.DebugString() + " @ " + toString());
+    if (message.command() == Command::HEARTBEAT && message.has_heartbeat())
+    {
+        heartbeatHandler.handleHeartbeat(message);
+    }
+    else
+    {
+        trace("Unexpected ControlMessage received:\n" + message + " @ " + toString());
+    }
     return nullptr;
 }
 

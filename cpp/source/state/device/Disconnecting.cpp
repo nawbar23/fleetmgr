@@ -16,6 +16,7 @@ Disconnecting::Disconnecting(IState& state) :
 
 std::unique_ptr<IState> Disconnecting::start()
 {
+    heartbeatHandler.end();
     return nullptr;
 }
 
