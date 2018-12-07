@@ -1,5 +1,5 @@
-#ifndef FM_STATE_HEARTBEATHANDLER_HPP
-#define FM_STATE_HEARTBEATHANDLER_HPP
+#ifndef FM_BACKEND_HEARTBEATHANDLER_HPP
+#define FM_BACKEND_HEARTBEATHANDLER_HPP
 
 #include "IClient.hpp"
 
@@ -8,7 +8,7 @@
 namespace fm
 {
 
-namespace state
+namespace backend
 {
 
 /**
@@ -33,8 +33,8 @@ private:
     void onTimeout();
 };
 
-} // state
+} // backend
 
 } // fm
 
-#endif // FM_STATE_HEARTBEATHANDLER_HPP
+#endif // FM_BACKEND_HEARTBEATHANDLER_HPP
