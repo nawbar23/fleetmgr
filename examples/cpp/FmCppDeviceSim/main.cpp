@@ -17,12 +17,6 @@ int main(int, char**)
     DeviceSimulator simulator;
     simulator.start(core, facadeCertPath);
 
-    while (not simulator.isDone())
-    {
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-    }
-
-
     std::cout << " >>>>>>> DONE <<<<<<<" << std::endl;
     return 0;
 }
