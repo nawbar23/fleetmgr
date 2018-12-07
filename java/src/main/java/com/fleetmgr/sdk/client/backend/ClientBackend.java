@@ -49,7 +49,7 @@ public class ClientBackend implements StreamObserver<ControlMessage> {
 
     private HashMap<Long, Channel> sockets;
 
-    protected CoreClient core;
+    private CoreClient core;
 
     private ManagedChannel channel;
     private StreamObserver<ClientMessage> toFacade;

@@ -41,13 +41,11 @@ public abstract class Client extends StateMachine<Event> {
 
     protected ClientBackend backend;
 
-    CoreClient coreClient;
-
     Client(String coreAddress, String key, Listener listener, ExecutorService executor) {
         super(executor, null);
         this.listener = listener;
 
-        this.coreClient = new CoreClient(coreAddress, key);
+        CoreClient coreClient = new CoreClient(coreAddress, key);
 
         this.backend = new ClientBackend(this::trace, this, listener, executor, coreClient);
     }

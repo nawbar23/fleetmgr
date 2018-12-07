@@ -22,7 +22,7 @@ public class Pilot extends Client {
     }
 
     public ListDevicesResponse listDevices() throws IOException {
-        return coreClient.listDevices();
+        return backend.getCore().listDevices();
     }
 
     public ListDevicesResponse listConnectedDevices() throws IOException {
