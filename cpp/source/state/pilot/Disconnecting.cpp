@@ -19,6 +19,11 @@ std::unique_ptr<IState> Disconnecting::start()
     return nullptr;
 }
 
+std::string Disconnecting::toString() const
+{
+    return "Disconnecting";
+}
+
 std::unique_ptr<IState> Disconnecting::handleUserEvent(const UserEvent& event)
 {
     return defaultEventHandle(event.toString());
@@ -27,9 +32,4 @@ std::unique_ptr<IState> Disconnecting::handleUserEvent(const UserEvent& event)
 std::unique_ptr<IState> Disconnecting::handleConnectionEvent(const ConnectionEvent& event)
 {
     return defaultEventHandle(event.toString());
-}
-
-std::string Disconnecting::toString() const
-{
-    return "Disconnecting";
 }

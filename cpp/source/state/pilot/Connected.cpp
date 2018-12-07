@@ -19,6 +19,11 @@ std::unique_ptr<IState> Connected::start()
     return nullptr;
 }
 
+std::string Connected::toString() const
+{
+    return "Connected";
+}
+
 std::unique_ptr<IState> Connected::handleUserEvent(const UserEvent& event)
 {
     return defaultEventHandle(event.toString());
@@ -27,9 +32,4 @@ std::unique_ptr<IState> Connected::handleUserEvent(const UserEvent& event)
 std::unique_ptr<IState> Connected::handleConnectionEvent(const ConnectionEvent& event)
 {
     return defaultEventHandle(event.toString());
-}
-
-std::string Connected::toString() const
-{
-    return "Connected";
 }

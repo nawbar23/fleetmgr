@@ -51,6 +51,11 @@ std::unique_ptr<IState> Connecting::start()
     }
 }
 
+std::string Connecting::toString() const
+{
+    return "Connecting";
+}
+
 std::unique_ptr<IState> Connecting::handleUserEvent(const UserEvent& event)
 {
     return defaultEventHandle(event.toString());
@@ -81,9 +86,4 @@ std::unique_ptr<IState> Connecting::handleMessage(const ControlMessage& message)
         listener.onEvent(std::make_shared<FacadeEvent>(FacadeEvent::ERROR));
         return std::make_unique<Disconnected>(*this);
     }
-}
-
-std::string Connecting::toString() const
-{
-    return "Connecting";
 }

@@ -4,10 +4,11 @@
 
 using namespace fm;
 using namespace fm::state;
-using namespace fm::event::input::user;
-using namespace fm::event::input::connection;
 
 using namespace com::fleetmgr::interfaces::facade::control;
+
+using event::input::user::UserEvent;
+using event::input::connection::ConnectionEvent;
 
 IState::~IState()
 {
@@ -39,6 +40,16 @@ IState::IState(IClient& _client, IClient::Listener& _listener, core::https::IHtt
 {
 }
 
+std::unique_ptr<IState> IState::handleUserEvent(const UserEvent& event)
+{
+    return defaultEventHandle(event.toString());
+}
+
+std::unique_ptr<IState> IState::handleConnectionEvent(const ConnectionEvent& event)
+{
+    return defaultEventHandle(event.toString());
+}
+
 void IState::send(const ClientMessage& message)
 {
     client.send(message);
@@ -46,13 +57,13 @@ void IState::send(const ClientMessage& message)
 
 std::unique_ptr<IState> IState::defaultEventHandle(const std::string& eventName)
 {
-    trace("Unexpected: " + eventName + " @ " + toString());
+    trace("Unexpected event: " + eventName + " @ " + toString());
     return nullptr;
 }
 
-std::unique_ptr<IState> IState::defaultMessageHandle()
+std::unique_ptr<IState> IState::defaultMessageHandle(const ControlMessage& message)
 {
-    trace("Unexpected ClientMessage: @ " + toString());
+    trace("Unexpected ControlMessage:/n" + message.DebugString() + " @ " + toString());
     return nullptr;
 }
 

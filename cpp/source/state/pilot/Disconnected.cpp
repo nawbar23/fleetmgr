@@ -24,17 +24,12 @@ std::unique_ptr<IState> Disconnected::start()
     return nullptr;
 }
 
-std::unique_ptr<IState> Disconnected::handleUserEvent(const UserEvent& event)
-{
-    return defaultEventHandle(event.toString());
-}
-
-std::unique_ptr<IState> Disconnected::handleConnectionEvent(const ConnectionEvent& event)
-{
-    return defaultEventHandle(event.toString());
-}
-
 std::string Disconnected::toString() const
 {
     return "Disconnected";
+}
+
+std::unique_ptr<IState> Disconnected::handleUserEvent(const UserEvent& event)
+{
+    return defaultEventHandle(event.toString());
 }

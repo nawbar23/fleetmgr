@@ -31,27 +31,27 @@ public:
 
     std::unique_ptr<IState> handleEvent(const std::shared_ptr<const event::input::IInputEvent>);
 
-    virtual std::unique_ptr<IState> handleUserEvent(const event::input::user::UserEvent&) = 0;
-
-    virtual std::unique_ptr<IState> handleConnectionEvent(const event::input::connection::ConnectionEvent&) = 0;
-
     virtual std::string toString() const = 0;
 
 protected:
-    IState(IState&);
-
-    IState(IClient&, IClient::Listener&, core::https::IHttpsClient&);
-
     IClient& client;
     IClient::Listener& listener;
 
     core::CoreClient core;
 
+    IState(IState&);
+
+    IState(IClient&, IClient::Listener&, core::https::IHttpsClient&);
+
+    virtual std::unique_ptr<IState> handleUserEvent(const event::input::user::UserEvent&);
+
+    virtual std::unique_ptr<IState> handleConnectionEvent(const event::input::connection::ConnectionEvent&);
+
     void send(const com::fleetmgr::interfaces::facade::control::ClientMessage&);
 
     std::unique_ptr<IState> defaultEventHandle(const std::string& eventName);
 
-    std::unique_ptr<IState> defaultMessageHandle();
+    std::unique_ptr<IState> defaultMessageHandle(const com::fleetmgr::interfaces::facade::control::ControlMessage&);
 
     void trace(const std::string& message);
 };
