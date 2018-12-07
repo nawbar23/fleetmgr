@@ -1,8 +1,6 @@
-#include "Device.hpp"
-#include "AsioListener.hpp"
-#include "AsioHttpsClient.hpp"
+#include "DeviceSimulator.hpp"
 
-#include "event/input/user/UserEvent.hpp"
+#include "AsioHttpsClient.hpp"
 
 int main(int, char**)
 {
@@ -11,18 +9,20 @@ int main(int, char**)
 
     const std::string apiKey = "";
 
-    const std::string certPath = "../../../cpp/grpc_facade.crt";
+    const std::string facadeCertPath = "../../../cpp/grpc_facade.crt";
 
-    AsioListener listener;
+
     AsioHttpsClient core(host, port, apiKey);
 
-    fm::Device device(listener, core, certPath);
+    DeviceSimulator simulator;
+    simulator.start(core, facadeCertPath);
 
-    using fm::event::input::user::UserEvent;
-    device.notifyEvent(std::make_shared<const UserEvent>(UserEvent::ATTACH));
+    while (not simulator.isDone())
+    {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
 
-    std::this_thread::sleep_for(std::chrono::seconds(5));
 
-    std::cout << "DONE" << std::endl;
+    std::cout << " >>>>>>> DONE <<<<<<<" << std::endl;
     return 0;
 }

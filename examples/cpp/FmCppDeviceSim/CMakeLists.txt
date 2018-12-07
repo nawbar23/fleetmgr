@@ -21,6 +21,8 @@ include_directories(${PROJECT_SOURCE_DIR}/example)
 
 set(FILES
     ${PROJECT_SOURCE_DIR}/main.cpp
+    ${PROJECT_SOURCE_DIR}/DeviceSimulator.cpp
+    ${PROJECT_SOURCE_DIR}/DeviceSimulator.hpp
     ${PROJECT_SOURCE_DIR}/example/AsioHttpsClient.cpp
     ${PROJECT_SOURCE_DIR}/example/AsioHttpsClient.hpp
     ${PROJECT_SOURCE_DIR}/example/AsioListener.cpp

@@ -20,7 +20,7 @@ AsioListener::~AsioListener()
 
 void AsioListener::onEvent(const std::shared_ptr<const fm::event::output::FacadeEvent> event)
 {
-    trace("Emmited: " + event->toString());
+    trace("AsioListener::onEvent Emmited: " + event->toString());
 }
 
 void AsioListener::execute(std::function<void(void)> task)

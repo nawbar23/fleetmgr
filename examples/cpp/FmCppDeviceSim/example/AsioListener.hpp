@@ -19,7 +19,9 @@ public:
 
     ~AsioListener() override;
 
-    void onEvent(const std::shared_ptr<const fm::event::output::FacadeEvent> event) override;
+    bool isDone();
+
+    virtual void onEvent(const std::shared_ptr<const fm::event::output::FacadeEvent> event) override;
 
     void execute(std::function<void(void)> task) override;
 
@@ -31,6 +33,8 @@ public:
 
 private:
     TimerThread timerThread;
+
+    std::atomic<bool> done;
 };
 
 #endif // ASIOLISTENER_HPP
