@@ -52,6 +52,11 @@ std::unique_ptr<IState> IState::handleConnectionEvent(const ConnectionEvent& eve
     return defaultEventHandle(event.toString());
 }
 
+std::unique_ptr<IState> IState::createOuterState()
+{
+    return nullptr;
+}
+
 void IState::send(const ClientMessage& message)
 {
     backend.send(message);

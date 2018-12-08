@@ -37,6 +37,8 @@ public:
 
     virtual std::unique_ptr<IState> handleConnectionEvent(const event::input::connection::ConnectionEvent&);
 
+    virtual std::unique_ptr<IState> createOuterState();
+
     virtual std::string toString() const = 0;
 
 protected:

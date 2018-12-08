@@ -26,6 +26,14 @@ ClientBackend::ClientBackend(IClient& _client, IClient::Listener& _listener, cor
 {
 }
 
+ClientBackend::~ClientBackend()
+{
+    if (reader.joinable())
+    {
+        reader.join();
+    }
+}
+
 core::CoreClient& ClientBackend::getCore()
 {
     return core;
@@ -67,16 +75,14 @@ void ClientBackend::openFacadeConnection(const std::string& host, const int port
     keepReader.store(true);
     reader = std::thread([this] ()
     {
-        while (keepReader.load())
+        std::shared_ptr<ControlMessage> controlMessage = std::make_shared<ControlMessage>();
+        while (stream->Read(controlMessage.get()) && keepReader.load())
         {
-            std::shared_ptr<ControlMessage> controlMessage = std::make_shared<ControlMessage>();
-            while (stream->Read(controlMessage.get()))
-            {
-                using event::input::connection::Received;
-                client.notifyEvent(std::make_shared<Received>(controlMessage));
-            }
-            std::this_thread::sleep_for(std::chrono::microseconds(1));
+            using event::input::connection::Received;
+            client.notifyEvent(std::make_shared<Received>(controlMessage));
+            controlMessage = std::make_shared<ControlMessage>();
         }
+        trace("Reception task done");
     });
 }
 
@@ -88,7 +94,6 @@ void ClientBackend::closeFacadeConnection()
     {
         throw std::runtime_error("Error!, could not close stream");
     }
-    reader.join();
 }
 
 void ClientBackend::send(const ClientMessage& message)

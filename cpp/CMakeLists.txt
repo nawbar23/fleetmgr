@@ -87,6 +87,8 @@ set(SOURCES
     ${PROJECT_SOURCE_DIR}/source/state/device/Connected.cpp
     ${PROJECT_SOURCE_DIR}/source/state/device/Disconnecting.cpp
     ${PROJECT_SOURCE_DIR}/source/state/device/connected/Ready.cpp
+    ${PROJECT_SOURCE_DIR}/source/state/device/connected/Released.cpp
+    ${PROJECT_SOURCE_DIR}/source/state/device/connected/Releasing.cpp
     ${PROJECT_SOURCE_DIR}/source/state/pilot/Disconnected.cpp
     ${PROJECT_SOURCE_DIR}/source/state/pilot/Connecting.cpp
     ${PROJECT_SOURCE_DIR}/source/state/pilot/Connected.cpp
@@ -131,6 +133,8 @@ set(HEADERS
     ${PROJECT_SOURCE_DIR}/include/state/device/Connected.hpp
     ${PROJECT_SOURCE_DIR}/include/state/device/Disconnecting.hpp
     ${PROJECT_SOURCE_DIR}/include/state/device/connected/Ready.hpp
+    ${PROJECT_SOURCE_DIR}/include/state/device/connected/Released.hpp
+    ${PROJECT_SOURCE_DIR}/include/state/device/connected/Releasing.hpp
     ${PROJECT_SOURCE_DIR}/include/state/pilot/Disconnected.hpp
     ${PROJECT_SOURCE_DIR}/include/state/pilot/Connecting.hpp
     ${PROJECT_SOURCE_DIR}/include/state/pilot/Connected.hpp

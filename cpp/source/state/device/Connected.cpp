@@ -50,5 +50,5 @@ std::unique_ptr<IState> Connected::onNewState(std::unique_ptr<IState> newState)
         internalState.swap(newState);
         newState.reset(internalState->start().release());
     }
-    return nullptr;
+    return internalState->createOuterState();
 }

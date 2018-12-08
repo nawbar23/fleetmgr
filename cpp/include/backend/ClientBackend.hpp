@@ -29,6 +29,8 @@ class ClientBackend
 public:
     ClientBackend(IClient&, IClient::Listener&, core::https::IHttpsClient&, const std::string&);
 
+    ~ClientBackend();
+
     core::CoreClient& getCore();
 
     HeartbeatHandler& getHeartbeatHandler();

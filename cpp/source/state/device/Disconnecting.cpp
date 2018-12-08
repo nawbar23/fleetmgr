@@ -1,5 +1,7 @@
 #include "state/device/Disconnecting.hpp"
 
+#include "state/device/Disconnected.hpp"
+
 #include "backend/ClientBackend.hpp"
 
 using namespace fm;
@@ -19,7 +21,9 @@ Disconnecting::Disconnecting(IState& state) :
 std::unique_ptr<IState> Disconnecting::start()
 {
     backend.getHeartbeatHandler().end();
-    return nullptr;
+    backend.closeFacadeConnection();
+    listener.onEvent(std::make_shared<FacadeEvent>(FacadeEvent::RELEASED));
+    return std::make_unique<Disconnected>(*this);
 }
 
 std::unique_ptr<IState> Disconnecting::handleUserEvent(const UserEvent& event)

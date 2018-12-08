@@ -1,6 +1,6 @@
-#include "state/device/connected/Ready.hpp"
+#include "state/device/connected/Released.hpp"
 
-#include "state/device/connected/Releasing.hpp"
+#include "state/device/Disconnecting.hpp"
 
 #include "event/input/connection/Received.hpp"
 
@@ -17,34 +17,27 @@ using event::input::connection::Received;
 
 using event::output::FacadeEvent;
 
-Ready::Ready(IState& state) :
+Released::Released(IState& state) :
     IState(state)
 {
 }
 
-std::unique_ptr<IState> Ready::start()
+std::unique_ptr<IState> Released::start()
 {
     return nullptr;
 }
 
-std::string Ready::toString() const
+std::string Released::toString() const
 {
-    return "Ready";
+    return "Released";
 }
 
-std::unique_ptr<IState> Ready::handleUserEvent(const UserEvent& event)
+std::unique_ptr<IState> Released::handleUserEvent(const UserEvent& event)
 {
-    switch (event.getType())
-    {
-    case UserEvent::RELEASE:
-        return std::make_unique<Releasing>(*this);
-
-    default:
-        return defaultEventHandle(event.toString());
-    }
+    return defaultEventHandle(event.toString());
 }
 
-std::unique_ptr<IState> Ready::handleConnectionEvent(const ConnectionEvent& event)
+std::unique_ptr<IState> Released::handleConnectionEvent(const ConnectionEvent& event)
 {
     switch (event.getType())
     {
@@ -56,7 +49,12 @@ std::unique_ptr<IState> Ready::handleConnectionEvent(const ConnectionEvent& even
     }
 }
 
-std::unique_ptr<IState> Ready::handleMessage(const ControlMessage& message)
+std::unique_ptr<IState> Released::createOuterState()
+{
+    return std::make_unique<Disconnecting>(*this);
+}
+
+std::unique_ptr<IState> Released::handleMessage(const ControlMessage& message)
 {
     return defaultMessageHandle(message);
 }
