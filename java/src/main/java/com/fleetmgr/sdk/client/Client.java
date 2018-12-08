@@ -49,9 +49,4 @@ public abstract class Client extends StateMachine<Event> {
 
         this.backend = new ClientBackend(this::trace, this, listener, executor, coreClient);
     }
-
-    @Override
-    public void trace(String message) {
-        listener.trace(message);
-    }
 }
