@@ -5,6 +5,8 @@
 
 #include "event/input/connection/Received.hpp"
 
+#include "backend/ClientBackend.hpp"
+
 #include "core/attach.pb.h"
 
 using namespace fm;
@@ -30,9 +32,9 @@ std::unique_ptr<IState> Connecting::start()
 {
     try
     {
-        AttachResponse attachResponse = core.attach();
+        AttachResponse attachResponse = backend.getCore().attach();
 
-        client.openFacadeConnection(
+        backend.openFacadeConnection(
                     attachResponse.host(),
                     attachResponse.port());
 
@@ -82,7 +84,7 @@ std::unique_ptr<IState> Connecting::handleMessage(const ControlMessage& message)
     }
     else
     {
-        client.closeFacadeConnection();
+        backend.closeFacadeConnection();
         listener.onEvent(std::make_shared<FacadeEvent>(FacadeEvent::ERROR));
         return std::make_unique<Disconnected>(*this);
     }

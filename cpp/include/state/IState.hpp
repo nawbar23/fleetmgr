@@ -39,13 +39,11 @@ protected:
     IClient& client;
     IClient::Listener& listener;
 
-    core::CoreClient core;
-
-    backend::HeartbeatHandler heartbeatHandler;
+    backend::ClientBackend& backend;
 
     IState(IState&);
 
-    IState(IClient&, IClient::Listener&, core::https::IHttpsClient&);
+    IState(IClient&, IClient::Listener&, backend::ClientBackend&);
 
     virtual std::unique_ptr<IState> handleUserEvent(const event::input::user::UserEvent&);
 

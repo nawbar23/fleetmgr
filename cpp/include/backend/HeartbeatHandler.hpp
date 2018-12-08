@@ -1,8 +1,6 @@
 #ifndef FM_BACKEND_HEARTBEATHANDLER_HPP
 #define FM_BACKEND_HEARTBEATHANDLER_HPP
 
-#include "IClient.hpp"
-
 #include "facade/control/facade_service.pb.h"
 
 namespace fm
@@ -10,6 +8,8 @@ namespace fm
 
 namespace backend
 {
+
+class ClientBackend;
 
 /**
  * Created by: Bartosz Nawrot
@@ -19,7 +19,7 @@ namespace backend
 class HeartbeatHandler
 {
 public:
-    HeartbeatHandler(IClient&);
+    HeartbeatHandler(ClientBackend&);
 
     void start();
 
@@ -28,7 +28,9 @@ public:
     void handleHeartbeat(const com::fleetmgr::interfaces::facade::control::ControlMessage&);
 
 private:
-    IClient& client;
+    ClientBackend& backend;
+
+    std::time_t lastReception;
 
     void onTimeout();
 };

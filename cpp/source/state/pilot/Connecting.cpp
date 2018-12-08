@@ -5,6 +5,8 @@
 
 #include "event/input/connection/Received.hpp"
 
+#include "backend/ClientBackend.hpp"
+
 using namespace fm;
 using namespace fm::state;
 using namespace fm::state::pilot;
@@ -58,7 +60,7 @@ std::unique_ptr<IState> Connecting::handleMessage(const ControlMessage& message)
     }
     else
     {
-        client.closeFacadeConnection();
+        backend.closeFacadeConnection();
         listener.onEvent(std::make_shared<FacadeEvent>(FacadeEvent::ERROR));
         return std::make_unique<Disconnected>(*this);
     }

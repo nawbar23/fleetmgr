@@ -2,6 +2,8 @@
 
 #include "IClient.hpp"
 
+#include "backend/ClientBackend.hpp"
+
 using namespace fm;
 using namespace fm::state;
 
@@ -29,16 +31,14 @@ std::unique_ptr<IState> IState::handleEvent(const std::shared_ptr<const event::i
 IState::IState(IState& state) :
     client(state.client),
     listener(state.listener),
-    core(state.core),
-    heartbeatHandler(state.heartbeatHandler)
+    backend(state.backend)
 {
 }
 
-IState::IState(IClient& _client, IClient::Listener& _listener, core::https::IHttpsClient& coreClient) :
+IState::IState(IClient& _client, IClient::Listener& _listener, backend::ClientBackend& _backend) :
     client(_client),
     listener(_listener),
-    core(coreClient),
-    heartbeatHandler(_client)
+    backend(_backend)
 {
 }
 
@@ -54,7 +54,7 @@ std::unique_ptr<IState> IState::handleConnectionEvent(const ConnectionEvent& eve
 
 void IState::send(const ClientMessage& message)
 {
-    client.send(message);
+    backend.send(message);
 }
 
 std::unique_ptr<IState> IState::defaultEventHandle(const std::string& eventName)
@@ -67,7 +67,7 @@ std::unique_ptr<IState> IState::defaultMessageHandle(const ControlMessage& messa
 {
     if (message.command() == Command::HEARTBEAT && message.has_heartbeat())
     {
-        heartbeatHandler.handleHeartbeat(message);
+        backend.getHeartbeatHandler().handleHeartbeat(message);
     }
     else
     {
@@ -78,5 +78,5 @@ std::unique_ptr<IState> IState::defaultMessageHandle(const ControlMessage& messa
 
 void IState::trace(const std::string& message)
 {
-    client.trace(message);
+    listener.trace(message);
 }

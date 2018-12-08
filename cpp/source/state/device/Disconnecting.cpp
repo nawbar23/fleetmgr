@@ -1,5 +1,7 @@
 #include "state/device/Disconnecting.hpp"
 
+#include "backend/ClientBackend.hpp"
+
 using namespace fm;
 using namespace fm::state;
 using namespace fm::state::device;
@@ -16,7 +18,7 @@ Disconnecting::Disconnecting(IState& state) :
 
 std::unique_ptr<IState> Disconnecting::start()
 {
-    heartbeatHandler.end();
+    backend.getHeartbeatHandler().end();
     return nullptr;
 }
 

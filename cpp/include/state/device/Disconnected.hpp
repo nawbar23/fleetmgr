@@ -22,7 +22,7 @@ class Disconnected : public IState
 public:
     Disconnected(IState&);
 
-    Disconnected(IClient&, IClient::Listener&, core::https::IHttpsClient&);
+    Disconnected(IClient&, IClient::Listener&, backend::ClientBackend&);
 
     std::unique_ptr<IState> start() override;
 

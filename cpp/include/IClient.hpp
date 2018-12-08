@@ -27,6 +27,11 @@ namespace state
     class IState;
 }
 
+namespace backend
+{
+    class ClientBackend;
+}
+
 /**
  * Created by: Bartosz Nawrot
  * Date: 2018-11-25
@@ -55,19 +60,16 @@ public:
 
     void notifyEvent(const std::shared_ptr<const event::input::IInputEvent>);
 
-    void openFacadeConnection(const std::string&, const int);
-
-    void closeFacadeConnection();
-
-    void send(const com::fleetmgr::interfaces::facade::control::ClientMessage& message);
-
-    // TODO Bartek argument should be changed to recursive template for optimization
-    void trace(const std::string& message);
+    std::string getStateName() const;
 
     virtual std::string toString() const = 0;
 
 protected:
-    IClient(std::unique_ptr<state::IState>, Listener&, const std::string&);
+    std::unique_ptr<backend::ClientBackend> backend;
+
+    IClient(Listener&, core::https::IHttpsClient&, const std::string&);
+
+    void setState(std::unique_ptr<state::IState>);
 
 private:
     IClient() = delete;
@@ -77,24 +79,6 @@ private:
 
     std::mutex stateLock;
     std::unique_ptr<state::IState> state;
-
-    const std::string certPath;
-
-    std::shared_ptr<grpc::Channel> channel;
-
-    std::unique_ptr<
-    com::fleetmgr::interfaces::facade::control::FacadeService::Stub> stub;
-
-    grpc::ClientContext context;
-
-    std::unique_ptr<grpc::ClientReaderWriter<
-    com::fleetmgr::interfaces::facade::control::ClientMessage,
-    com::fleetmgr::interfaces::facade::control::ControlMessage>> stream;
-
-    std::atomic<bool> keepReader;
-    std::thread reader;
-
-    void readCert(const std::string&, std::string&);
 };
 
 } // fm

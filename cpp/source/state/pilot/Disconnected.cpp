@@ -14,8 +14,8 @@ Disconnected::Disconnected(IState& state) :
 {
 }
 
-Disconnected::Disconnected(IClient& client, IClient::Listener& listener, core::https::IHttpsClient& coreClient) :
-    IState(client, listener, coreClient)
+Disconnected::Disconnected(IClient& client, IClient::Listener& listener, backend::ClientBackend& backend) :
+    IState(client, listener, backend)
 {
 }
 

@@ -2,6 +2,8 @@
 
 #include "state/device/connected/Ready.hpp"
 
+#include "backend/ClientBackend.hpp"
+
 using namespace fm;
 using namespace fm::state;
 using namespace fm::state::device;
@@ -19,7 +21,7 @@ Connected::Connected(IState& state) :
 
 std::unique_ptr<IState> Connected::start()
 {
-    heartbeatHandler.start();
+    backend.getHeartbeatHandler().start();
     internalState->start();
     listener.onEvent(std::make_shared<FacadeEvent>(FacadeEvent::ATTACHED));
     return nullptr;
