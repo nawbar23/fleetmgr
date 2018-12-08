@@ -26,11 +26,6 @@ std::unique_ptr<IState> Disconnected::start()
     return nullptr;
 }
 
-std::string Disconnected::toString() const
-{
-    return "Disconnected";
-}
-
 std::unique_ptr<IState> Disconnected::handleUserEvent(const UserEvent& event)
 {
     switch (event.getType())
@@ -41,4 +36,9 @@ std::unique_ptr<IState> Disconnected::handleUserEvent(const UserEvent& event)
     default:
         return defaultEventHandle(event.toString());
     }
+}
+
+std::string Disconnected::toString() const
+{
+    return "Disconnected";
 }

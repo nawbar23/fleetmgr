@@ -23,9 +23,9 @@ public:
 
     virtual void onEvent(const std::shared_ptr<const fm::event::output::FacadeEvent> event) override;
 
-    void execute(std::function<void(void)> task) override;
-
     void trace(const std::string& message) override;
+
+    std::unique_ptr<com::fleetmgr::interfaces::Location> getLocation() override;
 
     std::shared_ptr<fm::timer::ITimer> createTimer() override;
 

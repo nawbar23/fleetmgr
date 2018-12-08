@@ -9,6 +9,8 @@
 using namespace fm;
 using namespace fm::event;
 
+using com::fleetmgr::interfaces::Location;
+
 AsioListener::AsioListener()
 {
 }
@@ -23,18 +25,18 @@ void AsioListener::onEvent(const std::shared_ptr<const fm::event::output::Facade
     trace("AsioListener::onEvent Emmited: " + event->toString());
 }
 
-void AsioListener::execute(std::function<void(void)> task)
-{
-    trace("Execution request");
-    // TODO Bartek replace with approperiate executor, for example asio::io_service
-    // TODO Bartek or something more proffesional like Shaen Parent style tasking system
-    std::thread t([&task] () { task(); });
-    t.detach();
-}
-
 void AsioListener::trace(const std::string& message)
 {
     std::cout << "Client trace: [" << message << "]" << std::endl;
+}
+
+std::unique_ptr<Location> AsioListener::getLocation()
+{
+    std::unique_ptr<Location> location = std::make_unique<Location>();
+    location->set_latitude(50.0);
+    location->set_longitude(20.0);
+    location->set_altitude(400.0);
+    return location;
 }
 
 std::shared_ptr<fm::timer::ITimer> AsioListener::createTimer()

@@ -33,6 +33,10 @@ public:
 
     std::unique_ptr<IState> handleEvent(const std::shared_ptr<const event::input::IInputEvent>);
 
+    virtual std::unique_ptr<IState> handleUserEvent(const event::input::user::UserEvent&);
+
+    virtual std::unique_ptr<IState> handleConnectionEvent(const event::input::connection::ConnectionEvent&);
+
     virtual std::string toString() const = 0;
 
 protected:
@@ -44,10 +48,6 @@ protected:
     IState(IState&);
 
     IState(IClient&, IClient::Listener&, backend::ClientBackend&);
-
-    virtual std::unique_ptr<IState> handleUserEvent(const event::input::user::UserEvent&);
-
-    virtual std::unique_ptr<IState> handleConnectionEvent(const event::input::connection::ConnectionEvent&);
 
     void send(const com::fleetmgr::interfaces::facade::control::ClientMessage&);
 

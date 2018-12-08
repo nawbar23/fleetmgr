@@ -11,8 +11,7 @@
 
 #include "timer/ITimer.hpp"
 
-#include "facade/control/facade_service.grpc.pb.h"
-#include <grpc++/grpc++.h>
+#include "common/location.pb.h"
 
 #include <memory>
 #include <mutex>
@@ -47,9 +46,9 @@ public:
 
         virtual void onEvent(const std::shared_ptr<const event::output::FacadeEvent>) = 0;
 
-        virtual void execute(std::function<void(void)>) = 0;
-
         virtual void trace(const std::string&) = 0;
+
+        virtual std::unique_ptr<com::fleetmgr::interfaces::Location> getLocation() = 0;
 
         virtual std::shared_ptr<timer::ITimer> createTimer() = 0;
 

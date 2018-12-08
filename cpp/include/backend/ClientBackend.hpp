@@ -33,6 +33,8 @@ public:
 
     HeartbeatHandler& getHeartbeatHandler();
 
+    std::unique_ptr<com::fleetmgr::interfaces::Location> getLocation();
+
     void openFacadeConnection(const std::string&, const int);
 
     void closeFacadeConnection();

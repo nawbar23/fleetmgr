@@ -10,6 +10,7 @@
 using namespace fm;
 using namespace fm::backend;
 
+using namespace com::fleetmgr::interfaces;
 using namespace com::fleetmgr::interfaces::facade::control;
 
 ClientBackend::ClientBackend(IClient& _client, IClient::Listener& _listener, core::https::IHttpsClient& coreClient, const std::string& _certPath) :
@@ -33,6 +34,11 @@ core::CoreClient& ClientBackend::getCore()
 HeartbeatHandler& ClientBackend::getHeartbeatHandler()
 {
    return heartbeatHandler;
+}
+
+std::unique_ptr<Location> ClientBackend::getLocation()
+{
+    return listener.getLocation();
 }
 
 void ClientBackend::openFacadeConnection(const std::string& host, const int port)

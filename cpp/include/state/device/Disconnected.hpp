@@ -26,10 +26,9 @@ public:
 
     std::unique_ptr<IState> start() override;
 
-    std::string toString() const override;
-
-protected:
     std::unique_ptr<IState> handleUserEvent(const event::input::user::UserEvent&) override;
+
+    std::string toString() const override;
 };
 
 } // device

@@ -19,17 +19,28 @@ std::unique_ptr<IState> Connected::start()
     return nullptr;
 }
 
-std::string Connected::toString() const
-{
-    return "Connected";
-}
-
 std::unique_ptr<IState> Connected::handleUserEvent(const UserEvent& event)
 {
-    return defaultEventHandle(event.toString());
+    return onNewState(internalState->handleUserEvent(event));
 }
 
 std::unique_ptr<IState> Connected::handleConnectionEvent(const ConnectionEvent& event)
 {
-    return defaultEventHandle(event.toString());
+    return onNewState(internalState->handleConnectionEvent(event));
+}
+
+std::unique_ptr<IState> Connected::onNewState(std::unique_ptr<IState> newState)
+{
+    while (nullptr != newState.get())
+    {
+        listener.trace("Connected transition: " + internalState->toString() + " -> " + newState->toString());
+        internalState.swap(newState);
+        newState.reset(internalState->start().release());
+    }
+    return nullptr;
+}
+
+std::string Connected::toString() const
+{
+    return "Connected::" + internalState->toString();
 }

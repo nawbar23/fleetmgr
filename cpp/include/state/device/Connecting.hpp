@@ -24,13 +24,13 @@ public:
 
     std::unique_ptr<IState> start() override;
 
-    std::string toString() const override;
-
-protected:
     std::unique_ptr<IState> handleUserEvent(const event::input::user::UserEvent&) override;
 
     std::unique_ptr<IState> handleConnectionEvent(const event::input::connection::ConnectionEvent&) override;
 
+    std::string toString() const override;
+
+private:
     std::unique_ptr<IState> handleMessage(const com::fleetmgr::interfaces::facade::control::ControlMessage&);
 };
 
