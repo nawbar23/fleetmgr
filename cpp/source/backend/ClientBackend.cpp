@@ -61,31 +61,49 @@ void ClientBackend::openFacadeConnection(const std::string& host, const int port
     channel = grpc::CreateCustomChannel(address, creds, args);
     stub = FacadeService::NewStub(channel);
 
-    // TODO Bartek maybe it should be done with ClientAsyncReaderWriter
-    stream = stub->control(&context);
+    stream = stub->Asynccontrol(&context, &completionQueue, (void*)3);
 
-    keepReader.store(true);
-    listener.execute(std::bind(&ClientBackend::proceeReader, this));
+    void* connectTag;
+    bool ok = false;
+
+    auto deadline = std::chrono::system_clock::now() +
+        std::chrono::seconds(5);
+
+    completionQueue.AsyncNext(&connectTag, &ok, deadline);
+
+    if (ok && connectTag == (void*)3)
+    {
+        trace("Connection to the facade established");
+
+        readTag = (void*)1;
+
+        toRead = std::make_shared<ControlMessage>();
+        stream->Read(toRead.get(), readTag);
+
+        keepReader.store(true);
+        listener.execute(std::bind(&ClientBackend::proceeReader, this));
+    }
+    else
+    {
+        throw std::runtime_error("Could not connect to the facade");
+    }
 }
 
 
 void ClientBackend::closeFacadeConnection()
 {
     keepReader.store(false);
-    grpc::Status status = stream->Finish();
-    if (not status.ok())
-    {
-        throw std::runtime_error("Error!, could not close stream");
-    }
+//    grpc::Status status = stream->Finish();
+//    if (not status.ok())
+//    {
+//        throw std::runtime_error("Error!, could not close stream");
+//    }
 }
 
 void ClientBackend::send(const ClientMessage& message)
 {
     trace("Sending:\n" + message.DebugString() + " @ " + client.getStateName());
-    if (not stream->Write(message))
-    {
-        throw std::runtime_error("Error!, could not send message");
-    }
+    stream->Write(message, (void*)2);
 }
 
 void ClientBackend::trace(const std::string& message)
@@ -95,11 +113,20 @@ void ClientBackend::trace(const std::string& message)
 
 void ClientBackend::proceeReader()
 {
-    std::shared_ptr<ControlMessage> controlMessage = std::make_shared<ControlMessage>();
-    if (stream->Read(controlMessage.get()))
+    void* tag;
+    bool ok = false;
+
+    auto deadline = std::chrono::system_clock::now() +
+        std::chrono::milliseconds(1);
+    completionQueue.AsyncNext(&tag, &ok, deadline);
+
+    if (ok && tag == readTag)
     {
         using event::input::connection::Received;
-        client.notifyEvent(std::make_shared<Received>(controlMessage));
+        client.notifyEvent(std::make_shared<Received>(toRead));
+
+        toRead = std::make_shared<ControlMessage>();
+        stream->Read(toRead.get(), readTag);
     }
 
     if (keepReader.load())

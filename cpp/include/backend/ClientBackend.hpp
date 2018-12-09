@@ -60,8 +60,12 @@ private:
     com::fleetmgr::interfaces::facade::control::FacadeService::Stub> stub;
 
     grpc::ClientContext context;
+    grpc::CompletionQueue completionQueue;
 
-    std::unique_ptr<grpc::ClientReaderWriter<
+    void* readTag;
+    std::shared_ptr<com::fleetmgr::interfaces::facade::control::ControlMessage> toRead;
+
+    std::unique_ptr<grpc::ClientAsyncReaderWriter<
     com::fleetmgr::interfaces::facade::control::ClientMessage,
     com::fleetmgr::interfaces::facade::control::ControlMessage>> stream;
 
