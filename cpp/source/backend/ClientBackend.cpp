@@ -92,7 +92,6 @@ void ClientBackend::openFacadeConnection(const std::string& host, const int port
 
 void ClientBackend::closeFacadeConnection()
 {
-    trace("asdasd");
     keepReader.store(false);
 
     grpc::Status status = grpc::Status::CANCELLED;
