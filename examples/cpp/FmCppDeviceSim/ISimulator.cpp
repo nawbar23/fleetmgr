@@ -14,11 +14,6 @@ ISimulator::ISimulator(boost::asio::io_service& ioService) :
 {
 }
 
-void ISimulator::start(AsioHttpsClient& core, const std::string& facadeCertPath)
-{
-    startImpl(core, facadeCertPath);
-}
-
 bool ISimulator::isDone()
 {
     return done.load();

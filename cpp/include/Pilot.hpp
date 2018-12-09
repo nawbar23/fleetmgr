@@ -3,6 +3,8 @@
 
 #include "IClient.hpp"
 
+#include "core/list_devices.pb.h"
+
 namespace fm
 {
 
@@ -17,6 +19,10 @@ public:
     Pilot(Listener&, core::https::IHttpsClient&, const std::string&);
 
     std::string toString() const override;
+
+    com::fleetmgr::interfaces::ListDevicesResponse listDevices();
+
+    com::fleetmgr::interfaces::ListDevicesResponse listConnectedDevices();
 };
 
 } // fm

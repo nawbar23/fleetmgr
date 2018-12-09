@@ -10,10 +10,10 @@ class PilotSimulator : public ISimulator
 public:
     PilotSimulator(boost::asio::io_service&);
 
+    void start(AsioHttpsClient&, const std::string&);
+
 private:
     std::unique_ptr<fm::Pilot> pilot;
-
-    void startImpl(AsioHttpsClient&, const std::string&) override;
 
     void handleEvent(const std::shared_ptr<const fm::event::output::FacadeEvent> event) override;
 };

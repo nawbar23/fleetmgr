@@ -14,16 +14,12 @@ class ISimulator : public AsioListener
 public:
     ISimulator(boost::asio::io_service&);
 
-    void start(AsioHttpsClient&, const std::string&);
-
     bool isDone();
 
     void onEvent(const std::shared_ptr<const fm::event::output::FacadeEvent> event) override;
 
 protected:
     std::atomic<bool> done;
-
-    virtual void startImpl(AsioHttpsClient&, const std::string&) = 0;
 
     virtual void handleEvent(const std::shared_ptr<const fm::event::output::FacadeEvent> event) = 0;
 

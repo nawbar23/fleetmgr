@@ -52,7 +52,7 @@ OperateResponse CoreClient::operate(const OperateRequest& operateRequest)
 ListDevicesResponse CoreClient::listDevices()
 {
     std::string responseString =
-            client.execute("/pilots", https::IHttpsClient::GET, "");
+            client.execute("/devices/", https::IHttpsClient::GET, "");
     std::cout << "List devices response: " << responseString << std::endl;
     ListDevicesResponse response;
     Status status = JsonStringToMessage(responseString, &response, options);

@@ -23,11 +23,15 @@ namespace user
 class Operate : public UserEvent
 {
 public:
-    Operate();
+    Operate(long deviceId);
 
     std::string toString() const override;
 
+    long getDeviceId() const;
+
 private:
+    long deviceId;
+
 };
 
 } // user

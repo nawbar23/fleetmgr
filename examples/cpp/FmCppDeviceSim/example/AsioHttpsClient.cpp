@@ -90,6 +90,7 @@ std::string AsioHttpsClient::execute(const std::string& path, Method method, con
     // Gracefully close the stream
     beast::error_code ec;
     stream.shutdown(ec);
+
     if(ec == net::error::eof)
     {
         // Rationale:

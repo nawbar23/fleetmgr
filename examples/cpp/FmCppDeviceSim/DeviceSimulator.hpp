@@ -10,10 +10,10 @@ class DeviceSimulator : public ISimulator
 public:
     DeviceSimulator(boost::asio::io_service&);
 
+    void start(AsioHttpsClient&, const std::string&);
+
 private:
     std::unique_ptr<fm::Device> device;
-
-    void startImpl(AsioHttpsClient&, const std::string&) override;
 
     void handleEvent(const std::shared_ptr<const fm::event::output::FacadeEvent> event) override;
 };

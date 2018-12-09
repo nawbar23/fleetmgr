@@ -14,7 +14,7 @@ DeviceSimulator::DeviceSimulator(boost::asio::io_service& ioService) :
 {
 }
 
-void DeviceSimulator::startImpl(AsioHttpsClient& core, const std::string& facadeCertPath)
+void DeviceSimulator::start(AsioHttpsClient& core, const std::string& facadeCertPath)
 {
     device = std::make_unique<fm::Device>(*this, core, facadeCertPath);
     execute([this] ()
@@ -28,10 +28,10 @@ void DeviceSimulator::handleEvent(const std::shared_ptr<const FacadeEvent> event
     switch (event->getType())
     {
     case FacadeEvent::ATTACHED:
-        execute([this] ()
-        {
-            device->notifyEvent(std::make_shared<UserEvent>(UserEvent::RELEASE));
-        });
+//        execute([this] ()
+//        {
+//            device->notifyEvent(std::make_shared<UserEvent>(UserEvent::RELEASE));
+//        });
         break;
 
     case FacadeEvent::ERROR:

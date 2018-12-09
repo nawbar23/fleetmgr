@@ -18,6 +18,7 @@ int main(int, char**)
     boost::asio::io_service ioService;
 
     PilotSimulator simulator(ioService);
+
     simulator.start(core, facadeCertPath);
 
     while (not simulator.isDone())
