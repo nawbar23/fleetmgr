@@ -92,12 +92,35 @@ void ClientBackend::openFacadeConnection(const std::string& host, const int port
 
 void ClientBackend::closeFacadeConnection()
 {
+    trace("asdasd");
     keepReader.store(false);
-//    grpc::Status status = stream->Finish();
-//    if (not status.ok())
-//    {
-//        throw std::runtime_error("Error!, could not close stream");
-//    }
+
+    grpc::Status status = grpc::Status::CANCELLED;
+    stream->Finish(&status, (void*)4);
+
+    void* releaseTag;
+    bool ok = false;
+
+    auto deadline = std::chrono::system_clock::now() +
+        std::chrono::seconds(5);
+
+    completionQueue.AsyncNext(&releaseTag, &ok, deadline);
+
+    // cleanup reading tasks
+    while (releaseTag == (void*)1)
+    {
+        completionQueue.AsyncNext(&releaseTag, &ok, deadline);
+    }
+
+    if (ok && releaseTag == (void*)4)
+    {
+        trace("Connection to the facede closed with: " +
+              (status.ok() ? "success" : status.error_message()));
+    }
+    else
+    {
+        throw std::runtime_error("Could not close facade connection");
+    }
 }
 
 void ClientBackend::send(const ClientMessage& message)
@@ -118,6 +141,10 @@ void ClientBackend::proceeReader()
 
     auto deadline = std::chrono::system_clock::now() +
         std::chrono::milliseconds(1);
+
+    // Bartek is it really the best way of handling asynchronous reading?
+    // Bartek this will cause posing a lot of 1ms long dummy tasks...
+    // Bartek would prefere smth similaral as Java-style onNext callback
     completionQueue.AsyncNext(&tag, &ok, deadline);
 
     if (ok && tag == readTag)
