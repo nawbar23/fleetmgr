@@ -89,10 +89,20 @@ set(SOURCES
     ${PROJECT_SOURCE_DIR}/source/state/device/connected/Ready.cpp
     ${PROJECT_SOURCE_DIR}/source/state/device/connected/Released.cpp
     ${PROJECT_SOURCE_DIR}/source/state/device/connected/Releasing.cpp
+    ${PROJECT_SOURCE_DIR}/source/state/device/connected/Flying.cpp
+    ${PROJECT_SOURCE_DIR}/source/state/device/connected/Recovering.cpp
     ${PROJECT_SOURCE_DIR}/source/state/pilot/Disconnected.cpp
     ${PROJECT_SOURCE_DIR}/source/state/pilot/Connecting.cpp
     ${PROJECT_SOURCE_DIR}/source/state/pilot/Connected.cpp
     ${PROJECT_SOURCE_DIR}/source/state/pilot/Disconnecting.cpp
+    ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/Controlling.cpp
+    ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/Recovering.cpp
+    ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/Released.cpp
+    ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/Releasing.cpp
+    ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/ReleasingControl.cpp
+    ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/RequestingControl.cpp
+    ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/Spectating.cpp
+    ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/ValidatingChannels.cpp
     ${PROJECT_SOURCE_DIR}/source/timer/ITimer.cpp
     ${PROJECT_SOURCE_DIR}/source/traffic/Channel.cpp
     ${PROJECT_SOURCE_DIR}/source/traffic/socket/ISocket.cpp
@@ -135,10 +145,20 @@ set(HEADERS
     ${PROJECT_SOURCE_DIR}/include/state/device/connected/Ready.hpp
     ${PROJECT_SOURCE_DIR}/include/state/device/connected/Released.hpp
     ${PROJECT_SOURCE_DIR}/include/state/device/connected/Releasing.hpp
+    ${PROJECT_SOURCE_DIR}/include/state/device/connected/Flying.hpp
+    ${PROJECT_SOURCE_DIR}/include/state/device/connected/Recovering.hpp
     ${PROJECT_SOURCE_DIR}/include/state/pilot/Disconnected.hpp
     ${PROJECT_SOURCE_DIR}/include/state/pilot/Connecting.hpp
     ${PROJECT_SOURCE_DIR}/include/state/pilot/Connected.hpp
     ${PROJECT_SOURCE_DIR}/include/state/pilot/Disconnecting.hpp
+    ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/Controlling.hpp
+    ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/Recovering.hpp
+    ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/Released.hpp
+    ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/Releasing.hpp
+    ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/ReleasingControl.hpp
+    ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/RequestingControl.hpp
+    ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/Spectating.hpp
+    ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/ValidatingChannels.hpp
     ${PROJECT_SOURCE_DIR}/include/timer/ITimer.hpp
     ${PROJECT_SOURCE_DIR}/include/traffic/Channel.hpp
     ${PROJECT_SOURCE_DIR}/include/traffic/socket/ISocket.hpp
