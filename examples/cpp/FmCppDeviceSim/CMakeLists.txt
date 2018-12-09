@@ -20,9 +20,12 @@ include_directories(${_FM_SDK_DIR}/generated)
 include_directories(${PROJECT_SOURCE_DIR}/example)
 
 set(FILES
-    ${PROJECT_SOURCE_DIR}/main.cpp
+    ${PROJECT_SOURCE_DIR}/ISimulator.cpp
+    ${PROJECT_SOURCE_DIR}/ISimulator.hpp
     ${PROJECT_SOURCE_DIR}/DeviceSimulator.cpp
     ${PROJECT_SOURCE_DIR}/DeviceSimulator.hpp
+    ${PROJECT_SOURCE_DIR}/PilotSimulator.cpp
+    ${PROJECT_SOURCE_DIR}/PilotSimulator.hpp
     ${PROJECT_SOURCE_DIR}/example/AsioHttpsClient.cpp
     ${PROJECT_SOURCE_DIR}/example/AsioHttpsClient.hpp
     ${PROJECT_SOURCE_DIR}/example/AsioListener.cpp
@@ -46,8 +49,8 @@ elseif(MSVC)
     message(STATUS "Added parallel build arguments to CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
 endif()
 
-add_executable(FmCppDeviceSim ${FILES})
-target_link_libraries(FmCppDeviceSim
+add_library(_fm_example STATIC ${FILES})
+target_link_libraries(_fm_example
     fm_sdk
     ${Boost_LIBRARIES}
     OpenSSL::SSL
@@ -55,3 +58,12 @@ target_link_libraries(FmCppDeviceSim
     gRPC::grpc++
     protobuf::libprotobuf
     )
+
+foreach (_target deviceSim pilotSim)
+
+add_executable(${_target} "${_target}.cpp")
+target_link_libraries(${_target}
+    _fm_example
+    )
+
+endforeach()

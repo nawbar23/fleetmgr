@@ -1,21 +1,21 @@
-#ifndef DEVICESIMULATOR_HPP
-#define DEVICESIMULATOR_HPP
+#ifndef PILOTSIMULATOR_HPP
+#define PILOTSIMULATOR_HPP
 
 #include "ISimulator.hpp"
 
-#include "Device.hpp"
+#include "Pilot.hpp"
 
-class DeviceSimulator : public ISimulator
+class PilotSimulator : public ISimulator
 {
 public:
-    DeviceSimulator();
+    PilotSimulator();
 
 private:
-    std::unique_ptr<fm::Device> device;
+    std::unique_ptr<fm::Pilot> pilot;
 
     void startImpl(AsioHttpsClient&, const std::string&) override;
 
     void handleEvent(const std::shared_ptr<const fm::event::output::FacadeEvent> event) override;
 };
 
-#endif // DEVICESIMULATOR_HPP
+#endif // PILOTSIMULATOR_HPP
