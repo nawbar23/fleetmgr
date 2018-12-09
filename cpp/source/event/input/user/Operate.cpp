@@ -4,7 +4,7 @@ using namespace fm;
 using namespace fm::event::input::user;
 
 Operate::Operate() :
-    Operate(OPERATE)
+    UserEvent(OPERATE)
 {
 }
 
