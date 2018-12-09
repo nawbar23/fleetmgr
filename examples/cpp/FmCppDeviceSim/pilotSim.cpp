@@ -11,6 +11,7 @@ int main(int, char**)
 
     const std::string facadeCertPath = "../../../cpp/grpc_facade.crt";
 
+    std::cout << "Staring Pilot simulation..." << std::endl;
 
     AsioHttpsClient core(host, port, apiKey);
 
