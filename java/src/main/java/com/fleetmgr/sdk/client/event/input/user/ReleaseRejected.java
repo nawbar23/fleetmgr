@@ -10,7 +10,7 @@ public class ReleaseRejected extends UserEvent {
     private String message;
 
     public ReleaseRejected(String message) {
-        super(Type.REJECT_HANDOVER);
+        super(Type.RELEASE_REJECTED);
         this.message = message;
     }
 

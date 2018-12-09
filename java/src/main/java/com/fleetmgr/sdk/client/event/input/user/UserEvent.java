@@ -15,7 +15,7 @@ public class UserEvent implements Event {
         OPERATE,
         REQUEST_CONTROL,
         RELEASE_ACCEPTED,
-        REJECT_HANDOVER,
+        RELEASE_REJECTED,
         CONTROL_READY,
         OPEN_CHANNELS,
         CLOSE_CHANNELS,

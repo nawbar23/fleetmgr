@@ -55,7 +55,7 @@ public class ReleasingControl extends State {
                         .build());
                 return null;
 
-            case REJECT_HANDOVER:
+            case RELEASE_REJECTED:
                 ReleaseRejected releaseRejected = (ReleaseRejected)event;
                 send(ClientMessage.newBuilder()
                         .setCommand(Command.RELEASE_CONTROL)
