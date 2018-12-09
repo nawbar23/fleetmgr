@@ -42,10 +42,10 @@ public class Connected extends State {
 
     private State onNewState(State newState) {
         boolean wasRecovering = internalState instanceof Recovering;
-        if (newState != null) {
+        while (newState != null) {
             trace("Connected transition: " + toString() + " -> Connected." + newState.toString());
             internalState = newState;
-            internalState.start();
+            newState = (State)internalState.start();
         }
         if (internalState instanceof Released) {
             return new Disconnecting(this, wasRecovering);
