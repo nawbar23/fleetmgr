@@ -76,9 +76,22 @@ set(SOURCES
     ${PROJECT_SOURCE_DIR}/source/core/https/IHttpsClient.cpp
     ${PROJECT_SOURCE_DIR}/source/event/input/IInputEvent.cpp
     ${PROJECT_SOURCE_DIR}/source/event/input/user/UserEvent.cpp
+    ${PROJECT_SOURCE_DIR}/source/event/input/user/CloseChannels.cpp
+    ${PROJECT_SOURCE_DIR}/source/event/input/user/OpenChannels.cpp
+    ${PROJECT_SOURCE_DIR}/source/event/input/user/Operate.cpp
+    ${PROJECT_SOURCE_DIR}/source/event/input/user/ReleaseAccepted.cpp
+    ${PROJECT_SOURCE_DIR}/source/event/input/user/ReleaseRejected.cpp
     ${PROJECT_SOURCE_DIR}/source/event/input/connection/ConnectionEvent.cpp
     ${PROJECT_SOURCE_DIR}/source/event/input/connection/Received.cpp
     ${PROJECT_SOURCE_DIR}/source/event/output/FacadeEvent.cpp
+    ${PROJECT_SOURCE_DIR}/source/event/output/ChannelsClosed.cpp
+    ${PROJECT_SOURCE_DIR}/source/event/output/ChannelsOpened.cpp
+    ${PROJECT_SOURCE_DIR}/source/event/output/Error.cpp
+    ${PROJECT_SOURCE_DIR}/source/event/output/HandoverAccepted.cpp
+    ${PROJECT_SOURCE_DIR}/source/event/output/HandoverRejected.cpp
+    ${PROJECT_SOURCE_DIR}/source/event/output/Message.cpp
+    ${PROJECT_SOURCE_DIR}/source/event/output/OperationEnded.cpp
+    ${PROJECT_SOURCE_DIR}/source/event/output/OperationStarted.cpp
     ${PROJECT_SOURCE_DIR}/source/backend/ClientBackend.cpp
     ${PROJECT_SOURCE_DIR}/source/backend/HeartbeatHandler.cpp
     ${PROJECT_SOURCE_DIR}/source/state/IState.cpp
@@ -132,9 +145,23 @@ set(HEADERS
     ${PROJECT_SOURCE_DIR}/include/core/https/IHttpsClient.hpp
     ${PROJECT_SOURCE_DIR}/include/event/input/IInputEvent.hpp
     ${PROJECT_SOURCE_DIR}/include/event/input/user/UserEvent.hpp
+    ${PROJECT_SOURCE_DIR}/include/event/input/user/CloseChannels.hpp
+    ${PROJECT_SOURCE_DIR}/include/event/input/user/OpenChannels.hpp
+    ${PROJECT_SOURCE_DIR}/include/event/input/user/Operate.hpp
+    ${PROJECT_SOURCE_DIR}/include/event/input/user/ReleaseAccepted.hpp
+    ${PROJECT_SOURCE_DIR}/include/event/input/user/ReleaseRejected.hpp
     ${PROJECT_SOURCE_DIR}/include/event/input/connection/ConnectionEvent.hpp
     ${PROJECT_SOURCE_DIR}/include/event/input/connection/Received.hpp
     ${PROJECT_SOURCE_DIR}/include/event/output/FacadeEvent.hpp
+    ${PROJECT_SOURCE_DIR}/include/event/output/ChannelsClosed.hpp
+    ${PROJECT_SOURCE_DIR}/include/event/output/ChannelsOpened.hpp
+    ${PROJECT_SOURCE_DIR}/include/event/output/Error.hpp
+    ${PROJECT_SOURCE_DIR}/include/event/output/HandoverAccepted.hpp
+    ${PROJECT_SOURCE_DIR}/include/event/output/HandoverRejected.hpp
+    ${PROJECT_SOURCE_DIR}/include/event/output/Message.hpp
+    ${PROJECT_SOURCE_DIR}/include/event/output/OperationEnded.hpp
+    ${PROJECT_SOURCE_DIR}/include/event/output/OperationStarted.hpp
+    ${PROJECT_SOURCE_DIR}/include/event/output/ChannelsClosed.hpp
     ${PROJECT_SOURCE_DIR}/include/backend/ClientBackend.hpp
     ${PROJECT_SOURCE_DIR}/include/backend/HeartbeatHandler.hpp
     ${PROJECT_SOURCE_DIR}/include/state/IState.hpp
