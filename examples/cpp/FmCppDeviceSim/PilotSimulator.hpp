@@ -8,7 +8,7 @@
 class PilotSimulator : public ISimulator
 {
 public:
-    PilotSimulator();
+    PilotSimulator(boost::asio::io_service&);
 
 private:
     std::unique_ptr<fm::Pilot> pilot;

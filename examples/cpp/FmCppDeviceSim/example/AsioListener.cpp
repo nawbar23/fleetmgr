@@ -11,7 +11,8 @@ using namespace fm::event;
 
 using com::fleetmgr::interfaces::Location;
 
-AsioListener::AsioListener()
+AsioListener::AsioListener(boost::asio::io_service& _ioService) :
+    ioService(_ioService)
 {
 }
 
@@ -23,6 +24,11 @@ AsioListener::~AsioListener()
 void AsioListener::onEvent(const std::shared_ptr<const fm::event::output::FacadeEvent> event)
 {
     trace("AsioListener::onEvent Emmited: " + event->toString());
+}
+
+void AsioListener::execute(std::function<void(void)> task)
+{
+    ioService.post(task);
 }
 
 void AsioListener::trace(const std::string& message)

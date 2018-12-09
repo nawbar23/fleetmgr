@@ -12,7 +12,7 @@
 class ISimulator : public AsioListener
 {
 public:
-    ISimulator();
+    ISimulator(boost::asio::io_service&);
 
     void start(AsioHttpsClient&, const std::string&);
 

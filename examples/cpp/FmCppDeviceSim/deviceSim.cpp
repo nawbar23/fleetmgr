@@ -15,8 +15,22 @@ int main(int, char**)
 
     AsioHttpsClient core(host, port, apiKey);
 
-    DeviceSimulator simulator;
+    boost::asio::io_service ioService;
+
+    DeviceSimulator simulator(ioService);
     simulator.start(core, facadeCertPath);
+
+    while (not simulator.isDone())
+    {
+        try
+        {
+            ioService.run();
+        }
+        catch (const std::exception& e)
+        {
+            std::cout << "Task execution error: " << e.what() << std::endl;
+        }
+    }
 
     std::cout << " >>>>>>> DONE <<<<<<<" << std::endl;
     return 0;

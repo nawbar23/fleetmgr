@@ -8,7 +8,7 @@
 class DeviceSimulator : public ISimulator
 {
 public:
-    DeviceSimulator();
+    DeviceSimulator(boost::asio::io_service&);
 
 private:
     std::unique_ptr<fm::Device> device;

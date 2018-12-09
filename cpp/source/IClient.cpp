@@ -21,15 +21,18 @@ IClient::~IClient()
 
 void IClient::notifyEvent(const std::shared_ptr<const event::input::IInputEvent> event)
 {
-    std::lock_guard<std::mutex> lockGuard(stateLock);
-    listener.trace("Handling: " + event->toString() + " @ " + state->toString());
-    std::unique_ptr<state::IState> newState = state->handleEvent(event);
-    while (nullptr != newState.get())
+    listener.execute([this, event] ()
     {
-        listener.trace("Transition: " + state->toString() + " -> " + newState->toString());
-        state.swap(newState);
-        newState.reset(state->start().release());
-    }
+        std::lock_guard<std::mutex> lockGuard(stateLock);
+        listener.trace("Handling: " + event->toString() + " @ " + state->toString());
+        std::unique_ptr<state::IState> newState = state->handleEvent(event);
+        while (nullptr != newState.get())
+        {
+            listener.trace("Transition: " + state->toString() + " -> " + newState->toString());
+            state.swap(newState);
+            newState.reset(state->start().release());
+        }
+    });
 }
 
 std::string IClient::getStateName() const

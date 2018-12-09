@@ -8,7 +8,8 @@ using namespace fm::event;
 using fm::event::input::user::UserEvent;
 using fm::event::output::FacadeEvent;
 
-ISimulator::ISimulator() :
+ISimulator::ISimulator(boost::asio::io_service& ioService) :
+    AsioListener(ioService),
     done(false)
 {
 }
@@ -16,17 +17,6 @@ ISimulator::ISimulator() :
 void ISimulator::start(AsioHttpsClient& core, const std::string& facadeCertPath)
 {
     startImpl(core, facadeCertPath);
-
-    while (not done.load())
-    {
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
-        std::lock_guard<std::mutex> lock(queueLock);
-        while (not eventQueue.empty())
-        {
-            handleEvent(eventQueue.front());
-            eventQueue.pop_front();
-        }
-    }
 }
 
 bool ISimulator::isDone()
@@ -36,7 +26,5 @@ bool ISimulator::isDone()
 
 void ISimulator::onEvent(const std::shared_ptr<const FacadeEvent> event)
 {
-    trace("DeviceSimulator::onEvent Emmited: " + event->toString());
-    std::lock_guard<std::mutex> lock(queueLock);
-    eventQueue.push_back(event);
+    handleEvent(event);
 }

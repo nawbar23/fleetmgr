@@ -29,8 +29,6 @@ class ClientBackend
 public:
     ClientBackend(IClient&, IClient::Listener&, core::https::IHttpsClient&, const std::string&);
 
-    ~ClientBackend();
-
     core::CoreClient& getCore();
 
     HeartbeatHandler& getHeartbeatHandler();
@@ -68,7 +66,8 @@ private:
     com::fleetmgr::interfaces::facade::control::ControlMessage>> stream;
 
     std::atomic<bool> keepReader;
-    std::thread reader;
+
+    void proceeReader();
 
     void readCert(const std::string&, std::string&);
 };

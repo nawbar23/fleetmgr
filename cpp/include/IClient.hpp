@@ -15,8 +15,7 @@
 
 #include <memory>
 #include <mutex>
-#include <thread>
-#include <atomic>
+#include <functional>
 
 namespace fm
 {
@@ -45,6 +44,8 @@ public:
         virtual ~Listener();
 
         virtual void onEvent(const std::shared_ptr<const event::output::FacadeEvent>) = 0;
+
+        virtual void execute(std::function<void(void)>) = 0;
 
         virtual void trace(const std::string&) = 0;
 

@@ -26,14 +26,6 @@ ClientBackend::ClientBackend(IClient& _client, IClient::Listener& _listener, cor
 {
 }
 
-ClientBackend::~ClientBackend()
-{
-    if (reader.joinable())
-    {
-        reader.join();
-    }
-}
-
 core::CoreClient& ClientBackend::getCore()
 {
     return core;
@@ -41,7 +33,7 @@ core::CoreClient& ClientBackend::getCore()
 
 HeartbeatHandler& ClientBackend::getHeartbeatHandler()
 {
-   return heartbeatHandler;
+    return heartbeatHandler;
 }
 
 std::unique_ptr<Location> ClientBackend::getLocation()
@@ -73,18 +65,9 @@ void ClientBackend::openFacadeConnection(const std::string& host, const int port
     stream = stub->control(&context);
 
     keepReader.store(true);
-    reader = std::thread([this] ()
-    {
-        std::shared_ptr<ControlMessage> controlMessage = std::make_shared<ControlMessage>();
-        while (stream->Read(controlMessage.get()) && keepReader.load())
-        {
-            using event::input::connection::Received;
-            client.notifyEvent(std::make_shared<Received>(controlMessage));
-            controlMessage = std::make_shared<ControlMessage>();
-        }
-        trace("Reception task done");
-    });
+    listener.execute(std::bind(&ClientBackend::proceeReader, this));
 }
+
 
 void ClientBackend::closeFacadeConnection()
 {
@@ -108,6 +91,21 @@ void ClientBackend::send(const ClientMessage& message)
 void ClientBackend::trace(const std::string& message)
 {
     listener.trace(message);
+}
+
+void ClientBackend::proceeReader()
+{
+    std::shared_ptr<ControlMessage> controlMessage = std::make_shared<ControlMessage>();
+    if (stream->Read(controlMessage.get()))
+    {
+        using event::input::connection::Received;
+        client.notifyEvent(std::make_shared<Received>(controlMessage));
+    }
+
+    if (keepReader.load())
+    {
+        listener.execute(std::bind(&ClientBackend::proceeReader, this));
+    }
 }
 
 void ClientBackend::readCert(const std::string& filename, std::string& data)

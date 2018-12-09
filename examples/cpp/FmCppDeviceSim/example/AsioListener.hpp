@@ -10,18 +10,22 @@
 
 #include "TimerThread.hpp"
 
+#include <boost/asio.hpp>
+
 #include <memory>
 
 class AsioListener : public fm::IClient::Listener
 {
 public:
-    AsioListener();
+    AsioListener(boost::asio::io_service&);
 
     ~AsioListener() override;
 
     bool isDone();
 
     virtual void onEvent(const std::shared_ptr<const fm::event::output::FacadeEvent> event) override;
+
+    void execute(std::function<void(void)>) override;
 
     void trace(const std::string& message) override;
 
@@ -32,6 +36,8 @@ public:
     std::shared_ptr<fm::traffic::socket::ISocket> createSocket(const fm::traffic::socket::ISocket::Protocol protocol) override;
 
 private:
+    boost::asio::io_service& ioService;
+
     TimerThread timerThread;
 
     std::atomic<bool> done;
