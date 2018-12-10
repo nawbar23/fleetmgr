@@ -1,10 +1,15 @@
 #include "state/pilot/Disconnected.hpp"
 
+#include "event/input/user/Operate.hpp"
+
+#include "state/pilot/Connecting.hpp"
+
 using namespace fm;
 using namespace fm::state;
 using namespace fm::state::pilot;
 
 using event::input::user::UserEvent;
+using event::input::user::Operate;
 using event::input::connection::ConnectionEvent;
 
 using event::output::FacadeEvent;
@@ -26,7 +31,17 @@ std::unique_ptr<IState> Disconnected::start()
 
 std::unique_ptr<IState> Disconnected::handleUserEvent(const UserEvent& event)
 {
-    return defaultEventHandle(event.toString());
+    switch (event.getType())
+    {
+    case UserEvent::OPERATE:
+    {
+        const Operate& o = reinterpret_cast<const Operate&>(event);
+        return std::make_unique<Connecting>(*this, o.getDeviceId(), o.getChannels());
+    }
+
+    default:
+        return defaultEventHandle(event.toString());
+    }
 }
 
 std::string Disconnected::toString() const

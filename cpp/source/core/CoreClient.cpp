@@ -54,14 +54,15 @@ ListDevicesResponse CoreClient::listDevices()
     std::string responseString =
             client.execute("/devices/", https::IHttpsClient::GET, "");
     std::cout << "List devices response: " << responseString << std::endl;
+    std::string responseJson = "{ \"devices\" : " + responseString + " }";
     ListDevicesResponse response;
-    Status status = JsonStringToMessage(responseString, &response, options);
+    Status status = JsonStringToMessage(responseJson, &response, options);
     if (Status::OK == status)
     {
         return response;
     }
     else
     {
-        throw std::runtime_error("Could not parse response: " + responseString);
+        throw std::runtime_error("Could not parse response: " + responseJson);
     }
 }

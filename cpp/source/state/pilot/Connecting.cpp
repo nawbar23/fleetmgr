@@ -7,6 +7,8 @@
 
 #include "backend/ClientBackend.hpp"
 
+#include "core/attach.pb.h"
+
 using namespace fm;
 using namespace fm::state;
 using namespace fm::state::pilot;
@@ -19,14 +21,46 @@ using event::input::connection::Received;
 
 using event::output::FacadeEvent;
 
-Connecting::Connecting(IState& state) :
-    IState(state)
+using com::fleetmgr::interfaces::OperateRequest;
+using com::fleetmgr::interfaces::OperateResponse;
+
+Connecting::Connecting(IState& state, long _deviceId, const std::vector<long>& _channels) :
+    IState(state),
+    deviceId(_deviceId),
+    channels(_channels)
 {
 }
 
 std::unique_ptr<IState> Connecting::start()
 {
-    return nullptr;
+    try
+    {
+        OperateRequest request;
+        request.set_requesteddeviceid(deviceId);
+        OperateResponse operateResponse = backend.getCore().operate(request);
+
+        backend.openFacadeConnection(
+                    operateResponse.host(),
+                    operateResponse.port());
+        initialRole = operateResponse.role();
+
+        ClientMessage message;
+        message.set_command(Command::SETUP);
+        message.mutable_attach()->set_key(operateResponse.key());
+        for (long c : channels)
+        {
+            message.mutable_requestchannels()->add_channelid(c);
+        }
+        send(message);
+
+        return nullptr;
+    }
+    catch(std::exception const& e)
+    {
+        trace("Operate error: " + std::string(e.what()));
+        listener.onEvent(std::make_shared<const FacadeEvent>(FacadeEvent::ERROR));
+        return std::make_unique<Disconnected>(*this);
+    }
 }
 
 std::unique_ptr<IState> Connecting::handleUserEvent(const UserEvent& event)

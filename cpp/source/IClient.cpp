@@ -35,6 +35,11 @@ void IClient::notifyEvent(const std::shared_ptr<const event::input::IInputEvent>
     });
 }
 
+void IClient::trace(const std::string& message)
+{
+    listener.trace(message);
+}
+
 std::string IClient::getStateName() const
 {
     return state->toString();

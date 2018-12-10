@@ -3,6 +3,10 @@
 
 #include "state/IState.hpp"
 
+#include "common/role.pb.h"
+
+#include <vector>
+
 namespace fm
 {
 
@@ -20,7 +24,7 @@ namespace pilot
 class Connecting : public IState
 {
 public:
-    Connecting(IState&);
+    Connecting(IState&, long, const std::vector<long>&);
 
     std::unique_ptr<IState> start() override;
 
@@ -31,6 +35,12 @@ public:
     std::string toString() const override;
 
     std::unique_ptr<IState> handleMessage(const com::fleetmgr::interfaces::facade::control::ControlMessage&);
+
+private:
+    long deviceId;
+    std::vector<long> channels;
+
+    com::fleetmgr::interfaces::Role initialRole;
 };
 
 } // pilot

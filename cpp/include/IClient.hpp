@@ -60,6 +60,8 @@ public:
 
     void notifyEvent(const std::shared_ptr<const event::input::IInputEvent>);
 
+    void trace(const std::string& message);
+
     std::string getStateName() const;
 
     virtual std::string toString() const = 0;

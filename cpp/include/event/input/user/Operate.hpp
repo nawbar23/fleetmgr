@@ -3,6 +3,8 @@
 
 #include "event/input/user/UserEvent.hpp"
 
+#include <vector>
+
 namespace fm
 {
 
@@ -23,15 +25,17 @@ namespace user
 class Operate : public UserEvent
 {
 public:
-    Operate(long deviceId);
+    Operate(long, const std::vector<long>&);
 
     std::string toString() const override;
 
     long getDeviceId() const;
 
+    const std::vector<long>& getChannels() const;
+
 private:
     long deviceId;
-
+    std::vector<long> channels;
 };
 
 } // user

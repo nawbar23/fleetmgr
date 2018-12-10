@@ -26,9 +26,11 @@ void PilotSimulator::start(AsioHttpsClient& core, const std::string& facadeCertP
     if (response.devices_size() > 0)
     {
         long deviceId = response.devices(0).id();
-        execute([this, deviceId] ()
+        std::vector<long> channels{1, 3, 8};
+        std::shared_ptr<const Operate> o = std::make_shared<const Operate>(deviceId, channels);
+        execute([this, o] ()
         {
-            pilot->notifyEvent(std::make_shared<const Operate>(deviceId));
+            pilot->notifyEvent(o);
         });
     }
     else
