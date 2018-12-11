@@ -74,10 +74,10 @@ std::string AsioHttpsClient::execute(const std::string& path, Method method, con
     req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
     req.set(http::field::authorization, apiKey);
     req.set(http::field::accept, "application/json");
-    req.set(http::field::content_type, "application/json");
 
     if (not body.empty())
     {
+        req.set(http::field::content_type, "application/json");
         req.set(http::field::content_length, body.size());
         req.body() = body;
     }
@@ -93,8 +93,6 @@ std::string AsioHttpsClient::execute(const std::string& path, Method method, con
 
     // Receive the HTTP response
     http::read(stream, buffer, res);
-
-    std::cout << "bbb" << std::endl;
 
     // Gracefully close the stream
     beast::error_code ec;

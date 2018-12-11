@@ -1,9 +1,12 @@
 #include "state/device/Connecting.hpp"
 
 #include "state/device/Disconnected.hpp"
+#include "state/device/Disconnecting.hpp"
 #include "state/device/Connected.hpp"
 
 #include "event/input/connection/Received.hpp"
+
+#include "event/output/Error.hpp"
 
 #include "backend/ClientBackend.hpp"
 
@@ -20,6 +23,7 @@ using event::input::connection::ConnectionEvent;
 using event::input::connection::Received;
 
 using event::output::FacadeEvent;
+using event::output::Error;
 
 using com::fleetmgr::interfaces::AttachResponse;
 
@@ -77,15 +81,20 @@ std::string Connecting::toString() const
 
 std::unique_ptr<IState> Connecting::handleMessage(const ControlMessage& message)
 {
-    if (message.command() == Command::SETUP &&
-            message.response() == Response::ACCEPTED)
+    switch (message.command())
     {
-        return std::make_unique<Connected>(*this);
-    }
-    else
-    {
-        backend.closeFacadeConnection();
-        listener.onEvent(std::make_shared<FacadeEvent>(FacadeEvent::ERROR));
-        return std::make_unique<Disconnected>(*this);
+    case Command::SETUP:
+        if (message.response() == Response::ACCEPTED)
+        {
+            return std::make_unique<Connected>(*this);
+        }
+        else
+        {
+            listener.onEvent(std::make_shared<Error>());
+            return std::make_unique<Disconnecting>(*this);
+        }
+
+    default:
+        return defaultMessageHandle(message);
     }
 }

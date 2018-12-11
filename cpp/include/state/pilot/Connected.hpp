@@ -3,6 +3,11 @@
 
 #include "state/IState.hpp"
 
+#include "common/role.pb.h"
+#include "common/channel.pb.h"
+
+#include <vector>
+
 namespace fm
 {
 
@@ -20,7 +25,7 @@ namespace pilot
 class Connected : public IState
 {
 public:
-    Connected(IState&);
+    Connected(IState&, com::fleetmgr::interfaces::Role, const std::vector<com::fleetmgr::interfaces::Channel>&);
 
     std::unique_ptr<IState> start() override;
 
@@ -32,6 +37,8 @@ public:
 
 private:
     std::unique_ptr<state::IState> internalState;
+
+    com::fleetmgr::interfaces::Role initialRole;
 
     std::unique_ptr<IState> onNewState(std::unique_ptr<IState>);
 };

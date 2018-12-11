@@ -1,8 +1,11 @@
 #include "state/device/connected/Ready.hpp"
 
 #include "state/device/connected/Releasing.hpp"
+#include "state/device/connected/Flying.hpp"
 
 #include "event/input/connection/Received.hpp"
+
+#include "core/attach.pb.h"
 
 using namespace fm;
 using namespace fm::state;
@@ -16,6 +19,8 @@ using event::input::connection::ConnectionEvent;
 using event::input::connection::Received;
 
 using event::output::FacadeEvent;
+
+using com::fleetmgr::interfaces::Channel;
 
 Ready::Ready(IState& state) :
     IState(state)
@@ -58,5 +63,19 @@ std::unique_ptr<IState> Ready::handleConnectionEvent(const ConnectionEvent& even
 
 std::unique_ptr<IState> Ready::handleMessage(const ControlMessage& message)
 {
-    return defaultMessageHandle(message);
+    switch (message.command())
+    {
+    case Command::ATTACH_CHANNELS:
+    {
+        std::vector<Channel> openedeChannels(message.attachchannels().channels_size());
+        for (int i = 0; i < message.attachchannels().channels_size(); ++i)
+        {
+            openedeChannels.push_back(message.attachchannels().channels(i));
+        }
+        return std::make_unique<Flying>(*this, openedeChannels);
+    }
+
+    default:
+        return defaultMessageHandle(message);
+    }
 }

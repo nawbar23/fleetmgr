@@ -3,6 +3,11 @@
 
 #include "state/IState.hpp"
 
+#include "common/role.pb.h"
+#include "common/channel.pb.h"
+
+#include <vector>
+
 namespace fm
 {
 
@@ -23,7 +28,7 @@ namespace connected
 class ValidatingChannels : public IState
 {
 public:
-    ValidatingChannels(IState&);
+    ValidatingChannels(IState&, com::fleetmgr::interfaces::Role, const std::vector<com::fleetmgr::interfaces::Channel>&);
 
     std::unique_ptr<IState> start() override;
 
@@ -34,6 +39,10 @@ public:
     std::unique_ptr<IState> handleConnectionEvent(const event::input::connection::ConnectionEvent&) override;
 
 private:
+    com::fleetmgr::interfaces::Role role;
+
+    const std::vector<com::fleetmgr::interfaces::Channel> toValidate;
+
     std::unique_ptr<IState> handleMessage(const com::fleetmgr::interfaces::facade::control::ControlMessage&);
 };
 

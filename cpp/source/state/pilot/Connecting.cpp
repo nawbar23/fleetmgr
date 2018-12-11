@@ -1,9 +1,12 @@
 #include "state/pilot/Connecting.hpp"
 
 #include "state/pilot/Disconnected.hpp"
+#include "state/pilot/Disconnecting.hpp"
 #include "state/pilot/Connected.hpp"
 
 #include "event/input/connection/Received.hpp"
+
+#include "event/output/Error.hpp"
 
 #include "backend/ClientBackend.hpp"
 
@@ -20,9 +23,11 @@ using event::input::connection::ConnectionEvent;
 using event::input::connection::Received;
 
 using event::output::FacadeEvent;
+using event::output::Error;
 
 using com::fleetmgr::interfaces::OperateRequest;
 using com::fleetmgr::interfaces::OperateResponse;
+using com::fleetmgr::interfaces::Channel;
 
 Connecting::Connecting(IState& state, long _deviceId, const std::vector<long>& _channels) :
     IState(state),
@@ -82,16 +87,26 @@ std::unique_ptr<IState> Connecting::handleConnectionEvent(const ConnectionEvent&
 
 std::unique_ptr<IState> Connecting::handleMessage(const ControlMessage& message)
 {
-    if (message.command() == Command::SETUP &&
-            message.response() == Response::ACCEPTED)
+    switch (message.command())
     {
-        return std::make_unique<Connected>(*this);
-    }
-    else
-    {
-        backend.closeFacadeConnection();
-        listener.onEvent(std::make_shared<FacadeEvent>(FacadeEvent::ERROR));
-        return std::make_unique<Disconnected>(*this);
+    case Command::SETUP:
+        if (message.response() == Response::ACCEPTED)
+        {
+            std::vector<Channel> openedChannels(message.requestchannels().channel_size());
+            for (int i = 0; i < message.requestchannels().channel_size(); ++i)
+            {
+                openedChannels.push_back(message.requestchannels().channel(i));
+            }
+            return std::make_unique<Connected>(*this, initialRole, openedChannels);
+        }
+        else
+        {
+            listener.onEvent(std::make_shared<Error>());
+            return std::make_unique<Disconnecting>(*this);
+        }
+
+    default:
+        return defaultMessageHandle(message);
     }
 }
 

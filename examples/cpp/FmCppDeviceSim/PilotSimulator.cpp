@@ -44,10 +44,6 @@ void PilotSimulator::handleEvent(const std::shared_ptr<const FacadeEvent> event)
     switch (event->getType())
     {
     case FacadeEvent::OPERATION_STARTED:
-        execute([this] ()
-        {
-            pilot->notifyEvent(std::make_shared<UserEvent>(UserEvent::RELEASE));
-        });
         break;
 
     case FacadeEvent::ERROR:
