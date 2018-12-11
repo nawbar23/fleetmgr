@@ -70,7 +70,7 @@ public class HttpsClient {
 
         } else {
             String cause = "Request failed with code: " + result;
-            if (result > HttpURLConnection.HTTP_BAD_REQUEST) {
+            if (result >= HttpURLConnection.HTTP_BAD_REQUEST) {
                 cause += " " + readResponse(con.getErrorStream());
             }
             throw new IOException(cause);
