@@ -26,6 +26,8 @@ AsioHttpsClient::AsioHttpsClient(const std::string& host, const int port, const 
 
 std::string AsioHttpsClient::execute(const std::string& path, Method method, const std::string& body)
 {
+    std::cout << "Executing HTTPS request, path:" << path << " body: " << (body.empty() ? "-" : body) << std::endl;
+
     constexpr int version = 11;
 
     // The io_context is required for all I/O
@@ -71,9 +73,14 @@ std::string AsioHttpsClient::execute(const std::string& path, Method method, con
     req.set(http::field::host, host);
     req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
     req.set(http::field::authorization, apiKey);
-    req.set(http::field::content_type, "application/json");
     req.set(http::field::accept, "application/json");
-    req.set(http::field::body, body);
+    req.set(http::field::content_type, "application/json");
+
+    if (not body.empty())
+    {
+        req.set(http::field::content_length, body.size());
+        req.body() = body;
+    }
 
     // Send the HTTP request to the remote host
     http::write(stream, req);
@@ -86,6 +93,8 @@ std::string AsioHttpsClient::execute(const std::string& path, Method method, con
 
     // Receive the HTTP response
     http::read(stream, buffer, res);
+
+    std::cout << "bbb" << std::endl;
 
     // Gracefully close the stream
     beast::error_code ec;
