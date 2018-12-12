@@ -1,6 +1,6 @@
 package com.fleetmgr.sdk.system.capsule;
 
-import javafx.util.Pair;
+import com.fleetmgr.sdk.system.Pair;
 
 import java.util.LinkedList;
 import java.util.Queue;
