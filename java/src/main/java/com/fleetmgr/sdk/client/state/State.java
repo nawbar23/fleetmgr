@@ -60,9 +60,9 @@ public abstract class State implements
         }
     }
 
-    protected abstract State notifyConnection(ConnectionEvent event);
-
     protected abstract State notifyEvent(UserEvent event);
+
+    protected abstract State notifyConnection(ConnectionEvent event);
 
     public void send(ClientMessage message) {
         backend.send(message);

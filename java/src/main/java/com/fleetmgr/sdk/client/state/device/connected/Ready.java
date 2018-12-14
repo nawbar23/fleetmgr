@@ -23,13 +23,10 @@ public class Ready extends State {
     }
 
     @Override
-    public State notifyConnection(ConnectionEvent event) {
+    public State notifyEvent(UserEvent event) {
         switch (event.getType()) {
-            case RECEIVED:
-                return handleMessage(((Received)event).getMessage());
-
-            case LOST:
-                return new Recovering(this);
+            case RELEASE:
+                return new Releasing(this);
 
             default:
                 return defaultEventHandle(event.toString());
@@ -37,10 +34,13 @@ public class Ready extends State {
     }
 
     @Override
-    public State notifyEvent(UserEvent event) {
+    public State notifyConnection(ConnectionEvent event) {
         switch (event.getType()) {
-            case RELEASE:
-                return new Releasing(this);
+            case RECEIVED:
+                return handleMessage(((Received)event).getMessage());
+
+            case LOST:
+                return new Recovering(this);
 
             default:
                 return defaultEventHandle(event.toString());

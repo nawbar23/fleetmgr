@@ -46,12 +46,11 @@ public class ValidatingChannels extends State {
         return null;
     }
 
-
     @Override
-    public State notifyConnection(ConnectionEvent event) {
+    public State notifyEvent(UserEvent event) {
         switch (event.getType()) {
-            case RECEIVED:
-                return handleMessage(((Received) event).getMessage());
+            case RELEASE:
+                return new Releasing(this);
 
             default:
                 return defaultEventHandle(event.toString());
@@ -59,10 +58,10 @@ public class ValidatingChannels extends State {
     }
 
     @Override
-    public State notifyEvent(UserEvent event) {
+    public State notifyConnection(ConnectionEvent event) {
         switch (event.getType()) {
-            case RELEASE:
-                return new Releasing(this);
+            case RECEIVED:
+                return handleMessage(((Received) event).getMessage());
 
             default:
                 return defaultEventHandle(event.toString());

@@ -32,20 +32,6 @@ public class Controlling extends State {
     }
 
     @Override
-    public State notifyConnection(ConnectionEvent event) {
-        switch (event.getType()) {
-            case RECEIVED:
-                return handleMessage(((Received) event).getMessage());
-
-            case LOST:
-                return new Recovering(this);
-
-            default:
-                return defaultEventHandle(event.toString());
-        }
-    }
-
-    @Override
     public State notifyEvent(UserEvent event) {
         switch (event.getType()) {
             case OPEN_CHANNELS:
@@ -71,6 +57,20 @@ public class Controlling extends State {
 
             case RELEASE:
                 return new Releasing(this);
+
+            default:
+                return defaultEventHandle(event.toString());
+        }
+    }
+
+    @Override
+    public State notifyConnection(ConnectionEvent event) {
+        switch (event.getType()) {
+            case RECEIVED:
+                return handleMessage(((Received) event).getMessage());
+
+            case LOST:
+                return new Recovering(this);
 
             default:
                 return defaultEventHandle(event.toString());

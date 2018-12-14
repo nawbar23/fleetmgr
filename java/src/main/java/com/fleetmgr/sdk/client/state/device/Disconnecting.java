@@ -38,6 +38,14 @@ public class Disconnecting extends State {
     }
 
     @Override
+    public State notifyEvent(UserEvent event) {
+        switch (event.getType()) {
+            default:
+                return defaultEventHandle(event.toString());
+        }
+    }
+
+    @Override
     public State notifyConnection(ConnectionEvent event) {
         switch (event.getType()) {
             case CLOSED:
@@ -45,14 +53,6 @@ public class Disconnecting extends State {
                 listener.onEvent(new FacadeEvent(FacadeEvent.Type.RELEASED));
                 return new Disconnected(this);
 
-            default:
-                return defaultEventHandle(event.toString());
-        }
-    }
-
-    @Override
-    public State notifyEvent(UserEvent event) {
-        switch (event.getType()) {
             default:
                 return defaultEventHandle(event.toString());
         }

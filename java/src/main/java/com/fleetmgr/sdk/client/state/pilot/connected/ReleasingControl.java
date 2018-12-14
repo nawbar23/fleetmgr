@@ -31,17 +31,6 @@ public class ReleasingControl extends State {
     }
 
     @Override
-    public State notifyConnection(ConnectionEvent event) {
-        switch (event.getType()) {
-            case RECEIVED:
-                return handleMessage(((Received)event).getMessage());
-
-            default:
-                return defaultEventHandle(event.toString());
-        }
-    }
-
-    @Override
     public State notifyEvent(UserEvent event) {
         switch (event.getType()) {
             case RELEASE_ACCEPTED:
@@ -63,6 +52,17 @@ public class ReleasingControl extends State {
                         .setMessage(releaseRejected.getMessage())
                         .build());
                 return new Controlling(this);
+
+            default:
+                return defaultEventHandle(event.toString());
+        }
+    }
+
+    @Override
+    public State notifyConnection(ConnectionEvent event) {
+        switch (event.getType()) {
+            case RECEIVED:
+                return handleMessage(((Received)event).getMessage());
 
             default:
                 return defaultEventHandle(event.toString());

@@ -58,6 +58,11 @@ public class Connecting extends State {
     }
 
     @Override
+    public State notifyEvent(UserEvent event) {
+        return defaultEventHandle(event.toString());
+    }
+
+    @Override
     public State notifyConnection(ConnectionEvent event) {
         switch (event.getType()) {
             case RECEIVED:
@@ -66,11 +71,6 @@ public class Connecting extends State {
             default:
                 return defaultEventHandle(event.toString());
         }
-    }
-
-    @Override
-    public State notifyEvent(UserEvent event) {
-        return defaultEventHandle(event.toString());
     }
 
     private State handleMessage(ControlMessage message) {

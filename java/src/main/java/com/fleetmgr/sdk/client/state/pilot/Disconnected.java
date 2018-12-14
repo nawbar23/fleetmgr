@@ -33,11 +33,6 @@ public class Disconnected extends State {
     }
 
     @Override
-    public State notifyConnection(ConnectionEvent event) {
-        return defaultEventHandle(event.toString());
-    }
-
-    @Override
     public State notifyEvent(UserEvent event) {
         switch (event.getType()) {
             case OPERATE:
@@ -49,6 +44,11 @@ public class Disconnected extends State {
             default:
                 return defaultEventHandle(event.toString());
         }
+    }
+
+    @Override
+    public State notifyConnection(ConnectionEvent event) {
+        return defaultEventHandle(event.toString());
     }
 
     @Override

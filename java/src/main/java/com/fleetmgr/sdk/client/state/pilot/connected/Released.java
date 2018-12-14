@@ -21,15 +21,14 @@ public class Released extends State {
     }
 
     @Override
-    public State notifyConnection(ConnectionEvent event) {
-        return defaultEventHandle(event.toString());
-    }
-
-    @Override
     public State notifyEvent(UserEvent event) {
         return defaultEventHandle(event.toString());
     }
 
+    @Override
+    public State notifyConnection(ConnectionEvent event) {
+        return defaultEventHandle(event.toString());
+    }
 
     @Override
     public String toString() {

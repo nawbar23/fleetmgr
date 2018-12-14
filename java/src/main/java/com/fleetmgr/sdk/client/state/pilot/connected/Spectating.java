@@ -35,17 +35,6 @@ public class Spectating extends State {
     }
 
     @Override
-    public State notifyConnection(ConnectionEvent event) {
-        switch (event.getType()) {
-            case RECEIVED:
-                return handleMessage(((Received) event).getMessage());
-
-            default:
-                return defaultEventHandle(event.toString());
-        }
-    }
-
-    @Override
     public State notifyEvent(UserEvent event) {
         switch (event.getType()) {
             case OPEN_CHANNELS:
@@ -74,6 +63,17 @@ public class Spectating extends State {
 
             case RELEASE:
                 return new Releasing(this);
+
+            default:
+                return defaultEventHandle(event.toString());
+        }
+    }
+
+    @Override
+    public State notifyConnection(ConnectionEvent event) {
+        switch (event.getType()) {
+            case RECEIVED:
+                return handleMessage(((Received) event).getMessage());
 
             default:
                 return defaultEventHandle(event.toString());

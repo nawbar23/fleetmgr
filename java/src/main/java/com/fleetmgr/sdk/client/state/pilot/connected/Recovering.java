@@ -27,10 +27,10 @@ public class Recovering extends State {
     }
 
     @Override
-    public State notifyConnection(ConnectionEvent event) {
+    public State notifyEvent(UserEvent event) {
         switch (event.getType()) {
-            case RECEIVED:
-                return handleMessage(((Received)event).getMessage());
+            case RELEASE:
+                return new Released(this);
 
             default:
                 return defaultEventHandle(event.toString());
@@ -38,10 +38,10 @@ public class Recovering extends State {
     }
 
     @Override
-    public State notifyEvent(UserEvent event) {
+    public State notifyConnection(ConnectionEvent event) {
         switch (event.getType()) {
-            case RELEASE:
-                return new Released(this);
+            case RECEIVED:
+                return handleMessage(((Received)event).getMessage());
 
             default:
                 return defaultEventHandle(event.toString());

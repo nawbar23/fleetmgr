@@ -39,6 +39,14 @@ public class Flying extends State {
     }
 
     @Override
+    public State notifyEvent(UserEvent event) {
+        switch (event.getType()) {
+            default:
+                return defaultEventHandle(event.toString());
+        }
+    }
+
+    @Override
     public State notifyConnection(ConnectionEvent event) {
         switch (event.getType()) {
             case RECEIVED:
@@ -47,14 +55,6 @@ public class Flying extends State {
             case LOST:
                 return new Recovering(this);
 
-            default:
-                return defaultEventHandle(event.toString());
-        }
-    }
-
-    @Override
-    public State notifyEvent(UserEvent event) {
-        switch (event.getType()) {
             default:
                 return defaultEventHandle(event.toString());
         }

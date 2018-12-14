@@ -31,12 +31,12 @@ public class Connected extends State {
     }
 
     @Override
-    public State notifyConnection(ConnectionEvent event) {
+    public State notifyEvent(UserEvent event) {
         return onNewState(internalState.handleEvent(event));
     }
 
     @Override
-    public State notifyEvent(UserEvent event) {
+    public State notifyConnection(ConnectionEvent event) {
         return onNewState(internalState.handleEvent(event));
     }
 

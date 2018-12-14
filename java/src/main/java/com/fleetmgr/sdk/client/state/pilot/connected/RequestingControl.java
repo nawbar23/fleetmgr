@@ -32,17 +32,6 @@ public class RequestingControl extends State {
     }
 
     @Override
-    public State notifyConnection(ConnectionEvent event) {
-        switch (event.getType()) {
-            case RECEIVED:
-                return handleMessage(((Received)event).getMessage());
-
-            default:
-                return defaultEventHandle(event.toString());
-        }
-    }
-
-    @Override
     public State notifyEvent(UserEvent event) {
         switch (event.getType()) {
             case CONTROL_READY:
@@ -50,6 +39,17 @@ public class RequestingControl extends State {
                         .setCommand(Command.CONTROL_READY)
                         .build());
                 return null;
+
+            default:
+                return defaultEventHandle(event.toString());
+        }
+    }
+
+    @Override
+    public State notifyConnection(ConnectionEvent event) {
+        switch (event.getType()) {
+            case RECEIVED:
+                return handleMessage(((Received)event).getMessage());
 
             default:
                 return defaultEventHandle(event.toString());
