@@ -30,6 +30,11 @@ long Operate::getDeviceId() const
     return deviceId;
 }
 
+std::vector<long>& Operate::getChannels()
+{
+    return channels;
+}
+
 const std::vector<long>& Operate::getChannels() const
 {
     return channels;

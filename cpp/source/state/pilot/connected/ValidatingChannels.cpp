@@ -8,6 +8,8 @@
 #include "event/output/ChannelsOpened.hpp"
 #include "event/output/Error.hpp"
 
+#include "backend/ClientBackend.hpp"
+
 using namespace fm;
 using namespace fm::state;
 using namespace fm::state::pilot;
@@ -35,10 +37,13 @@ ValidatingChannels::ValidatingChannels(IState& state, Role _role, const std::vec
 
 std::unique_ptr<IState> ValidatingChannels::start()
 {
-    // TODO backend->validateChannels(channels);
+    auto result = backend.validateChannels(toValidate);
     ClientMessage response;
     response.set_command(Command::CHANNELS_READY);
-    // TODO response.mutable_attachchannels()->...
+    for (auto& pair : result)
+    {
+        response.mutable_attachchannels()->add_attachedchannels(pair.first);
+    }
     send(response);
     return nullptr;
 }

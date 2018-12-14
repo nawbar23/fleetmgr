@@ -3,6 +3,8 @@
 
 #include "IClient.hpp"
 
+#include "traffic/Channel.hpp"
+
 #include "core/CoreClient.hpp"
 
 #include "backend/HeartbeatHandler.hpp"
@@ -40,6 +42,12 @@ public:
     void closeFacadeConnection();
 
     void send(const com::fleetmgr::interfaces::facade::control::ClientMessage& message);
+
+    std::unordered_map<long, traffic::Channel> validateChannels(const std::vector<com::fleetmgr::interfaces::Channel>&);
+
+    void closeChannels(const std::vector<long>&);
+
+    void closeAllChannels();
 
     // TODO Bartek argument should be changed to recursive template for optimization
     void trace(const std::string& message);

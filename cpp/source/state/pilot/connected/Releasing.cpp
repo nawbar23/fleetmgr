@@ -1,4 +1,4 @@
-#include "state/pilot/connected/Controlling.hpp"
+#include "state/pilot/connected/Releasing.hpp"
 
 #include "event/input/connection/Received.hpp"
 
@@ -15,31 +15,22 @@ using event::input::connection::Received;
 
 using event::output::FacadeEvent;
 
-Controlling::Controlling(IState& state) :
+Releasing::Releasing(IState& state) :
     IState(state)
 {
 }
 
-std::unique_ptr<IState> Controlling::start()
+std::unique_ptr<IState> Releasing::start()
 {
     return nullptr;
 }
 
-std::string Controlling::toString() const
+std::string Releasing::toString() const
 {
-    return "Controlling";
+    return "Releasing";
 }
 
-std::unique_ptr<IState> Controlling::handleUserEvent(const UserEvent& event)
-{
-    switch (event.getType())
-    {
-    default:
-        return defaultEventHandle(event.toString());
-    }
-}
-
-std::unique_ptr<IState> Controlling::handleConnectionEvent(const ConnectionEvent& event)
+std::unique_ptr<IState> Releasing::handleUserEvent(const UserEvent& event)
 {
     switch (event.getType())
     {
@@ -48,7 +39,16 @@ std::unique_ptr<IState> Controlling::handleConnectionEvent(const ConnectionEvent
     }
 }
 
-std::unique_ptr<IState> Controlling::handleMessage(const ControlMessage& message)
+std::unique_ptr<IState> Releasing::handleConnectionEvent(const ConnectionEvent& event)
+{
+    switch (event.getType())
+    {
+    default:
+        return defaultEventHandle(event.toString());
+    }
+}
+
+std::unique_ptr<IState> Releasing::handleMessage(const ControlMessage& message)
 {
     switch (message.command())
     {

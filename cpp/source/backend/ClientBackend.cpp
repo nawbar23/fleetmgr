@@ -128,6 +128,21 @@ void ClientBackend::send(const ClientMessage& message)
     stream->Write(message, (void*)2);
 }
 
+std::unordered_map<long, traffic::Channel> ClientBackend::validateChannels(const std::vector<Channel>&)
+{
+    trace("TODO ClientBackend::validateChannels missing implemenatation");
+}
+
+void ClientBackend::closeChannels(const std::vector<long>&)
+{
+    trace("TODO ClientBackend::closeChannels missing implemenatation");
+}
+
+void ClientBackend::closeAllChannels()
+{
+    trace("TODO ClientBackend::closeAllChannels missing implemenatation");
+}
+
 void ClientBackend::trace(const std::string& message)
 {
     listener.trace(message);

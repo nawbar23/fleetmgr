@@ -25,11 +25,15 @@ namespace user
 class Operate : public UserEvent
 {
 public:
+    Operate(long);
+
     Operate(long, const std::vector<long>&);
 
     std::string toString() const override;
 
     long getDeviceId() const;
+
+    std::vector<long>& getChannels();
 
     const std::vector<long>& getChannels() const;
 

@@ -3,6 +3,8 @@
 
 #include "event/input/user/UserEvent.hpp"
 
+#include <vector>
+
 namespace fm
 {
 
@@ -25,9 +27,16 @@ class CloseChannels : public UserEvent
 public:
     CloseChannels();
 
+    CloseChannels(const std::vector<long>&);
+
     std::string toString() const override;
 
+    std::vector<long>& getChannels();
+
+    const std::vector<long>& getChannels() const;
+
 private:
+    std::vector<long> channels;
 };
 
 } // user
