@@ -1,6 +1,7 @@
 package com.fleetmgr.sdk.client.backend;
 
 import com.fleetmgr.sdk.client.Client;
+import com.fleetmgr.sdk.client.Constants;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.interfaces.facade.control.*;
 import com.fleetmgr.sdk.system.capsule.Timer;
@@ -13,9 +14,6 @@ import java.util.concurrent.atomic.AtomicLong;
  * Description:
  */
 public class HeartbeatHandler {
-
-    private static final int VERIFICATION_INTERVAL = 5; // [s]
-    private static final int MAX_SILENT_INTERVAL = 15; // [s]
 
     private Client client;
     private ClientBackend backend;
@@ -37,8 +35,8 @@ public class HeartbeatHandler {
         lastReception.set(System.currentTimeMillis());
 
         timer = client.executeEvery(this::onTimeout,
-                VERIFICATION_INTERVAL * 1000,
-                VERIFICATION_INTERVAL * 1000);
+                Constants.VERIFICATION_INTERVAL * 1000,
+                Constants.VERIFICATION_INTERVAL * 1000);
     }
 
     public void end() {
@@ -63,7 +61,7 @@ public class HeartbeatHandler {
 
     private void onTimeout() {
         long silentTime = System.currentTimeMillis() - lastReception.get();
-        if (silentTime > MAX_SILENT_INTERVAL * 1000) {
+        if (silentTime > Constants.MAX_SILENT_INTERVAL * 1000) {
             client.notifyEvent(new ConnectionEvent(ConnectionEvent.Type.LOST));
         }
     }
