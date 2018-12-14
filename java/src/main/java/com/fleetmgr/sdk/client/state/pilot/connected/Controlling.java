@@ -81,7 +81,7 @@ public class Controlling extends State {
         switch (message.getCommand()) {
             case ADD_CHANNELS:
                 if (message.getResponse() == Response.ACCEPTED) {
-                    return new ValidatingChannels(this, Role.PILOT,
+                    return new ValidatingChannels(this, Role.LEADER,
                             message.getRequestChannels().getChannelList());
 
                 } else {
