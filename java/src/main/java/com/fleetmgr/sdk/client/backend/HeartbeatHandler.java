@@ -1,12 +1,16 @@
 package com.fleetmgr.sdk.client.backend;
 
-import com.fleetmgr.sdk.client.Client;
-import com.fleetmgr.sdk.client.Constants;
-import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.interfaces.facade.control.*;
+import com.fleetmgr.sdk.client.Client;
+import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.system.capsule.Timer;
 
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.logging.Logger;
+
+import static com.fleetmgr.sdk.client.Constants.MAX_SILENT_INTERVAL_SEC;
+import static com.fleetmgr.sdk.client.Constants.VERIFICATION_INTERVAL_SEC;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * Created by: Bartosz Nawrot
@@ -14,6 +18,8 @@ import java.util.concurrent.atomic.AtomicLong;
  * Description:
  */
 public class HeartbeatHandler {
+
+    private static final Logger logger = Logger.getLogger(HeartbeatHandler.class.getName());
 
     private Client client;
     private ClientBackend backend;
@@ -30,38 +36,39 @@ public class HeartbeatHandler {
     }
 
     public void start() {
-        client.trace("Starting heartbeat verification task");
+        logger.info("Start heartbeat verification task");
+        lastReception.set(System.nanoTime());
 
-        lastReception.set(System.currentTimeMillis());
-
-        timer = client.executeEvery(this::onTimeout,
-                Constants.VERIFICATION_INTERVAL * 1000,
-                Constants.VERIFICATION_INTERVAL * 1000);
+        long interval = SECONDS.toMillis(VERIFICATION_INTERVAL_SEC);
+        timer = client.executeEvery(this::onTimeout, interval, interval);
     }
 
     public void end() {
-        client.trace("Ending heartbeat verification task");
+        logger.info("End heartbeat verification task");
         if (timer != null) {
             timer.cancel();
-            timer = null;
         }
     }
 
     public void handleHeartbeat(ControlMessage message) {
-        lastReception.set(System.currentTimeMillis());
+        lastReception.set(System.nanoTime());
+
+        HeartbeatResponse heartbeatResponse = HeartbeatResponse.newBuilder()
+                .setKey(message.getHeartbeat().getKey())
+                .setLocation(backend.getLocation())
+                .build();
+
         backend.send(ClientMessage.newBuilder()
                 .setCommand(Command.HEARTBEAT)
                 .setResponse(Response.ACCEPTED)
-                .setHeartbeat(HeartbeatResponse.newBuilder()
-                        .setKey(message.getHeartbeat().getKey())
-                        .setLocation(backend.getLocation())
-                        .build())
+                .setHeartbeat(heartbeatResponse)
                 .build());
     }
 
     private void onTimeout() {
-        long silentTime = System.currentTimeMillis() - lastReception.get();
-        if (silentTime > Constants.MAX_SILENT_INTERVAL * 1000) {
+        long silentTime = System.nanoTime() - lastReception.get();
+
+        if (silentTime > SECONDS.toNanos(MAX_SILENT_INTERVAL_SEC)) {
             client.notifyEvent(new ConnectionEvent(ConnectionEvent.Type.LOST));
         }
     }

@@ -9,8 +9,11 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.util.concurrent.ExecutorService;
+import java.util.logging.Logger;
 
 public class UdpChannel extends Channel {
+
+    private static final Logger logger = Logger.getLogger(UdpChannel.class.getName());
 
     private ExecutorService executor;
 
@@ -58,7 +61,7 @@ public class UdpChannel extends Channel {
         byte[] buffer = new byte[256];
         DatagramPacket packet = new DatagramPacket(buffer, 256);
 
-        trace("Waiting for router response");
+        logger.warning("Waiting for router response");
         socket.receive(packet);
 
         byte[] test = new byte[packet.getLength()];
@@ -87,7 +90,7 @@ public class UdpChannel extends Channel {
                     break;
                 }
             }
-            trace("Reception thread ended");
+            logger.info("Reception thread ended");
         });
     }
 

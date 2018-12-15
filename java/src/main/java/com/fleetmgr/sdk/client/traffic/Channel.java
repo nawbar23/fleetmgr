@@ -1,17 +1,13 @@
 package com.fleetmgr.sdk.client.traffic;
 
+import com.fleetmgr.sdk.client.core.https.HttpsClient;
+
 import java.io.IOException;
+import java.util.logging.Logger;
 
 public abstract class Channel {
 
-    public interface Listener {
-        void onReceived(Channel channel, byte[] data, int size);
-        void onClosed(Channel channel);
-        void trace(String message);
-    }
-
     final long channelId;
-
     protected Listener listener;
 
     Channel(long channelId, Listener listener) {
@@ -31,7 +27,9 @@ public abstract class Channel {
 
     public abstract void close();
 
-    protected void trace(String message) {
-        listener.trace("[" + toString() + "]: " + message);
+    public interface Listener {
+        void onReceived(Channel channel, byte[] data, int size);
+
+        void onClosed(Channel channel);
     }
 }

@@ -8,7 +8,7 @@ package com.fleetmgr.sdk.client.event.output.facade;
 public class Error extends Message {
 
     public Error(String message) {
-        super(Type.ERROR, message, MessageType.ERROR);
+        super(message, MessageType.ERROR, Type.ERROR);
     }
 
     @Override

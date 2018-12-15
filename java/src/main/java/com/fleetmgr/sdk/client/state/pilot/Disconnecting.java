@@ -3,53 +3,61 @@ package com.fleetmgr.sdk.client.state.pilot;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;
 import com.fleetmgr.sdk.client.event.output.facade.FacadeEvent;
-import com.fleetmgr.sdk.client.state.State;
+import com.fleetmgr.sdk.system.machine.BaseState;
+
+import java.util.Optional;
 
 /**
  * Created by: Bartosz Nawrot
  * Date: 23.09.2018
  * Description:
  */
-public class Disconnecting extends State {
+public class Disconnecting extends BaseState {
 
     private boolean wasRecovering;
 
-    Disconnecting(State state, boolean wasRecovering) {
+    Disconnecting(BaseState state, boolean wasRecovering) {
         super(state);
         this.wasRecovering = wasRecovering;
     }
 
     @Override
-    public State start() {
+    public void start() {
         backend.getHeartbeatHandler().end();
+
         if (wasRecovering) {
             backend.closeFacadeChannel();
             listener.onEvent(new FacadeEvent(FacadeEvent.Type.RELEASED));
-            return new Disconnected(this);
-
-        } else {
-            return null;
         }
     }
 
     @Override
-    public State notifyEvent(UserEvent event) {
+    public Optional<BaseState> getInitialState() {
+        if (wasRecovering) {
+            return Optional.of(new Disconnected(this));
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public Optional<BaseState> onUserEvent(UserEvent event) {
         switch (event.getType()) {
             default:
-                return defaultEventHandle(event.toString());
+                return defaultConnectionEventHandler(event.toString());
         }
     }
 
     @Override
-    public State notifyConnection(ConnectionEvent event) {
+    public Optional<BaseState> onConnectionEvent(ConnectionEvent event) {
         switch (event.getType()) {
             case CLOSED:
                 backend.closeFacadeChannel();
                 listener.onEvent(new FacadeEvent(FacadeEvent.Type.RELEASED));
-                return new Disconnected(this);
+                return Optional.of(new Disconnected(this));
 
             default:
-                return defaultEventHandle(event.toString());
+                return defaultConnectionEventHandler(event.toString());
         }
     }
 

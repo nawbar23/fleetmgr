@@ -1,66 +1,71 @@
 package com.fleetmgr.sdk.client.state.pilot.connected;
 
-import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
-import com.fleetmgr.sdk.client.event.input.connection.Received;
-import com.fleetmgr.sdk.client.event.input.user.UserEvent;
-import com.fleetmgr.sdk.client.state.State;
 import com.fleetmgr.interfaces.facade.control.ClientMessage;
 import com.fleetmgr.interfaces.facade.control.Command;
 import com.fleetmgr.interfaces.facade.control.ControlMessage;
 import com.fleetmgr.interfaces.facade.control.Response;
+import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
+import com.fleetmgr.sdk.client.event.input.connection.Received;
+import com.fleetmgr.sdk.client.event.input.user.UserEvent;
+import com.fleetmgr.sdk.client.traffic.Channel;
+import com.fleetmgr.sdk.system.machine.BaseState;
+
+import java.util.Optional;
+import java.util.logging.Logger;
 
 /**
  * Created by: Bartosz Nawrot
  * Date: 24.09.2018
  * Description:
  */
-public class Releasing extends State {
+public class Releasing extends BaseState {
 
-    Releasing(State state) {
+    private static final Logger logger = Logger.getLogger(Releasing.class.getName());
+
+    Releasing(BaseState state) {
         super(state);
     }
 
     @Override
-    public State start() {
+    public void start() {
         backend.closeAllChannels();
         send(ClientMessage.newBuilder()
                 .setCommand(Command.RELEASE)
                 .build());
-        return null;
     }
 
     @Override
-    public State notifyEvent(UserEvent event) {
-        return defaultEventHandle(event.toString());
+    public Optional<BaseState> onUserEvent(UserEvent event) {
+        return defaultConnectionEventHandler(event.toString());
     }
 
     @Override
-    public State notifyConnection(ConnectionEvent event) {
+    public Optional<BaseState> onConnectionEvent(ConnectionEvent event) {
         switch (event.getType()) {
             case RECEIVED:
-                return handleMessage(((Received)event).getMessage());
+                return handleMessage(((Received) event).getMessage());
 
             default:
-                return defaultEventHandle(event.toString());
+                return defaultConnectionEventHandler(event.toString());
         }
     }
 
-    private State handleMessage(ControlMessage message) {
+    private Optional<BaseState> handleMessage(ControlMessage message) {
         switch (message.getCommand()) {
             case RELEASE:
                 if (message.getResponse() == Response.ACCEPTED) {
-                    return new Released(this);
+                    return Optional.of(new Released(this));
 
                 } else {
-                    return defaultMessageHandle(message);
+                    return defaultUserEventHandler(message);
                 }
 
             case HEARTBEAT:
-                trace("Heartbeat ignored during release procedure");
-                return null;
+                logger.warning("Heartbeat ignored during release procedure");
+                return Optional.empty();
 
             default:
-                return defaultMessageHandle(message);
+                return defaultUserEventHandler(message);
         }
     }
 

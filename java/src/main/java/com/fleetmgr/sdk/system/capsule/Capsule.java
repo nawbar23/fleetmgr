@@ -15,7 +15,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class Capsule {
 
-    private final Long NOT_TIMER_ID = 0L;
+    private final Long INVALID_TIMER_ID = 0L;
 
     private ExecutorService executor;
 
@@ -34,7 +34,7 @@ public class Capsule {
         this.queue = new LinkedList<>();
         this.processing = new AtomicBoolean(false);
 
-        this.lastTimerId = NOT_TIMER_ID;
+        this.lastTimerId = INVALID_TIMER_ID;
     }
 
     public void execute(Runnable task) {
@@ -43,7 +43,7 @@ public class Capsule {
             queue.add(new Pair<>(() -> {
                 task.run();
                 proceed();
-            }, NOT_TIMER_ID));
+            }, INVALID_TIMER_ID));
         }
         else {
             processing.set(true);
@@ -57,13 +57,13 @@ public class Capsule {
 
     public Timer executeAfter(Runnable task, long timeout) {
         lastTimerId++;
-        if (lastTimerId.equals(NOT_TIMER_ID)) lastTimerId++;
+        if (lastTimerId.equals(INVALID_TIMER_ID)) lastTimerId++;
         return new Timer(task, timeout, lastTimerId, this::cancel);
     }
 
     public Timer executeEvery(Runnable task, long delay, long interval) {
         lastTimerId++;
-        if (lastTimerId.equals(NOT_TIMER_ID)) lastTimerId++;
+        if (lastTimerId.equals(INVALID_TIMER_ID)) lastTimerId++;
         return new Timer(task, delay, interval, lastTimerId, this::cancel);
     }
 

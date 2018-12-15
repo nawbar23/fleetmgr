@@ -1,9 +1,9 @@
 package com.fleetmgr.sdk.client;
 
-import com.fleetmgr.sdk.client.state.pilot.Disconnected;
 import com.fleetmgr.interfaces.ConnectionState;
 import com.fleetmgr.interfaces.Device;
 import com.fleetmgr.interfaces.ListDevicesResponse;
+import com.fleetmgr.sdk.client.state.pilot.Disconnected;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
@@ -21,18 +21,14 @@ public class Pilot extends Client {
         setState(new Disconnected(this, backend, listener));
     }
 
-    public ListDevicesResponse listDevices() throws IOException {
-        return backend.getCore().listDevices();
-    }
-
     public ListDevicesResponse listConnectedDevices() throws IOException {
         ListDevicesResponse.Builder builder = ListDevicesResponse.newBuilder();
-        ListDevicesResponse response = listDevices();
-        for (Device d : response.getDevicesList()) {
-            if (d.getConnectionState() == ConnectionState.CONNECTED) {
-                builder.addDevices(d);
-            }
-        }
+        ListDevicesResponse response = backend.getCoreClient().listDevices();
+
+        response.getDevicesList().stream()
+                .filter(device -> device.getConnectionState() == ConnectionState.CONNECTED)
+                .forEach(builder::addDevices);
+
         return builder.build();
     }
 }

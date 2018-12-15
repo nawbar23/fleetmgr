@@ -2,19 +2,18 @@ package com.fleetmgr.sdk.client.state.device;
 
 import com.fleetmgr.sdk.client.Client;
 import com.fleetmgr.sdk.client.backend.ClientBackend;
-import com.fleetmgr.sdk.client.core.CoreClient;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;
-import com.fleetmgr.sdk.client.state.State;
+import com.fleetmgr.sdk.system.machine.BaseState;
 
-import java.util.concurrent.ExecutorService;
+import java.util.Optional;
 
 /**
  * Created by: Bartosz Nawrot
  * Date: 23.09.2018
  * Description:
  */
-public class Disconnected extends State {
+public class Disconnected extends BaseState {
 
     public Disconnected(Client client,
                         ClientBackend backend,
@@ -22,29 +21,24 @@ public class Disconnected extends State {
         super(client, backend, listener);
     }
 
-    Disconnected(State state) {
+    Disconnected(BaseState state) {
         super(state);
     }
 
     @Override
-    public State start() {
-        return null;
-    }
-
-    @Override
-    public State notifyEvent(UserEvent event) {
+    public Optional<BaseState> onUserEvent(UserEvent event) {
         switch (event.getType()) {
             case ATTACH:
-                return new Connecting(this);
+                return Optional.of(new Connecting(this));
 
             default:
-                return defaultEventHandle(event.toString());
+                return defaultConnectionEventHandler(event.toString());
         }
     }
 
     @Override
-    public State notifyConnection(ConnectionEvent event) {
-        return defaultEventHandle(event.toString());
+    public Optional<BaseState> onConnectionEvent(ConnectionEvent event) {
+        return defaultConnectionEventHandler(event.toString());
     }
 
     @Override

@@ -2,33 +2,30 @@ package com.fleetmgr.sdk.client.state.device.connected;
 
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;
-import com.fleetmgr.sdk.client.state.State;
+import com.fleetmgr.sdk.system.machine.BaseState;
+
+import java.util.Optional;
 
 /**
  * Created by: Bartosz Nawrot
  * Date: 25.09.2018
  * Description:
  */
-public class Released extends State {
+public class Released extends BaseState {
 
 
-    Released(State state) {
+    Released(BaseState state) {
         super(state);
     }
 
     @Override
-    public State start() {
-        return null;
+    public Optional<BaseState> onUserEvent(UserEvent event) {
+        return defaultConnectionEventHandler(event.toString());
     }
 
     @Override
-    public State notifyEvent(UserEvent event) {
-        return defaultEventHandle(event.toString());
-    }
-
-    @Override
-    public State notifyConnection(ConnectionEvent event) {
-        return defaultEventHandle(event.toString());
+    public Optional<BaseState> onConnectionEvent(ConnectionEvent event) {
+        return defaultConnectionEventHandler(event.toString());
     }
 
     @Override

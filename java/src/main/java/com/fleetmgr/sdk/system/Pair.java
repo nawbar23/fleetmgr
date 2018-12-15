@@ -1,60 +1,56 @@
 package com.fleetmgr.sdk.system;
 
+import java.util.Objects;
+
 /**
  * Created by: Bartosz Nawrot
  * Date: 12.12.2018
  * Description:
  */
 public class Pair<A, B> {
-    private A first;
-    private B second;
+    private A key;
+    private B value;
 
-    public Pair(A first, B second) {
-        super();
-        this.first = first;
-        this.second = second;
-    }
-
-    public int hashCode() {
-        int hashFirst = first != null ? first.hashCode() : 0;
-        int hashSecond = second != null ? second.hashCode() : 0;
-
-        return (hashFirst + hashSecond) * hashSecond + hashFirst;
-    }
-
-    public boolean equals(Object other) {
-        if (other instanceof Pair) {
-            Pair otherPair = (Pair) other;
-            return
-                    ((  this.first == otherPair.first ||
-                            ( this.first != null && otherPair.first != null &&
-                                    this.first.equals(otherPair.first))) &&
-                            (  this.second == otherPair.second ||
-                                    ( this.second != null && otherPair.second != null &&
-                                            this.second.equals(otherPair.second))) );
-        }
-
-        return false;
-    }
-
-    public String toString()
-    {
-        return "(" + first + ", " + second + ")";
+    public Pair(A key, B value) {
+        this.key = key;
+        this.value = value;
     }
 
     public A getKey() {
-        return first;
+        return key;
     }
 
     public void setKey(A first) {
-        this.first = first;
+        this.key = first;
     }
 
     public B getValue() {
-        return second;
+        return value;
     }
 
     public void setValue(B second) {
-        this.second = second;
+        this.value = second;
+    }
+
+    @Override
+    public String toString() {
+        return "Pair{" +
+                "key=" + key +
+                ", value=" + value +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+        Pair<?, ?> pair = (Pair<?, ?>) other;
+        return Objects.equals(key, pair.key) &&
+                Objects.equals(value, pair.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(key, value);
     }
 }

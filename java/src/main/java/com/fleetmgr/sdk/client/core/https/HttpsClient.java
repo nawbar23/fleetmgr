@@ -1,5 +1,6 @@
 package com.fleetmgr.sdk.client.core.https;
 
+import com.fleetmgr.sdk.client.backend.ClientBackend;
 import com.google.api.HttpRule;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -13,6 +14,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
+import java.util.logging.Logger;
 
 import static com.google.api.HttpRule.PatternCase.GET;
 
@@ -23,18 +25,61 @@ import static com.google.api.HttpRule.PatternCase.GET;
  */
 public class HttpsClient {
 
-    public interface Listener {
-        void trace(String message);
+    private static final Logger logger = Logger.getLogger(HttpsClient.class.getName());
+
+    static {
+        // TODO verify if it is really needed
+        logger.warning("Trusting self signed SSL certificates is enabled");
+        disableSslVerification();
     }
 
     private final String address;
     private final String apiKey;
-    private final Listener listener;
 
-    public HttpsClient(String address, String apiKey, Listener listener) {
+    public HttpsClient(String address, String apiKey) {
         this.address = address;
         this.apiKey = apiKey;
-        this.listener = listener;
+    }
+
+    private static String readResponse(InputStream is) throws IOException {
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(is));
+        String inputLine;
+        StringBuilder content = new StringBuilder();
+        while ((inputLine = in.readLine()) != null) {
+            content.append(inputLine);
+        }
+        in.close();
+        return content.toString();
+    }
+
+    private static void disableSslVerification() {
+        try {
+            // Create a trust manager that does not validate certificate chains
+            TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
+                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                    return null;
+                }
+
+                public void checkClientTrusted(X509Certificate[] certs, String authType) {
+                }
+
+                public void checkServerTrusted(X509Certificate[] certs, String authType) {
+                }
+            }
+            };
+
+            // Install the all-trusting trust manager
+            SSLContext sc = SSLContext.getInstance("SSL");
+            sc.init(null, trustAllCerts, new SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+
+            // Install the all-trusting host verifier
+            HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
+
+        } catch (NoSuchAlgorithmException | KeyManagementException e) {
+            e.printStackTrace();
+        }
     }
 
     public String execute(String path, HttpRule.PatternCase method) throws IOException {
@@ -43,7 +88,7 @@ public class HttpsClient {
 
     public String execute(String path, HttpRule.PatternCase method, String body) throws IOException {
         URL url = new URL(address + path);
-        listener.trace("Execute " + method.name() + ": " + url.toString() + " body: " + body);
+        logger.info("Execute " + method.name() + ": " + url.toString() + " body: " + body);
         HttpsURLConnection con = (HttpsURLConnection) url.openConnection();
         con.setDoOutput(true);
         con.setDoInput(true);
@@ -65,7 +110,7 @@ public class HttpsClient {
         int result = con.getResponseCode();
         if (result >= HttpURLConnection.HTTP_OK && result < HttpURLConnection.HTTP_MULT_CHOICE) {
             String response = readResponse(con.getInputStream());
-            listener.trace("Response " + result + ": " + response);
+            logger.info("Response " + result + ": " + response);
             return response;
 
         } else {
@@ -74,51 +119,6 @@ public class HttpsClient {
                 cause += " " + readResponse(con.getErrorStream());
             }
             throw new IOException(cause);
-        }
-    }
-
-    private static String readResponse(InputStream is) throws IOException {
-        BufferedReader in = new BufferedReader(
-                new InputStreamReader(is));
-        String inputLine;
-        StringBuilder content = new StringBuilder();
-        while ((inputLine = in.readLine()) != null) {
-            content.append(inputLine);
-        }
-        in.close();
-        return content.toString();
-    }
-
-    static {
-        // TODO verify if it is really needed
-        disableSslVerification();
-    }
-
-    private static void disableSslVerification() {
-        try
-        {
-            // Create a trust manager that does not validate certificate chains
-            TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {
-                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                    return null;
-                }
-                public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                }
-                public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                }
-            }
-            };
-
-            // Install the all-trusting trust manager
-            SSLContext sc = SSLContext.getInstance("SSL");
-            sc.init(null, trustAllCerts, new SecureRandom());
-            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
-
-            // Install the all-trusting host verifier
-            HttpsURLConnection.setDefaultHostnameVerifier((hostname, session) -> true);
-
-        } catch (NoSuchAlgorithmException | KeyManagementException e) {
-            e.printStackTrace();
         }
     }
 }

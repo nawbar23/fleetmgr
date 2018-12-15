@@ -12,8 +12,8 @@ public class ConnectionEvent implements Event {
     public enum Type {
         CLOSED,
         ERROR,
-        RECEIVED,
         LOST,
+        RECEIVED
     }
 
     private Type type;

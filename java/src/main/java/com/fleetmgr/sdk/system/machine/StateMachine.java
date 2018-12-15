@@ -1,36 +1,46 @@
 package com.fleetmgr.sdk.system.machine;
 
+import com.fleetmgr.sdk.client.event.input.Event;
+import com.fleetmgr.sdk.client.traffic.Channel;
 import com.fleetmgr.sdk.system.capsule.Capsule;
 
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
+import java.util.logging.Logger;
 
 /**
  * Created by: Bartosz Nawrot
  * Date: 21.10.2018
  * Description:
  */
-public abstract class StateMachine<Event> extends Capsule {
+public abstract class StateMachine<E extends Event> extends Capsule {
 
-    private State<Event> state;
+    private static final Logger logger = Logger.getLogger(StateMachine.class.getName());
 
-    public StateMachine(ExecutorService executor, State<Event> initial) {
+    private BaseState state;
+
+    public StateMachine(ExecutorService executor, BaseState initial) {
         super(executor);
         this.state = initial;
     }
 
-    public void notifyEvent(Event event) {
+    public void notifyEvent(E event) {
         execute(() -> {
-            trace("Handling: " + event + " @ " + state);
-            State<Event> newState = state.handleEvent(event);
-            while (newState != null) {
-                trace("Transition: " + state + " -> " + newState);
-                state = newState;
-                newState = state.start();
+            logger.info("Handling: " + event + " @ " + state);
+
+            Optional<BaseState> newState = state.handleEvent(event);
+
+            while (newState.isPresent()) {
+                logger.info("Transition: " + state + " -> " + newState);
+                state = newState.get();
+
+                state.start();
+                newState = state.getInitialState();
             }
         });
     }
 
-    protected void setState(State<Event> state) {
+    protected void setState(BaseState state) {
         this.state = state;
         this.state.start();
     }
@@ -38,6 +48,4 @@ public abstract class StateMachine<Event> extends Capsule {
     public String getStateName() {
         return state.toString();
     }
-
-    protected abstract void trace(String message);
 }

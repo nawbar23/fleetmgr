@@ -1,40 +1,41 @@
 package com.fleetmgr.sdk.client.state.pilot.connected;
 
+import com.fleetmgr.interfaces.HandoverData;
+import com.fleetmgr.interfaces.facade.control.ClientMessage;
+import com.fleetmgr.interfaces.facade.control.Command;
+import com.fleetmgr.interfaces.facade.control.ControlMessage;
+import com.fleetmgr.interfaces.facade.control.Response;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.connection.Received;
 import com.fleetmgr.sdk.client.event.input.user.ReleaseAccepted;
 import com.fleetmgr.sdk.client.event.input.user.ReleaseRejected;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;
 import com.fleetmgr.sdk.client.event.output.facade.FacadeEvent;
-import com.fleetmgr.sdk.client.state.State;
-import com.fleetmgr.interfaces.HandoverData;
-import com.fleetmgr.interfaces.facade.control.ClientMessage;
-import com.fleetmgr.interfaces.facade.control.Command;
-import com.fleetmgr.interfaces.facade.control.ControlMessage;
-import com.fleetmgr.interfaces.facade.control.Response;
+import com.fleetmgr.sdk.system.machine.BaseState;
+
+import java.util.Optional;
 
 /**
  * Created by: Bartosz Nawrot
  * Date: 23.09.2018
  * Description:
  */
-public class ReleasingControl extends State {
+public class ReleasingControl extends BaseState {
 
-    ReleasingControl(State state) {
+    ReleasingControl(BaseState state) {
         super(state);
     }
 
     @Override
-    public State start() {
+    public void start() {
         listener.onEvent(new FacadeEvent(FacadeEvent.Type.RELEASE_CONTROL));
-        return null;
     }
 
     @Override
-    public State notifyEvent(UserEvent event) {
+    public Optional<BaseState> onUserEvent(UserEvent event) {
         switch (event.getType()) {
             case RELEASE_ACCEPTED:
-                ReleaseAccepted releaseAccepted = (ReleaseAccepted)event;
+                ReleaseAccepted releaseAccepted = (ReleaseAccepted) event;
                 send(ClientMessage.newBuilder()
                         .setCommand(Command.RELEASE_CONTROL)
                         .setResponse(Response.ACCEPTED)
@@ -42,34 +43,34 @@ public class ReleasingControl extends State {
                                 .setHandoverData(new String(releaseAccepted.getData()))
                                 .build())
                         .build());
-                return null;
+                return Optional.empty();
 
             case RELEASE_REJECTED:
-                ReleaseRejected releaseRejected = (ReleaseRejected)event;
+                ReleaseRejected releaseRejected = (ReleaseRejected) event;
                 send(ClientMessage.newBuilder()
                         .setCommand(Command.RELEASE_CONTROL)
                         .setResponse(Response.REJECTED)
                         .setMessage(releaseRejected.getMessage())
                         .build());
-                return new Controlling(this);
+                return Optional.of(new Controlling(this));
 
             default:
-                return defaultEventHandle(event.toString());
+                return defaultConnectionEventHandler(event.toString());
         }
     }
 
     @Override
-    public State notifyConnection(ConnectionEvent event) {
+    public Optional<BaseState> onConnectionEvent(ConnectionEvent event) {
         switch (event.getType()) {
             case RECEIVED:
-                return handleMessage(((Received)event).getMessage());
+                return handleMessage(((Received) event).getMessage());
 
             default:
-                return defaultEventHandle(event.toString());
+                return defaultConnectionEventHandler(event.toString());
         }
     }
 
-    private State handleMessage(ControlMessage message) {
+    private Optional<BaseState> handleMessage(ControlMessage message) {
         switch (message.getCommand()) {
             case CONTROL_RELEASED:
                 listener.onEvent(new FacadeEvent(FacadeEvent.Type.CONTROL_RELEASED));
@@ -77,10 +78,10 @@ public class ReleasingControl extends State {
                         .setCommand(Command.CONTROL_RELEASED)
                         .setResponse(Response.ACCEPTED)
                         .build());
-                return new Spectating(this);
+                return Optional.of(new Spectating(this));
 
             default:
-                return defaultMessageHandle(message);
+                return defaultUserEventHandler(message);
         }
     }
 

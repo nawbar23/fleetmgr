@@ -16,14 +16,14 @@ public class Message extends FacadeEvent {
     private MessageType messageType;
     protected String message;
 
-    Message(Type type, String message, MessageType messageType) {
-        super(type);
+    public Message(String message, MessageType messageType) {
+        super(Type.MESSAGE);
         this.messageType = messageType;
         this.message = message;
     }
 
-    public Message(String message, MessageType messageType) {
-        super(Type.MESSAGE);
+    Message(String message, MessageType messageType, Type type) {
+        super(type);
         this.messageType = messageType;
         this.message = message;
     }

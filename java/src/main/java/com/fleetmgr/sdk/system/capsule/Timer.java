@@ -9,15 +9,9 @@ import java.util.TimerTask;
  */
 public class Timer {
 
-    public interface Listener {
-        void onCanceled(Timer timer);
-    }
-
-    private java.util.Timer timer;
-
-    private final Long id;
+    private final long id;
     private final Listener listener;
-
+    private java.util.Timer timer;
     private boolean canceled = false;
     private boolean recurring = false;
 
@@ -55,7 +49,7 @@ public class Timer {
         }
     }
 
-    public Long getId() {
+    Long getId() {
         return id;
     }
 
@@ -70,5 +64,9 @@ public class Timer {
                 }
             }
         };
+    }
+
+    public interface Listener {
+        void onCanceled(Timer timer);
     }
 }

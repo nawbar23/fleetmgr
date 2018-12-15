@@ -8,7 +8,7 @@ package com.fleetmgr.sdk.client.event.output.facade;
 public class HandoverRejected extends Message {
 
     public HandoverRejected(String message) {
-        super(Type.HANDOVER_REJECTED, message, MessageType.ERROR);
+        super(message, MessageType.ERROR, Type.HANDOVER_REJECTED);
     }
 
     @Override

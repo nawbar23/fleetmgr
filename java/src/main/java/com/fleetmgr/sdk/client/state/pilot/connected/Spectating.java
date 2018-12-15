@@ -1,5 +1,11 @@
 package com.fleetmgr.sdk.client.state.pilot.connected;
 
+import com.fleetmgr.interfaces.AddChannelsRequest;
+import com.fleetmgr.interfaces.Role;
+import com.fleetmgr.interfaces.facade.control.ClientMessage;
+import com.fleetmgr.interfaces.facade.control.Command;
+import com.fleetmgr.interfaces.facade.control.ControlMessage;
+import com.fleetmgr.interfaces.facade.control.Response;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.connection.Received;
 import com.fleetmgr.sdk.client.event.input.user.CloseChannels;
@@ -8,47 +14,37 @@ import com.fleetmgr.sdk.client.event.input.user.UserEvent;
 import com.fleetmgr.sdk.client.event.output.facade.ChannelsClosed;
 import com.fleetmgr.sdk.client.event.output.facade.FacadeEvent;
 import com.fleetmgr.sdk.client.event.output.facade.OperationEnded;
-import com.fleetmgr.sdk.client.state.State;
-import com.fleetmgr.interfaces.AddChannelsRequest;
-import com.fleetmgr.interfaces.Role;
-import com.fleetmgr.interfaces.facade.control.ClientMessage;
-import com.fleetmgr.interfaces.facade.control.Command;
-import com.fleetmgr.interfaces.facade.control.ControlMessage;
-import com.fleetmgr.interfaces.facade.control.Response;
+import com.fleetmgr.sdk.system.machine.BaseState;
 
 import java.util.LinkedList;
+import java.util.Optional;
 
 /**
  * Created by: Bartosz Nawrot
  * Date: 23.09.2018
  * Description:
  */
-public class Spectating extends State {
+public class Spectating extends BaseState {
 
-    Spectating(State state) {
+    Spectating(BaseState state) {
         super(state);
     }
 
     @Override
-    public State start() {
-        return null;
-    }
-
-    @Override
-    public State notifyEvent(UserEvent event) {
+    public Optional<BaseState> onUserEvent(UserEvent event) {
         switch (event.getType()) {
             case OPEN_CHANNELS:
-                OpenChannels openChannels = (OpenChannels)event;
+                OpenChannels openChannels = (OpenChannels) event;
                 send(ClientMessage.newBuilder()
                         .setCommand(Command.ADD_CHANNELS)
                         .setRequestChannels(AddChannelsRequest.newBuilder()
                                 .addAllChannelId(openChannels.getChannels())
                                 .build())
                         .build());
-                return null;
+                return Optional.empty();
 
             case CLOSE_CHANNELS:
-                CloseChannels closeChannels = (CloseChannels)event;
+                CloseChannels closeChannels = (CloseChannels) event;
                 backend.closeChannels(closeChannels.getChannels());
                 send(ClientMessage.newBuilder()
                         .setCommand(Command.REMOVE_CHANNELS)
@@ -56,53 +52,53 @@ public class Spectating extends State {
                                 .addAllChannelId(closeChannels.getChannels())
                                 .build())
                         .build());
-                return null;
+                return Optional.empty();
 
             case REQUEST_CONTROL:
-                return new RequestingControl(this);
+                return Optional.of(new RequestingControl(this));
 
             case RELEASE:
-                return new Releasing(this);
+                return Optional.of(new Releasing(this));
 
             default:
-                return defaultEventHandle(event.toString());
+                return defaultConnectionEventHandler(event.toString());
         }
     }
 
     @Override
-    public State notifyConnection(ConnectionEvent event) {
+    public Optional<BaseState> onConnectionEvent(ConnectionEvent event) {
         switch (event.getType()) {
             case RECEIVED:
                 return handleMessage(((Received) event).getMessage());
 
             default:
-                return defaultEventHandle(event.toString());
+                return defaultConnectionEventHandler(event.toString());
         }
     }
 
-    private State handleMessage(ControlMessage message) {
+    private Optional<BaseState> handleMessage(ControlMessage message) {
         switch (message.getCommand()) {
             case ADD_CHANNELS:
                 if (message.getResponse() == Response.ACCEPTED) {
-                    return new ValidatingChannels(this, Role.PILOT,
-                            message.getRequestChannels().getChannelList());
+                    return Optional.of(new ValidatingChannels(this, Role.PILOT,
+                            message.getRequestChannels().getChannelList()));
 
                 } else {
-                    return defaultMessageHandle(message);
+                    return defaultUserEventHandler(message);
                 }
 
             case REMOVE_CHANNELS:
                 if (message.getResponse() == Response.ACCEPTED) {
                     listener.onEvent(new ChannelsClosed(null));
-                    return null;
+                    return Optional.empty();
 
                 } else {
-                    return defaultMessageHandle(message);
+                    return defaultUserEventHandler(message);
                 }
 
             case LEADER_UNREACHABLE:
                 listener.onEvent(new FacadeEvent(FacadeEvent.Type.LEADER_UNREACHABLE));
-                return null;
+                return Optional.empty();
 
             case OPERATION_ENDED:
                 listener.onEvent(new OperationEnded(new LinkedList<>(backend.getSockets().keySet())));
@@ -111,10 +107,10 @@ public class Spectating extends State {
                         .setCommand(Command.OPERATION_ENDED)
                         .setResponse(Response.ACCEPTED)
                         .build());
-                return new Released(this);
+                return Optional.of(new Released(this));
 
             default:
-                return defaultMessageHandle(message);
+                return defaultUserEventHandler(message);
         }
     }
 

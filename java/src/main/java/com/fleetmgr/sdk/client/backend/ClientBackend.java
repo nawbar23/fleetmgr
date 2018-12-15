@@ -26,6 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 /**
  * Created by: Bartosz Nawrot
@@ -34,11 +35,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class ClientBackend implements StreamObserver<ControlMessage> {
 
-    public interface Listener {
-        void trace(String message);
-    }
-
-    private Listener listener;
+    private static final Logger logger = Logger.getLogger(ClientBackend.class.getName());
 
     private Client client;
     private Client.Listener clientListener;
@@ -49,17 +46,16 @@ public class ClientBackend implements StreamObserver<ControlMessage> {
 
     private HashMap<Long, Channel> sockets;
 
-    private CoreClient core;
+    private CoreClient coreClient;
 
     private ManagedChannel channel;
     private StreamObserver<ClientMessage> toFacade;
 
-    public ClientBackend(Listener listener,
-                         Client client,
+    public ClientBackend(Client client,
                          Client.Listener clientListener,
                          ExecutorService executor,
-                         CoreClient core) {
-        this.listener = listener;
+                         CoreClient coreClient) {
+
         this.client = client;
         this.clientListener = clientListener;
 
@@ -68,7 +64,7 @@ public class ClientBackend implements StreamObserver<ControlMessage> {
         this.heartbeatHandler = new HeartbeatHandler(client, this);
 
         this.sockets = new HashMap<>();
-        this.core = core;
+        this.coreClient = coreClient;
     }
 
     public ExecutorService getExecutor() {
@@ -83,8 +79,8 @@ public class ClientBackend implements StreamObserver<ControlMessage> {
         return sockets;
     }
 
-    public CoreClient getCore() {
-        return core;
+    public CoreClient getCoreClient() {
+        return coreClient;
     }
 
     public void openFacadeConnection(String ip, int port) throws SSLException {
@@ -116,7 +112,7 @@ public class ClientBackend implements StreamObserver<ControlMessage> {
     }
 
     public void send(ClientMessage message) {
-        trace("Sending:\n" + message + "@ " + client.getStateName());
+        logger.info("Sending message:\n" + message + "@ " + client.getStateName());
         toFacade.onNext(message);
     }
 
@@ -140,13 +136,13 @@ public class ClientBackend implements StreamObserver<ControlMessage> {
         Map<Long, Channel> opened = new HashMap<>();
         for (com.fleetmgr.interfaces.Channel c : channels) {
             try {
-                trace("Opening channel id: " + c.getId());
+                logger.info("Opening channel, id: " + c.getId());
                 UdpChannel socket = new UdpChannel(executor,
-                        c.getIp(), c.getPort(), c.getId(), createDefaultSocketListener());
+                        c.getIp(), c.getPort(), c.getId(), new DefaultSocketListener());
                 socket.initialize(c.getRouteKey());
                 sockets.put(c.getId(), socket);
                 opened.put(c.getId(), socket);
-                trace("Channel id: " + c.getId() + " VALIDATED");
+                logger.info("Channel validated, id: " + c.getId());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -156,7 +152,7 @@ public class ClientBackend implements StreamObserver<ControlMessage> {
 
     public void closeChannels(Collection<Long> channels) {
         for (Long c : channels) {
-            trace("Closing channel id: " + c);
+            logger.info("Closing channel, id: " + c);
             Channel s = sockets.remove(c);
             if (s != null) {
                 s.close();
@@ -165,37 +161,25 @@ public class ClientBackend implements StreamObserver<ControlMessage> {
     }
 
     public void closeAllChannels() {
-        for (Channel s : sockets.values()) {
-            trace("Closing channel id: " + s.getChannelId());
-            s.close();
-        }
-        sockets.clear();
+        closeChannels(sockets.keySet());
     }
 
     Location getLocation() {
         return clientListener.getLocation();
     }
 
-    public void trace(String message) {
-        listener.trace(message);
+    private class DefaultSocketListener implements Channel.Listener {
+
+        @Override
+        public void onReceived(Channel channel, byte[] data, int size) {
+        }
+
+        @Override
+        public void onClosed(Channel channel) {
+        }
     }
 
-    private Channel.Listener createDefaultSocketListener() {
-        return new Channel.Listener() {
-            @Override
-            public void onReceived(Channel channel, byte[] data, int size) {
-            }
-
-            @Override
-            public void onClosed(Channel channel) {
-            }
-
-            @Override
-            public void trace(String message) {
-            }
-        };
-    }
-
+    @SuppressWarnings("SameParameterValue")
     private static SslContext buildSslContext(String trustCertCollectionFilePath,
                                               String clientCertChainFilePath,
                                               String clientPrivateKeyFilePath) throws SSLException {

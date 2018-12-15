@@ -1,5 +1,11 @@
 package com.fleetmgr.sdk.client.state.pilot.connected;
 
+import com.fleetmgr.interfaces.AddChannelsRequest;
+import com.fleetmgr.interfaces.Role;
+import com.fleetmgr.interfaces.facade.control.ClientMessage;
+import com.fleetmgr.interfaces.facade.control.Command;
+import com.fleetmgr.interfaces.facade.control.ControlMessage;
+import com.fleetmgr.interfaces.facade.control.Response;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.connection.Received;
 import com.fleetmgr.sdk.client.event.input.user.CloseChannels;
@@ -7,45 +13,36 @@ import com.fleetmgr.sdk.client.event.input.user.OpenChannels;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;
 import com.fleetmgr.sdk.client.event.output.facade.ChannelsClosed;
 import com.fleetmgr.sdk.client.event.output.facade.FacadeEvent;
-import com.fleetmgr.sdk.client.state.State;
-import com.fleetmgr.interfaces.AddChannelsRequest;
-import com.fleetmgr.interfaces.Role;
-import com.fleetmgr.interfaces.facade.control.ClientMessage;
-import com.fleetmgr.interfaces.facade.control.Command;
-import com.fleetmgr.interfaces.facade.control.ControlMessage;
-import com.fleetmgr.interfaces.facade.control.Response;
+import com.fleetmgr.sdk.system.machine.BaseState;
+
+import java.util.Optional;
 
 /**
  * Created by: Bartosz Nawrot
  * Date: 23.09.2018
  * Description:
  */
-public class Controlling extends State {
+public class Controlling extends BaseState {
 
-    Controlling(State state) {
+    Controlling(BaseState state) {
         super(state);
     }
 
     @Override
-    public State start() {
-        return null;
-    }
-
-    @Override
-    public State notifyEvent(UserEvent event) {
+    public Optional<BaseState> onUserEvent(UserEvent event) {
         switch (event.getType()) {
             case OPEN_CHANNELS:
-                OpenChannels openChannels = (OpenChannels)event;
+                OpenChannels openChannels = (OpenChannels) event;
                 send(ClientMessage.newBuilder()
                         .setCommand(Command.ADD_CHANNELS)
                         .setRequestChannels(AddChannelsRequest.newBuilder()
                                 .addAllChannelId(openChannels.getChannels())
                                 .build())
                         .build());
-                return null;
+                return Optional.empty();
 
             case CLOSE_CHANNELS:
-                CloseChannels closeChannels = (CloseChannels)event;
+                CloseChannels closeChannels = (CloseChannels) event;
                 backend.closeChannels(closeChannels.getChannels());
                 send(ClientMessage.newBuilder()
                         .setCommand(Command.REMOVE_CHANNELS)
@@ -53,59 +50,59 @@ public class Controlling extends State {
                                 .addAllChannelId(closeChannels.getChannels())
                                 .build())
                         .build());
-                return null;
+                return Optional.empty();
 
             case RELEASE:
-                return new Releasing(this);
+                return Optional.of(new Releasing(this));
 
             default:
-                return defaultEventHandle(event.toString());
+                return defaultConnectionEventHandler(event.toString());
         }
     }
 
     @Override
-    public State notifyConnection(ConnectionEvent event) {
+    public Optional<BaseState> onConnectionEvent(ConnectionEvent event) {
         switch (event.getType()) {
             case RECEIVED:
                 return handleMessage(((Received) event).getMessage());
 
             case LOST:
-                return new Recovering(this);
+                return Optional.of(new Recovering(this));
 
             default:
-                return defaultEventHandle(event.toString());
+                return defaultConnectionEventHandler(event.toString());
         }
     }
 
-    private State handleMessage(ControlMessage message) {
+    private Optional<BaseState> handleMessage(ControlMessage message) {
         switch (message.getCommand()) {
             case ADD_CHANNELS:
                 if (message.getResponse() == Response.ACCEPTED) {
-                    return new ValidatingChannels(this, Role.LEADER,
-                            message.getRequestChannels().getChannelList());
+                    return Optional.of(new ValidatingChannels(this, Role.LEADER,
+                            message.getRequestChannels().getChannelList()));
 
                 } else {
-                    return defaultMessageHandle(message);
+                    return defaultUserEventHandler(message);
                 }
 
             case REMOVE_CHANNELS:
                 if (message.getResponse() == Response.ACCEPTED) {
                     listener.onEvent(new ChannelsClosed(null));
-                    return null;
+                    return Optional.empty();
 
                 } else {
-                    return defaultMessageHandle(message);
+                    return defaultUserEventHandler(message);
                 }
 
             case DEVICE_UNREACHABLE:
                 listener.onEvent(new FacadeEvent(FacadeEvent.Type.DEVICE_UNREACHABLE));
-                return null;
+                return Optional.empty();
 
             case RELEASE_CONTROL:
-                return new ReleasingControl(this);
+                return Optional.of(new ReleasingControl(this));
 
             default:
-                return defaultMessageHandle(message);
+                return defaultUserEventHandler(message);
         }
     }
 

@@ -23,10 +23,11 @@ import static com.google.api.HttpRule.PatternCase.POST;
  */
 public class CoreClient {
 
+    private static final SimpleDateFormat sdf = new SimpleDateFormat("HH.mm.ss.SSS");
     private final HttpsClient client;
 
     public CoreClient(String address, String key) {
-        this.client = new HttpsClient(address, key, this::trace);
+        this.client = new HttpsClient(address, key);
     }
 
     public AttachResponse attach() throws IOException {
@@ -55,8 +56,6 @@ public class CoreClient {
         JsonFormat.parser().ignoringUnknownFields().merge(responseJson.toString(), builder);
         return builder.build();
     }
-
-    private static final SimpleDateFormat sdf = new SimpleDateFormat("HH.mm.ss.SSS");
 
     public void trace(String message) {
         System.out.println(sdf.format(new Timestamp(System.currentTimeMillis())) + ": " + message);

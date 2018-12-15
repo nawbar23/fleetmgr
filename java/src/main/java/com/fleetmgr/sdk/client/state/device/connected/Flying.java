@@ -1,86 +1,86 @@
 package com.fleetmgr.sdk.client.state.device.connected;
 
-import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
-import com.fleetmgr.sdk.client.event.input.connection.Received;
-import com.fleetmgr.sdk.client.event.input.user.UserEvent;
-import com.fleetmgr.sdk.client.traffic.Channel;
-import com.fleetmgr.sdk.client.event.output.facade.ChannelsClosed;
-import com.fleetmgr.sdk.client.event.output.facade.ChannelsOpened;
-import com.fleetmgr.sdk.client.event.output.facade.FacadeEvent;
-import com.fleetmgr.sdk.client.state.State;
 import com.fleetmgr.interfaces.ChannelsResponse;
 import com.fleetmgr.interfaces.facade.control.ClientMessage;
 import com.fleetmgr.interfaces.facade.control.Command;
 import com.fleetmgr.interfaces.facade.control.ControlMessage;
 import com.fleetmgr.interfaces.facade.control.Response;
+import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
+import com.fleetmgr.sdk.client.event.input.connection.Received;
+import com.fleetmgr.sdk.client.event.input.user.UserEvent;
+import com.fleetmgr.sdk.client.event.output.facade.ChannelsClosed;
+import com.fleetmgr.sdk.client.event.output.facade.ChannelsOpened;
+import com.fleetmgr.sdk.client.event.output.facade.FacadeEvent;
+import com.fleetmgr.sdk.client.traffic.Channel;
+import com.fleetmgr.sdk.system.machine.BaseState;
 
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by: Bartosz Nawrot
  * Date: 23.09.2018
  * Description:
  */
-public class Flying extends State {
+public class Flying extends BaseState {
 
     private List<com.fleetmgr.interfaces.Channel> initialChannels;
 
-    Flying(State state, List<com.fleetmgr.interfaces.Channel> initialChannels) {
+    Flying(BaseState state, List<com.fleetmgr.interfaces.Channel> initialChannels) {
         super(state);
         this.initialChannels = initialChannels;
     }
 
     @Override
-    public State start() {
+    public void start() {
         attachChannels(initialChannels);
-        return null;
     }
 
     @Override
-    public State notifyEvent(UserEvent event) {
+    public Optional<BaseState> onUserEvent(UserEvent event) {
         switch (event.getType()) {
             default:
-                return defaultEventHandle(event.toString());
+                return defaultConnectionEventHandler(event.toString());
         }
     }
 
     @Override
-    public State notifyConnection(ConnectionEvent event) {
+    public Optional<BaseState> onConnectionEvent(ConnectionEvent event) {
         switch (event.getType()) {
             case RECEIVED:
-                return handleMessage(((Received)event).getMessage());
+                return handleMessage(((Received) event).getMessage());
 
             case LOST:
-                return new Recovering(this);
+                return Optional.of(new Recovering(this));
 
             default:
-                return defaultEventHandle(event.toString());
+                return defaultConnectionEventHandler(event.toString());
         }
     }
 
-    private State handleMessage(ControlMessage message) {
+    private Optional<BaseState> handleMessage(ControlMessage message) {
         switch (message.getCommand()) {
             case ATTACH_CHANNELS:
                 attachChannels(message.getAttachChannels().getChannelsList());
-                return null;
+                return Optional.empty();
 
             case RELEASE_CHANNELS:
                 releaseChannels(
                         message.getChannels().getAttachedChannelsList(),
                         message.getCommand());
-                return null;
+                return Optional.empty();
 
             case OPERATION_ENDED:
                 releaseChannels(
                         new LinkedList<>(backend.getSockets().keySet()),
                         message.getCommand());
                 listener.onEvent(new FacadeEvent(FacadeEvent.Type.OPERATION_ENDED));
-                return new Ready(this);
+                return Optional.of(new Ready(this));
 
             default:
-                return defaultMessageHandle(message);
+                return defaultUserEventHandler(message);
         }
     }
 
