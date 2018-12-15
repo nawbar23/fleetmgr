@@ -6,18 +6,18 @@ package com.fleetmgr.sdk.system;
  * Description:
  */
 public class Pair<A, B> {
-    private A first;
-    private B second;
+    private A key;
+    private B value;
 
-    public Pair(A first, B second) {
+    public Pair(A key, B value) {
         super();
-        this.first = first;
-        this.second = second;
+        this.key = key;
+        this.value = value;
     }
 
     public int hashCode() {
-        int hashFirst = first != null ? first.hashCode() : 0;
-        int hashSecond = second != null ? second.hashCode() : 0;
+        int hashFirst = key != null ? key.hashCode() : 0;
+        int hashSecond = value != null ? value.hashCode() : 0;
 
         return (hashFirst + hashSecond) * hashSecond + hashFirst;
     }
@@ -26,12 +26,12 @@ public class Pair<A, B> {
         if (other instanceof Pair) {
             Pair otherPair = (Pair) other;
             return
-                    ((  this.first == otherPair.first ||
-                            ( this.first != null && otherPair.first != null &&
-                                    this.first.equals(otherPair.first))) &&
-                            (  this.second == otherPair.second ||
-                                    ( this.second != null && otherPair.second != null &&
-                                            this.second.equals(otherPair.second))) );
+                    ((  this.key == otherPair.key ||
+                            ( this.key != null && otherPair.key != null &&
+                                    this.key.equals(otherPair.key))) &&
+                            (  this.value == otherPair.value ||
+                                    ( this.value != null && otherPair.value != null &&
+                                            this.value.equals(otherPair.value))) );
         }
 
         return false;
@@ -39,22 +39,22 @@ public class Pair<A, B> {
 
     public String toString()
     {
-        return "(" + first + ", " + second + ")";
+        return "(" + key + ", " + value + ")";
     }
 
     public A getKey() {
-        return first;
+        return key;
     }
 
     public void setKey(A first) {
-        this.first = first;
+        this.key = first;
     }
 
     public B getValue() {
-        return second;
+        return value;
     }
 
     public void setValue(B second) {
-        this.second = second;
+        this.value = second;
     }
 }

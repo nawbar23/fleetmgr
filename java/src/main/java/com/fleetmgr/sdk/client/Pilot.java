@@ -28,11 +28,11 @@ public class Pilot extends Client {
     public ListDevicesResponse listConnectedDevices() throws IOException {
         ListDevicesResponse.Builder builder = ListDevicesResponse.newBuilder();
         ListDevicesResponse response = listDevices();
-        for (Device d : response.getDevicesList()) {
-            if (d.getConnectionState() == ConnectionState.CONNECTED) {
-                builder.addDevices(d);
-            }
-        }
+
+        response.getDevicesList().stream()
+                .filter(device -> device.getConnectionState() == ConnectionState.CONNECTED)
+                .forEach(builder::addDevices);
+
         return builder.build();
     }
 }

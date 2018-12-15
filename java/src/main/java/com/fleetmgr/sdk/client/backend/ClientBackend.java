@@ -142,7 +142,7 @@ public class ClientBackend implements StreamObserver<ControlMessage> {
             try {
                 trace("Opening channel id: " + c.getId());
                 UdpChannel socket = new UdpChannel(executor,
-                        c.getIp(), c.getPort(), c.getId(), createDefaultSocketListener());
+                        c.getIp(), c.getPort(), c.getId(), new DefaultSocketListener());
                 socket.initialize(c.getRouteKey());
                 sockets.put(c.getId(), socket);
                 opened.put(c.getId(), socket);
@@ -180,22 +180,21 @@ public class ClientBackend implements StreamObserver<ControlMessage> {
         listener.trace(message);
     }
 
-    private Channel.Listener createDefaultSocketListener() {
-        return new Channel.Listener() {
-            @Override
-            public void onReceived(Channel channel, byte[] data, int size) {
-            }
+    private class DefaultSocketListener implements Channel.Listener {
+        @Override
+        public void onReceived(Channel channel, byte[] data, int size) {
+        }
 
-            @Override
-            public void onClosed(Channel channel) {
-            }
+        @Override
+        public void onClosed(Channel channel) {
+        }
 
-            @Override
-            public void trace(String message) {
-            }
-        };
+        @Override
+        public void trace(String message) {
+        }
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static SslContext buildSslContext(String trustCertCollectionFilePath,
                                               String clientCertChainFilePath,
                                               String clientPrivateKeyFilePath) throws SSLException {
