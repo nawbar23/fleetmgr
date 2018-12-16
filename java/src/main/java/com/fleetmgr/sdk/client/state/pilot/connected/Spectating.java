@@ -16,6 +16,7 @@ import com.fleetmgr.interfaces.facade.control.Command;
 import com.fleetmgr.interfaces.facade.control.ControlMessage;
 import com.fleetmgr.interfaces.facade.control.Response;
 
+import java.util.Collection;
 import java.util.LinkedList;
 
 /**
@@ -49,7 +50,7 @@ public class Spectating extends State {
 
             case CLOSE_CHANNELS:
                 CloseChannels closeChannels = (CloseChannels)event;
-                backend.closeChannels(closeChannels.getChannels());
+                backend.getChannelsHandler().closeChannels(closeChannels.getChannels());
                 send(ClientMessage.newBuilder()
                         .setCommand(Command.REMOVE_CHANNELS)
                         .setRequestChannels(AddChannelsRequest.newBuilder()
@@ -105,8 +106,9 @@ public class Spectating extends State {
                 return null;
 
             case OPERATION_ENDED:
-                listener.onEvent(new OperationEnded(new LinkedList<>(backend.getSockets().keySet())));
-                backend.closeAllChannels();
+                Collection<Long> openedChannels = backend.getChannelsHandler().getOpenedChannels();
+                listener.onEvent(new OperationEnded(new LinkedList<>(openedChannels)));
+                backend.getChannelsHandler().closeAllChannels();
                 send(ClientMessage.newBuilder()
                         .setCommand(Command.OPERATION_ENDED)
                         .setResponse(Response.ACCEPTED)

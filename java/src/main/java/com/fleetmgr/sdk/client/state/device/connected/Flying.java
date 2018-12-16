@@ -14,6 +14,7 @@ import com.fleetmgr.interfaces.facade.control.Command;
 import com.fleetmgr.interfaces.facade.control.ControlMessage;
 import com.fleetmgr.interfaces.facade.control.Response;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -67,16 +68,21 @@ public class Flying extends State {
                 return null;
 
             case RELEASE_CHANNELS:
-                releaseChannels(
-                        message.getChannels().getAttachedChannelsList(),
-                        message.getCommand());
+                releaseChannels(message.getChannels().getAttachedChannelsList());
                 return null;
 
             case OPERATION_ENDED:
-                releaseChannels(
-                        new LinkedList<>(backend.getSockets().keySet()),
-                        message.getCommand());
+                Collection<Long> openedChannels = backend.getChannelsHandler().getOpenedChannels();
+                listener.onEvent(new ChannelsClosed(openedChannels));
+                backend.getChannelsHandler().closeAllChannels();
                 listener.onEvent(new FacadeEvent(FacadeEvent.Type.OPERATION_ENDED));
+                send(ClientMessage.newBuilder()
+                        .setCommand(Command.OPERATION_ENDED)
+                        .setResponse(Response.ACCEPTED)
+                        .setAttachChannels(ChannelsResponse.newBuilder()
+                                .addAllAttachedChannels(openedChannels)
+                                .build())
+                        .build());
                 return new Ready(this);
 
             default:
@@ -85,7 +91,7 @@ public class Flying extends State {
     }
 
     private void attachChannels(List<com.fleetmgr.interfaces.Channel> channels) {
-        Map<Long, Channel> validated = backend.validateChannels(channels);
+        Map<Long, Channel> validated = backend.getChannelsHandler().validateChannels(channels);
         listener.onEvent(new ChannelsOpened(validated.values()));
         send(ClientMessage.newBuilder()
                 .setCommand(Command.ATTACH_CHANNELS)
@@ -96,11 +102,11 @@ public class Flying extends State {
                 .build());
     }
 
-    private void releaseChannels(List<Long> channels, Command request) {
+    private void releaseChannels(List<Long> channels) {
         listener.onEvent(new ChannelsClosed(channels));
-        backend.closeChannels(channels);
+        backend.getChannelsHandler().closeChannels(channels);
         send(ClientMessage.newBuilder()
-                .setCommand(request)
+                .setCommand(Command.RELEASE_CHANNELS)
                 .setResponse(Response.ACCEPTED)
                 .setAttachChannels(ChannelsResponse.newBuilder()
                         .addAllAttachedChannels(channels)

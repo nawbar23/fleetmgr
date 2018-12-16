@@ -22,7 +22,7 @@ public class Recovering extends State {
     public State start() {
         backend.getHeartbeatHandler().end();
         listener.onEvent(new FacadeEvent(FacadeEvent.Type.CONNECTION_LOST));
-        backend.closeAllChannels();
+        backend.getChannelsHandler().closeAllChannels();
         return null;
     }
 

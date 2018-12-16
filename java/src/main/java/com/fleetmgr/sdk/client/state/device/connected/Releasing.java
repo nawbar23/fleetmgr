@@ -22,7 +22,7 @@ public class Releasing extends State {
 
     @Override
     public State start() {
-        backend.closeAllChannels();
+        backend.getChannelsHandler().closeAllChannels();
         send(ClientMessage.newBuilder()
                 .setCommand(Command.RELEASE)
                 .build());

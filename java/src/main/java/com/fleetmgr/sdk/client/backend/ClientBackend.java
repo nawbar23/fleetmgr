@@ -34,57 +34,52 @@ import java.util.concurrent.TimeUnit;
  */
 public class ClientBackend implements StreamObserver<ControlMessage> {
 
-    public interface Listener {
-        void trace(String message);
-    }
-
-    private Listener listener;
-
     private Client client;
     private Client.Listener clientListener;
 
     private ExecutorService executor;
 
-    private HeartbeatHandler heartbeatHandler;
-
-    private HashMap<Long, Channel> sockets;
-
     private CoreClient core;
+
+    private HeartbeatHandler heartbeatHandler;
+    private ChannelsHandler channelsHandler;
 
     private ManagedChannel channel;
     private StreamObserver<ClientMessage> toFacade;
 
-    public ClientBackend(Listener listener,
-                         Client client,
+    public ClientBackend(Client client,
                          Client.Listener clientListener,
                          ExecutorService executor,
                          CoreClient core) {
-        this.listener = listener;
         this.client = client;
         this.clientListener = clientListener;
 
         this.executor = executor;
 
-        this.heartbeatHandler = new HeartbeatHandler(client, this);
-
-        this.sockets = new HashMap<>();
         this.core = core;
+
+        this.heartbeatHandler = new HeartbeatHandler(client, this);
+        this.channelsHandler = new ChannelsHandler(client, executor);
     }
 
     public ExecutorService getExecutor() {
         return executor;
     }
 
+    public CoreClient getCore() {
+        return core;
+    }
+
     public HeartbeatHandler getHeartbeatHandler() {
         return heartbeatHandler;
     }
 
-    public HashMap<Long, Channel> getSockets() {
-        return sockets;
+    public ChannelsHandler getChannelsHandler() {
+        return channelsHandler;
     }
 
-    public CoreClient getCore() {
-        return core;
+    Location getLocation() {
+        return clientListener.getLocation();
     }
 
     public void openFacadeConnection(String ip, int port) throws SSLException {
@@ -136,64 +131,8 @@ public class ClientBackend implements StreamObserver<ControlMessage> {
         client.notifyEvent(new ConnectionEvent(ConnectionEvent.Type.CLOSED));
     }
 
-    public Map<Long, Channel> validateChannels(Collection<com.fleetmgr.interfaces.Channel> channels) {
-        Map<Long, Channel> opened = new HashMap<>();
-        for (com.fleetmgr.interfaces.Channel c : channels) {
-            try {
-                trace("Opening channel id: " + c.getId());
-                UdpChannel socket = new UdpChannel(executor,
-                        c.getIp(), c.getPort(), c.getId(), new DefaultSocketListener());
-                socket.initialize(c.getRouteKey());
-                sockets.put(c.getId(), socket);
-                opened.put(c.getId(), socket);
-                trace("Channel id: " + c.getId() + " VALIDATED");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        return opened;
-    }
-
-    public void closeChannels(Collection<Long> channels) {
-        for (Long c : channels) {
-            trace("Closing channel, id: " + c);
-            Channel s = sockets.remove(c);
-            if (s != null) {
-                s.close();
-            } else {
-                trace("Warning, trying to close not existing channel, id: " + c);
-            }
-        }
-    }
-
-    public void closeAllChannels() {
-        for (Channel s : sockets.values()) {
-            trace("Closing channel id: " + s.getChannelId());
-            s.close();
-        }
-        sockets.clear();
-    }
-
-    Location getLocation() {
-        return clientListener.getLocation();
-    }
-
     public void trace(String message) {
-        listener.trace(message);
-    }
-
-    private class DefaultSocketListener implements Channel.Listener {
-        @Override
-        public void onReceived(Channel channel, byte[] data, int size) {
-        }
-
-        @Override
-        public void onClosed(Channel channel) {
-        }
-
-        @Override
-        public void trace(String message) {
-        }
+        client.trace(message);
     }
 
     @SuppressWarnings("SameParameterValue")

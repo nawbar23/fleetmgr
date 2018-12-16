@@ -47,7 +47,7 @@ public abstract class Client extends StateMachine<Event> {
 
         CoreClient coreClient = new CoreClient(coreAddress, key);
 
-        this.backend = new ClientBackend(this::trace, this, listener, executor, coreClient);
+        this.backend = new ClientBackend(this, listener, executor, coreClient);
     }
 
     @Override
