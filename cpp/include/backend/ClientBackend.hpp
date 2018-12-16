@@ -8,6 +8,7 @@
 #include "core/CoreClient.hpp"
 
 #include "backend/HeartbeatHandler.hpp"
+#include "backend/ChannelsHandler.hpp"
 
 #include "facade/control/facade_service.grpc.pb.h"
 #include <grpc++/grpc++.h>
@@ -35,21 +36,17 @@ public:
 
     HeartbeatHandler& getHeartbeatHandler();
 
+    ChannelsHandler& getChannelsHandler();
+
     std::unique_ptr<com::fleetmgr::interfaces::Location> getLocation();
+
+    std::shared_ptr<traffic::socket::ISocket> createSocket(const traffic::socket::ISocket::Protocol);
 
     void openFacadeConnection(const std::string&, const int);
 
     void closeFacadeConnection();
 
     void send(const com::fleetmgr::interfaces::facade::control::ClientMessage& message);
-
-    std::shared_ptr<std::vector<std::shared_ptr<traffic::Channel>>> validateChannels(const std::vector<com::fleetmgr::interfaces::Channel>&);
-
-    void closeChannels(const std::vector<long>&);
-
-    void closeAllChannels();
-
-    std::shared_ptr<std::vector<long>> getChannelIds() const;
 
     // TODO Bartek argument should be changed to recursive template for optimization
     void trace(const std::string& message);
@@ -61,6 +58,7 @@ private:
     core::CoreClient core;
 
     HeartbeatHandler heartbeatHandler;
+    ChannelsHandler channelsHandler;
     
     const std::string certPath;
 
@@ -81,9 +79,7 @@ private:
 
     std::atomic<bool> keepReader;
 
-    std::unordered_map<long, std::shared_ptr<traffic::Channel>> channels;
-
-    void proceeReader();
+    void proceedReader();
 
     void readCert(const std::string&, std::string&);
 };

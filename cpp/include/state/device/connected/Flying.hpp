@@ -45,7 +45,7 @@ private:
 
     void attachChannels(std::shared_ptr<std::vector<com::fleetmgr::interfaces::Channel>>);
 
-    void releaseChannels(std::shared_ptr<std::vector<long>>, com::fleetmgr::interfaces::facade::control::Command);
+    void releaseChannels(std::shared_ptr<std::vector<long>>);
 };
 
 } // connected

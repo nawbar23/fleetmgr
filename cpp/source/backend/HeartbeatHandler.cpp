@@ -38,3 +38,8 @@ void HeartbeatHandler::onTimeout()
 {
 
 }
+
+void HeartbeatHandler::trace(const std::string& message)
+{
+    backend.trace(message);
+}

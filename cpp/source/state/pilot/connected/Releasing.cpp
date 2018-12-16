@@ -26,7 +26,7 @@ Releasing::Releasing(IState& state) :
 
 std::unique_ptr<IState> Releasing::start()
 {
-    backend.closeAllChannels();
+    backend.getChannelsHandler().closeAllChannels();
     ClientMessage message;
     message.set_command(Command::RELEASE);
     send(message);

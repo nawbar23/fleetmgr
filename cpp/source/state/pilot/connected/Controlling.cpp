@@ -62,7 +62,7 @@ std::unique_ptr<IState> Controlling::handleUserEvent(const UserEvent& event)
     case UserEvent::CLOSE_CHANNELS:
     {
         const CloseChannels& closeChannels = reinterpret_cast<const CloseChannels&>(event);
-        backend.closeChannels(closeChannels.getChannels());
+        backend.getChannelsHandler().closeChannels(closeChannels.getChannels());
         ClientMessage message;
         message.set_command(Command::REMOVE_CHANNELS);
         for (long c : closeChannels.getChannels())

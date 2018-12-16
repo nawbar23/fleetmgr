@@ -37,7 +37,7 @@ ValidatingChannels::ValidatingChannels(IState& state, Role _role, std::shared_pt
 
 std::unique_ptr<IState> ValidatingChannels::start()
 {
-    validated = backend.validateChannels(*toValidate);
+    validated = backend.getChannelsHandler().validateChannels(*toValidate);
     ClientMessage response;
     response.set_command(Command::CHANNELS_READY);
     for (std::shared_ptr<traffic::Channel> c : *validated)

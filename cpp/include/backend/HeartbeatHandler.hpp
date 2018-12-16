@@ -33,6 +33,8 @@ private:
     std::time_t lastReception;
 
     void onTimeout();
+
+    void trace(const std::string& message);
 };
 
 } // backend

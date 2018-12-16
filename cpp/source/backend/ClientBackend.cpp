@@ -2,6 +2,10 @@
 
 #include "IClient.hpp"
 
+#include "core/CoreClient.hpp"
+#include "backend/HeartbeatHandler.hpp"
+#include "backend/ChannelsHandler.hpp"
+
 #include "event/input/connection/Received.hpp"
 
 #include "traffic/Channel.hpp"
@@ -20,6 +24,7 @@ ClientBackend::ClientBackend(IClient& _client, IClient::Listener& _listener, cor
     listener(_listener),
     core(coreClient),
     heartbeatHandler(*this),
+    channelsHandler(*this),
     channel(nullptr),
     stub(nullptr),
     stream(nullptr),
@@ -38,9 +43,19 @@ HeartbeatHandler& ClientBackend::getHeartbeatHandler()
     return heartbeatHandler;
 }
 
+ChannelsHandler& ClientBackend::getChannelsHandler()
+{
+    return channelsHandler;
+}
+
 std::unique_ptr<Location> ClientBackend::getLocation()
 {
     return listener.getLocation();
+}
+
+std::shared_ptr<traffic::socket::ISocket> ClientBackend::createSocket(const traffic::socket::ISocket::Protocol protocol)
+{
+    return listener.createSocket(protocol);
 }
 
 void ClientBackend::openFacadeConnection(const std::string& host, const int port)
@@ -83,7 +98,7 @@ void ClientBackend::openFacadeConnection(const std::string& host, const int port
         stream->Read(toRead.get(), readTag);
 
         keepReader.store(true);
-        listener.execute(std::bind(&ClientBackend::proceeReader, this));
+        listener.execute(std::bind(&ClientBackend::proceedReader, this));
     }
     else
     {
@@ -130,70 +145,12 @@ void ClientBackend::send(const ClientMessage& message)
     stream->Write(message, (void*)2);
 }
 
-std::shared_ptr<std::vector<std::shared_ptr<traffic::Channel>>> ClientBackend::validateChannels(const std::vector<Channel>& toValidate)
-{
-    std::shared_ptr<std::vector<std::shared_ptr<traffic::Channel>>> result =
-            std::make_shared<std::vector<std::shared_ptr<traffic::Channel>>>();
-    for (const Channel& c : toValidate)
-    {
-        trace("Opening channel id: " + std::to_string(c.id()));
-        std::shared_ptr<traffic::socket::ISocket> socket = listener.createSocket(traffic::socket::ISocket::UDP);
-        std::shared_ptr<traffic::Channel> channel = std::make_shared<traffic::Channel>(c.id(), socket);
-        if (channel->open(c.ip(), c.port(), c.routekey()))
-        {
-            trace("Channel id: " + std::to_string(c.id()) + " validated");
-            channels.insert({c.id(), channel});
-            result->push_back(channel);
-        }
-    }
-    return result;
-}
-
-void ClientBackend::closeChannels(const std::vector<long>& toClose)
-{
-    for (long id : toClose)
-    {
-        auto c = channels.find(id);
-        if (c != channels.end())
-        {
-            trace("Closing channel, id: " + std::to_string(id));
-            c->second->close();
-            channels.erase(c);
-        }
-        else
-        {
-            trace("Warning, trying to close not existing channel, id: " + std::to_string(id));
-        }
-    }
-}
-
-void ClientBackend::closeAllChannels()
-{
-    for (auto& pair : channels)
-    {
-        trace("Closing channel, id: " + std::to_string(pair.first));
-        pair.second->close();
-    }
-    channels.clear();
-}
-
-std::shared_ptr<std::vector<long>> ClientBackend::getChannelIds() const
-{
-    std::shared_ptr<std::vector<long>> result = std::make_shared<std::vector<long>>();
-    result->reserve(channels.size());
-    for (auto& pair : channels)
-    {
-        result->push_back(pair.first);
-    }
-    return result;
-}
-
 void ClientBackend::trace(const std::string& message)
 {
     listener.trace(message);
 }
 
-void ClientBackend::proceeReader()
+void ClientBackend::proceedReader()
 {
     void* tag;
     bool ok = false;
@@ -217,7 +174,7 @@ void ClientBackend::proceeReader()
 
     if (keepReader.load())
     {
-        listener.execute(std::bind(&ClientBackend::proceeReader, this));
+        listener.execute(std::bind(&ClientBackend::proceedReader, this));
     }
 }
 

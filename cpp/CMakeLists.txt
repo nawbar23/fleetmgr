@@ -93,6 +93,7 @@ set(SOURCES
     ${PROJECT_SOURCE_DIR}/source/event/output/OperationStarted.cpp
     ${PROJECT_SOURCE_DIR}/source/backend/ClientBackend.cpp
     ${PROJECT_SOURCE_DIR}/source/backend/HeartbeatHandler.cpp
+    ${PROJECT_SOURCE_DIR}/source/backend/ChannelsHandler.cpp
     ${PROJECT_SOURCE_DIR}/source/state/IState.cpp
     ${PROJECT_SOURCE_DIR}/source/state/device/Disconnected.cpp
     ${PROJECT_SOURCE_DIR}/source/state/device/Connecting.cpp
@@ -162,6 +163,7 @@ set(HEADERS
     ${PROJECT_SOURCE_DIR}/include/event/output/ChannelsClosed.hpp
     ${PROJECT_SOURCE_DIR}/include/backend/ClientBackend.hpp
     ${PROJECT_SOURCE_DIR}/include/backend/HeartbeatHandler.hpp
+    ${PROJECT_SOURCE_DIR}/include/backend/ChannelsHandler.hpp
     ${PROJECT_SOURCE_DIR}/include/state/IState.hpp
     ${PROJECT_SOURCE_DIR}/include/state/device/Disconnected.hpp
     ${PROJECT_SOURCE_DIR}/include/state/device/Connecting.hpp
