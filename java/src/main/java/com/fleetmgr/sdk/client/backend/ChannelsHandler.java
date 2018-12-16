@@ -31,22 +31,23 @@ public class ChannelsHandler {
         this.channels = new HashMap<>();
     }
 
-    public Collection<Long> getOpenedChannels() {
+    public Collection<Long> getChannelIds() {
         return channels.keySet();
     }
 
-    public Map<Long, Channel> validateChannels(Collection<com.fleetmgr.interfaces.Channel> channels) {
+    public Map<Long, Channel> validateChannels(Collection<com.fleetmgr.interfaces.Channel> toValidate) {
         Map<Long, Channel> opened = new HashMap<>();
-        for (com.fleetmgr.interfaces.Channel c : channels) {
+        for (com.fleetmgr.interfaces.Channel c : toValidate) {
             try {
                 trace("Opening channel, id: " + c.getId());
 
                 Socket socket = new UdpSocket(executor);
                 Channel channel = new Channel(c.getId(), socket);
                 channel.open(c.getIp(), c.getPort(), c.getRouteKey());
-                this.channels.put(c.getId(), channel);
 
+                channels.put(c.getId(), channel);
                 opened.put(c.getId(), channel);
+
                 trace("Channel id: " + c.getId() + " validated");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -79,19 +80,5 @@ public class ChannelsHandler {
 
     public void trace(String message) {
         client.trace(message);
-    }
-
-    private class DefaultChannelList implements Channel.Listener {
-        @Override
-        public void onReceived(Channel channel, byte[] data, int size) {
-        }
-
-        @Override
-        public void onClosed(Channel channel) {
-        }
-
-        @Override
-        public void trace(String message) {
-        }
     }
 }

@@ -15,7 +15,6 @@ import com.fleetmgr.interfaces.facade.control.ControlMessage;
 import com.fleetmgr.interfaces.facade.control.Response;
 
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -64,7 +63,8 @@ public class Flying extends State {
     private State handleMessage(ControlMessage message) {
         switch (message.getCommand()) {
             case ATTACH_CHANNELS:
-                attachChannels(message.getAttachChannels().getChannelsList());
+                attachChannels(
+                        message.getAttachChannels().getChannelsList());
                 return null;
 
             case RELEASE_CHANNELS:
@@ -72,7 +72,7 @@ public class Flying extends State {
                 return null;
 
             case OPERATION_ENDED:
-                Collection<Long> openedChannels = backend.getChannelsHandler().getOpenedChannels();
+                Collection<Long> openedChannels = backend.getChannelsHandler().getChannelIds();
                 listener.onEvent(new ChannelsClosed(openedChannels));
                 backend.getChannelsHandler().closeAllChannels();
                 listener.onEvent(new FacadeEvent(FacadeEvent.Type.OPERATION_ENDED));

@@ -76,6 +76,9 @@ public class Spectating extends State {
             case RECEIVED:
                 return handleMessage(((Received) event).getMessage());
 
+            case LOST:
+                return new Recovering(this);
+
             default:
                 return defaultEventHandle(event.toString());
         }
@@ -106,7 +109,7 @@ public class Spectating extends State {
                 return null;
 
             case OPERATION_ENDED:
-                Collection<Long> openedChannels = backend.getChannelsHandler().getOpenedChannels();
+                Collection<Long> openedChannels = backend.getChannelsHandler().getChannelIds();
                 listener.onEvent(new OperationEnded(new LinkedList<>(openedChannels)));
                 backend.getChannelsHandler().closeAllChannels();
                 send(ClientMessage.newBuilder()
