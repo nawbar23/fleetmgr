@@ -1,8 +1,13 @@
 package com.fleetmgr.sdk.client.traffic;
 
+import com.fleetmgr.interfaces.Result;
+import com.fleetmgr.interfaces.ValidateChannelRequest;
+import com.fleetmgr.interfaces.ValidateChannelResponse;
+import com.fleetmgr.sdk.client.traffic.socket.Socket;
+
 import java.io.IOException;
 
-public abstract class Channel {
+public class Channel implements Socket.Listener {
 
     public interface Listener {
         void onReceived(Channel channel, byte[] data, int size);
@@ -10,28 +15,76 @@ public abstract class Channel {
         void trace(String message);
     }
 
-    final long channelId;
+    private final long channelId;
+    private final Socket socket;
 
     protected Listener listener;
 
-    Channel(long channelId, Listener listener) {
+    public Channel(long channelId, Socket socket) {
         this.channelId = channelId;
-        this.listener = listener;
+        this.socket = socket;
+        this.listener = null;
     }
 
     public void setListener(Listener listener) {
         this.listener = listener;
     }
 
+    public void open(String ip, int port, String key) throws IOException {
+        socket.setListener(this);
+        socket.connect(ip, port);
+
+        ValidateChannelRequest validateChannelRequest = ValidateChannelRequest.newBuilder()
+                .setKey(key)
+                .build();
+
+        socket.send(validateChannelRequest.toByteArray(), validateChannelRequest.getSerializedSize());
+
+        byte[] buffer = socket.readBlocking();
+
+        ValidateChannelResponse response = ValidateChannelResponse.parseFrom(buffer);
+        if (response.getResult() != Result.VALIDATION_ACCEPTED) {
+            throw new IOException("Channel validation rejected");
+        }
+
+        socket.startReading();
+    }
+
+    public void close() {
+        socket.disconnect();
+    }
+
+    public void send(byte[] data, int size) throws IOException {
+        socket.send(data, size);
+    }
+
     public long getChannelId() {
         return channelId;
     }
 
-    public abstract void send(byte[] data, int size) throws IOException;
+    @Override
+    public void onReceived(byte[] data, int size) {
+        if (listener != null) {
+            listener.onReceived(this, data, size);
+        }
+    }
 
-    public abstract void close();
+    @Override
+    public void onClosed() {
+        if (listener != null) {
+            listener.onClosed(this);
+        }
+    }
 
-    protected void trace(String message) {
+    @Override
+    public void trace(String message) {
         listener.trace("[" + toString() + "]: " + message);
+    }
+
+    @Override
+    public String toString() {
+        return "Channel{" +
+                "channelId=" + channelId +
+                '}';
     }
 }

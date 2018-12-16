@@ -2,7 +2,8 @@ package com.fleetmgr.sdk.client.backend;
 
 import com.fleetmgr.sdk.client.Client;
 import com.fleetmgr.sdk.client.traffic.Channel;
-import com.fleetmgr.sdk.client.traffic.UdpChannel;
+import com.fleetmgr.sdk.client.traffic.socket.Socket;
+import com.fleetmgr.sdk.client.traffic.socket.UdpSocket;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -39,11 +40,13 @@ public class ChannelsHandler {
         for (com.fleetmgr.interfaces.Channel c : channels) {
             try {
                 trace("Opening channel, id: " + c.getId());
-                UdpChannel socket = new UdpChannel(executor,
-                        c.getIp(), c.getPort(), c.getId(), new DefaultSocketListener());
-                socket.initialize(c.getRouteKey());
-                this.channels.put(c.getId(), socket);
-                opened.put(c.getId(), socket);
+
+                Socket socket = new UdpSocket(executor);
+                Channel channel = new Channel(c.getId(), socket);
+                channel.open(c.getIp(), c.getPort(), c.getRouteKey());
+                this.channels.put(c.getId(), channel);
+
+                opened.put(c.getId(), channel);
                 trace("Channel id: " + c.getId() + " validated");
             } catch (IOException e) {
                 e.printStackTrace();
@@ -65,10 +68,12 @@ public class ChannelsHandler {
     }
 
     public void closeAllChannels() {
-        for (Channel s : channels.values()) {
-            trace("Closing channel id: " + s.getChannelId());
-            s.close();
+        System.out.println(channels);
+        for (Channel c : channels.values()) {
+            trace("Closing channel id: " + c.getChannelId());
+            c.close();
         }
+        System.out.println("asdasdasd");
         channels.clear();
     }
 
@@ -76,7 +81,7 @@ public class ChannelsHandler {
         client.trace(message);
     }
 
-    private class DefaultSocketListener implements Channel.Listener {
+    private class DefaultChannelList implements Channel.Listener {
         @Override
         public void onReceived(Channel channel, byte[] data, int size) {
         }

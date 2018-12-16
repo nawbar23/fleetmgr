@@ -2,22 +2,12 @@ package com.fleetmgr.sdk.client.state;
 
 import com.fleetmgr.sdk.client.Client;
 import com.fleetmgr.sdk.client.backend.ClientBackend;
-import com.fleetmgr.sdk.client.backend.HeartbeatHandler;
-import com.fleetmgr.sdk.client.core.CoreClient;
 import com.fleetmgr.sdk.client.event.input.Event;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;
-import com.fleetmgr.sdk.client.traffic.Channel;
-import com.fleetmgr.sdk.client.traffic.UdpChannel;
 import com.fleetmgr.interfaces.facade.control.ClientMessage;
 import com.fleetmgr.interfaces.facade.control.Command;
 import com.fleetmgr.interfaces.facade.control.ControlMessage;
-
-import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
 
 /**
  * Created by: Bartosz Nawrot
