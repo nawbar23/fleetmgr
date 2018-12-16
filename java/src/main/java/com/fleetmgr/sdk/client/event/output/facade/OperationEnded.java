@@ -7,16 +7,19 @@ import java.util.Collection;
  * Date: 18.09.2018
  * Description:
  */
-public class OperationEnded extends ChannelsClosed {
+public class OperationEnded extends FacadeEvent {
 
-    public OperationEnded(Collection<Long> sockets) {
-        super(FacadeEvent.Type.OPERATION_ENDED, sockets);
+    private Collection<Long> channels;
+
+    public OperationEnded(Collection<Long> channels) {
+        super(FacadeEvent.Type.OPERATION_ENDED);
+        this.channels = channels;
     }
 
     @Override
     public String toString() {
         return "OperationEnded{" +
-                ", sockets=" + getSockets() +
+                ", sockets=" + channels +
                 "}";
     }
 }

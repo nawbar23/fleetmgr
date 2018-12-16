@@ -5,16 +5,23 @@ package com.fleetmgr.sdk.client.event.output.facade;
  * Date: 26.09.2018
  * Description:
  */
-public class HandoverRejected extends Message {
+public class HandoverRejected extends FacadeEvent {
+
+    private String message;
 
     public HandoverRejected(String message) {
-        super(Type.HANDOVER_REJECTED, message, MessageType.ERROR);
+        super(FacadeEvent.Type.HANDOVER_REJECTED);
+        this.message = message;
+    }
+
+    public String getMessage() {
+        return message;
     }
 
     @Override
     public String toString() {
         return "HandoverRejected{" +
-                "mesage='" + message + '\'' +
+                "message='" + message + '\'' +
                 '}';
     }
 }

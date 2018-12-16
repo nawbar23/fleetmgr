@@ -5,10 +5,13 @@ package com.fleetmgr.sdk.client.event.output.facade;
  * Date: 26.09.2018
  * Description:
  */
-public class Error extends Message {
+public class Error extends FacadeEvent {
+
+    private String message;
 
     public Error(String message) {
-        super(Type.ERROR, message, MessageType.ERROR);
+        super(Type.ERROR);
+        this.message = message;
     }
 
     @Override

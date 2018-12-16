@@ -16,11 +16,6 @@ public class ChannelsClosed extends FacadeEvent {
         this.sockets = sockets;
     }
 
-    public ChannelsClosed(Type type, Collection<Long> sockets) {
-        super(type);
-        this.sockets = sockets;
-    }
-
     public Collection<Long> getSockets() {
         return sockets;
     }
