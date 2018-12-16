@@ -1,7 +1,9 @@
 #ifndef FM_TRAFFIC_CHANNEL_HPP
 #define FM_TRAFFIC_CHANNEL_HPP
 
-#include <atomic>
+#include "traffic/socket/ISocket.hpp"
+
+#include <memory>
 #include <string>
 
 namespace fm
@@ -18,7 +20,15 @@ namespace traffic
 class Channel
 {
 public:
+    Channel(long, std::shared_ptr<socket::ISocket>);
 
+    bool open(const std::string&, const int, const std::string&);
+
+    long getId() const;
+
+private:
+    const long id;
+    std::shared_ptr<socket::ISocket> socket;
 };
 
 } // traffic

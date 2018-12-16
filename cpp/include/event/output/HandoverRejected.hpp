@@ -20,11 +20,14 @@ namespace output
 class HandoverRejected : public FacadeEvent
 {
 public:
-    HandoverRejected();
+    HandoverRejected(const std::string&);
+
+    const std::string& getMessage() const;
 
     std::string toString() const;
 
 private:
+    std::string message;
 };
 
 } // output

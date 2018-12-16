@@ -4,7 +4,7 @@
 
 int main(int, char**)
 {
-    const std::string host = "192.168.56.1";
+    const std::string host = "192.168.1.52";
     const int port = 14010;
 
     const std::string apiKey = "";

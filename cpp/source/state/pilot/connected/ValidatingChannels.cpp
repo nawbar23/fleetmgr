@@ -28,7 +28,7 @@ using event::output::Error;
 using com::fleetmgr::interfaces::Role;
 using com::fleetmgr::interfaces::Channel;
 
-ValidatingChannels::ValidatingChannels(IState& state, Role _role, const std::vector<Channel>& openedChannels) :
+ValidatingChannels::ValidatingChannels(IState& state, Role _role, std::shared_ptr<std::vector<Channel>> openedChannels) :
     IState(state),
     role(_role),
     toValidate(openedChannels)
@@ -37,12 +37,12 @@ ValidatingChannels::ValidatingChannels(IState& state, Role _role, const std::vec
 
 std::unique_ptr<IState> ValidatingChannels::start()
 {
-    auto result = backend.validateChannels(toValidate);
+    validated = backend.validateChannels(*toValidate);
     ClientMessage response;
     response.set_command(Command::CHANNELS_READY);
-    for (auto& pair : result)
+    for (std::shared_ptr<traffic::Channel> c : *validated)
     {
-        response.mutable_attachchannels()->add_attachedchannels(pair.first);
+        response.mutable_attachchannels()->add_attachedchannels(c->getId());
     }
     send(response);
     return nullptr;
@@ -81,7 +81,7 @@ std::unique_ptr<IState> ValidatingChannels::handleMessage(const ControlMessage& 
     case Command::CHANNELS_READY:
         if (message.response() == Response::ACCEPTED)
         {
-            listener.onEvent(std::make_shared<ChannelsOpened>());
+            listener.onEvent(std::make_shared<ChannelsOpened>(validated));
             switch (role)
             {
             case Role::LEADER:
@@ -93,7 +93,7 @@ std::unique_ptr<IState> ValidatingChannels::handleMessage(const ControlMessage& 
         }
         else
         {
-            listener.onEvent(std::make_shared<Error>());
+            listener.onEvent(std::make_shared<Error>(message.message()));
             return defaultMessageHandle(message);
         }
 

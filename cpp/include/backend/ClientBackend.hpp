@@ -43,11 +43,13 @@ public:
 
     void send(const com::fleetmgr::interfaces::facade::control::ClientMessage& message);
 
-    std::unordered_map<long, traffic::Channel> validateChannels(const std::vector<com::fleetmgr::interfaces::Channel>&);
+    std::shared_ptr<std::vector<std::shared_ptr<traffic::Channel>>> validateChannels(const std::vector<com::fleetmgr::interfaces::Channel>&);
 
     void closeChannels(const std::vector<long>&);
 
     void closeAllChannels();
+
+    std::shared_ptr<std::vector<long>> getChannelIds() const;
 
     // TODO Bartek argument should be changed to recursive template for optimization
     void trace(const std::string& message);
@@ -78,6 +80,8 @@ private:
     com::fleetmgr::interfaces::facade::control::ControlMessage>> stream;
 
     std::atomic<bool> keepReader;
+
+    std::unordered_map<long, std::shared_ptr<traffic::Channel>> channels;
 
     void proceeReader();
 

@@ -90,7 +90,7 @@ std::unique_ptr<IState> Connecting::handleMessage(const ControlMessage& message)
         }
         else
         {
-            listener.onEvent(std::make_shared<Error>());
+            listener.onEvent(std::make_shared<Error>(message.message()));
             return std::make_unique<Disconnecting>(*this);
         }
 

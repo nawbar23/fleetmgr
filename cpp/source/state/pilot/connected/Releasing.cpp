@@ -1,6 +1,10 @@
 #include "state/pilot/connected/Releasing.hpp"
 
+#include <state/pilot/connected/Released.hpp>
+
 #include "event/input/connection/Received.hpp"
+
+#include "backend/ClientBackend.hpp"
 
 using namespace fm;
 using namespace fm::state;
@@ -22,6 +26,10 @@ Releasing::Releasing(IState& state) :
 
 std::unique_ptr<IState> Releasing::start()
 {
+    backend.closeAllChannels();
+    ClientMessage message;
+    message.set_command(Command::RELEASE);
+    send(message);
     return nullptr;
 }
 
@@ -43,6 +51,9 @@ std::unique_ptr<IState> Releasing::handleConnectionEvent(const ConnectionEvent& 
 {
     switch (event.getType())
     {
+    case ConnectionEvent::RECEIVED:
+        return handleMessage(reinterpret_cast<const Received&>(event).getMessage());
+
     default:
         return defaultEventHandle(event.toString());
     }
@@ -52,6 +63,17 @@ std::unique_ptr<IState> Releasing::handleMessage(const ControlMessage& message)
 {
     switch (message.command())
     {
+    case Command::RELEASE:
+        if (message.response() == Response::ACCEPTED)
+        {
+            return std::make_unique<Released>(*this);
+        }
+        else
+        {
+            return defaultMessageHandle(message);
+        }
+        break;
+
     default:
         return defaultMessageHandle(message);
     }

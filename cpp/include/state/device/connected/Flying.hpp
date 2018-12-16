@@ -28,7 +28,7 @@ namespace connected
 class Flying : public IState
 {
 public:
-    Flying(IState&, const std::vector<com::fleetmgr::interfaces::Channel>&);
+    Flying(IState&, std::shared_ptr<std::vector<com::fleetmgr::interfaces::Channel>>);
 
     std::unique_ptr<IState> start() override;
 
@@ -39,13 +39,13 @@ public:
     std::unique_ptr<IState> handleConnectionEvent(const event::input::connection::ConnectionEvent&) override;
 
 private:
-    const std::vector<com::fleetmgr::interfaces::Channel> initialChannels;
+    std::shared_ptr<std::vector<com::fleetmgr::interfaces::Channel>> initialChannels;
 
     std::unique_ptr<IState> handleMessage(const com::fleetmgr::interfaces::facade::control::ControlMessage&);
 
-    void attachChannels(const std::vector<com::fleetmgr::interfaces::Channel>&);
+    void attachChannels(std::shared_ptr<std::vector<com::fleetmgr::interfaces::Channel>>);
 
-    void releaseChannels(const std::vector<long>&, com::fleetmgr::interfaces::facade::control::Command);
+    void releaseChannels(std::shared_ptr<std::vector<long>>, com::fleetmgr::interfaces::facade::control::Command);
 };
 
 } // connected

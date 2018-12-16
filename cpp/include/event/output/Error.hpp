@@ -20,11 +20,14 @@ namespace output
 class Error : public FacadeEvent
 {
 public:
-    Error();
+    Error(const std::string&);
+
+    const std::string& getMessage() const;
 
     std::string toString() const;
 
 private:
+    std::string message;
 };
 
 } // output

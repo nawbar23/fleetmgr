@@ -33,6 +33,8 @@ public:
 
     std::unique_ptr<IState> handleConnectionEvent(const event::input::connection::ConnectionEvent&) override;
 
+    std::unique_ptr<IState> createOuterState() override;
+
 private:
     std::unique_ptr<IState> handleMessage(const com::fleetmgr::interfaces::facade::control::ControlMessage&);
 };

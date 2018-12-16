@@ -3,6 +3,9 @@
 
 #include "event/output/FacadeEvent.hpp"
 
+#include <memory>
+#include <vector>
+
 namespace fm
 {
 
@@ -20,11 +23,14 @@ namespace output
 class HandoverAccepted : public FacadeEvent
 {
 public:
-    HandoverAccepted();
+    HandoverAccepted(std::shared_ptr<std::vector<uint8_t>>);
+
+    const std::vector<uint8_t> getData() const;
 
     std::string toString() const;
 
 private:
+    std::shared_ptr<std::vector<uint8_t>> data;
 };
 
 } // output

@@ -89,7 +89,6 @@ set(SOURCES
     ${PROJECT_SOURCE_DIR}/source/event/output/Error.cpp
     ${PROJECT_SOURCE_DIR}/source/event/output/HandoverAccepted.cpp
     ${PROJECT_SOURCE_DIR}/source/event/output/HandoverRejected.cpp
-    ${PROJECT_SOURCE_DIR}/source/event/output/Message.cpp
     ${PROJECT_SOURCE_DIR}/source/event/output/OperationEnded.cpp
     ${PROJECT_SOURCE_DIR}/source/event/output/OperationStarted.cpp
     ${PROJECT_SOURCE_DIR}/source/backend/ClientBackend.cpp
@@ -158,7 +157,6 @@ set(HEADERS
     ${PROJECT_SOURCE_DIR}/include/event/output/Error.hpp
     ${PROJECT_SOURCE_DIR}/include/event/output/HandoverAccepted.hpp
     ${PROJECT_SOURCE_DIR}/include/event/output/HandoverRejected.hpp
-    ${PROJECT_SOURCE_DIR}/include/event/output/Message.hpp
     ${PROJECT_SOURCE_DIR}/include/event/output/OperationEnded.hpp
     ${PROJECT_SOURCE_DIR}/include/event/output/OperationStarted.hpp
     ${PROJECT_SOURCE_DIR}/include/event/output/ChannelsClosed.hpp
@@ -193,7 +191,7 @@ set(HEADERS
 
 if(${CMAKE_GENERATOR} MATCHES "Unix Makefiles")
     message(STATUS ${CMAKE_BUILD_TOOL})
-    set(CMAKE_MAKE_PROGRAM "${CMAKE_MAKE_PROGRAM} -j2")
+    set(CMAKE_MAKE_PROGRAM "${CMAKE_MAKE_PROGRAM} -j4")
     message(STATUS "Added arguments to CMAKE_BUILD_TOOL: ${CMAKE_MAKE_PROGRAM}")
 elseif(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")

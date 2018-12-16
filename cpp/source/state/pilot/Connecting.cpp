@@ -92,16 +92,18 @@ std::unique_ptr<IState> Connecting::handleMessage(const ControlMessage& message)
     case Command::SETUP:
         if (message.response() == Response::ACCEPTED)
         {
-            std::vector<Channel> openedChannels(message.requestchannels().channel_size());
+            std::shared_ptr<std::vector<Channel>> openedChannels =
+                    std::make_shared<std::vector<Channel>>();
+            openedChannels->reserve(message.requestchannels().channel_size());
             for (int i = 0; i < message.requestchannels().channel_size(); ++i)
             {
-                openedChannels.push_back(message.requestchannels().channel(i));
+                openedChannels->push_back(message.requestchannels().channel(i));
             }
             return std::make_unique<Connected>(*this, initialRole, openedChannels);
         }
         else
         {
-            listener.onEvent(std::make_shared<Error>());
+            listener.onEvent(std::make_shared<Error>(message.message()));
             return std::make_unique<Disconnecting>(*this);
         }
 

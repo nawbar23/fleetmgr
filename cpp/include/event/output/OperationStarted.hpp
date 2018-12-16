@@ -3,6 +3,8 @@
 
 #include "event/output/FacadeEvent.hpp"
 
+#include "common/role.pb.h"
+
 namespace fm
 {
 
@@ -20,11 +22,14 @@ namespace output
 class OperationStarted : public FacadeEvent
 {
 public:
-    OperationStarted();
+    OperationStarted(com::fleetmgr::interfaces::Role);
+
+    com::fleetmgr::interfaces::Role getRole() const;
 
     std::string toString() const;
 
 private:
+    com::fleetmgr::interfaces::Role role;
 };
 
 } // output

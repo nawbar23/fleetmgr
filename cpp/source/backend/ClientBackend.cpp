@@ -4,6 +4,8 @@
 
 #include "event/input/connection/Received.hpp"
 
+#include "traffic/Channel.hpp"
+
 #include <fstream>
 #include <sstream>
 
@@ -128,9 +130,23 @@ void ClientBackend::send(const ClientMessage& message)
     stream->Write(message, (void*)2);
 }
 
-std::unordered_map<long, traffic::Channel> ClientBackend::validateChannels(const std::vector<Channel>&)
+std::shared_ptr<std::vector<std::shared_ptr<traffic::Channel>>> ClientBackend::validateChannels(const std::vector<Channel>& toValidate)
 {
-    trace("TODO ClientBackend::validateChannels missing implemenatation");
+    std::shared_ptr<std::vector<std::shared_ptr<traffic::Channel>>> result =
+            std::make_shared<std::vector<std::shared_ptr<traffic::Channel>>>();
+    for (const Channel& c : toValidate)
+    {
+        trace("Opening channel id: " + std::to_string(c.id()));
+        std::shared_ptr<traffic::socket::ISocket> socket = listener.createSocket(traffic::socket::ISocket::UDP);
+        std::shared_ptr<traffic::Channel> channel = std::make_shared<traffic::Channel>(c.id(), socket);
+        if (channel->open(c.ip(), c.port(), c.routekey()))
+        {
+            trace("Channel id: " + std::to_string(c.id()) + " validated");
+            channels.insert({c.id(), channel});
+        }
+        result->push_back(channel);
+    }
+    return result;
 }
 
 void ClientBackend::closeChannels(const std::vector<long>&)
@@ -141,6 +157,17 @@ void ClientBackend::closeChannels(const std::vector<long>&)
 void ClientBackend::closeAllChannels()
 {
     trace("TODO ClientBackend::closeAllChannels missing implemenatation");
+}
+
+std::shared_ptr<std::vector<long>> ClientBackend::getChannelIds() const
+{
+    std::shared_ptr<std::vector<long>> result = std::make_shared<std::vector<long>>();
+    result->reserve(channels.size());
+    for (const auto pair : channels)
+    {
+        result->push_back(pair.first);
+    }
+    return result;
 }
 
 void ClientBackend::trace(const std::string& message)

@@ -3,6 +3,9 @@
 
 #include "event/input/user/UserEvent.hpp"
 
+#include <memory>
+#include <vector>
+
 namespace fm
 {
 
@@ -23,11 +26,14 @@ namespace user
 class ReleaseAccepted : public UserEvent
 {
 public:
-    ReleaseAccepted();
+    ReleaseAccepted(std::shared_ptr<std::vector<uint8_t>>);
+
+    const std::vector<uint8_t>& getData() const;
 
     std::string toString() const override;
 
 private:
+    std::shared_ptr<std::vector<uint8_t>> data;
 };
 
 } // user

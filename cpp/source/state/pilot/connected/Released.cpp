@@ -1,5 +1,7 @@
 #include "state/pilot/connected/Released.hpp"
 
+#include "state/pilot/Disconnecting.hpp"
+
 #include "event/input/connection/Received.hpp"
 
 using namespace fm;
@@ -46,6 +48,11 @@ std::unique_ptr<IState> Released::handleConnectionEvent(const ConnectionEvent& e
     default:
         return defaultEventHandle(event.toString());
     }
+}
+
+std::unique_ptr<IState> Released::createOuterState()
+{
+    return std::make_unique<Disconnecting>(*this);
 }
 
 std::unique_ptr<IState> Released::handleMessage(const ControlMessage& message)

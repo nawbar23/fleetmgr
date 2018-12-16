@@ -103,7 +103,7 @@ std::unique_ptr<IState> Controlling::handleMessage(const ControlMessage& message
     case Command::ADD_CHANNELS:
         if (message.response() == Response::ACCEPTED)
         {
-            std::vector<Channel> toOpen;
+            std::shared_ptr<std::vector<Channel>> toOpen = std::make_shared<std::vector<Channel>>();
             return std::make_unique<ValidatingChannels>(*this, Role::LEADER, toOpen);
         }
         else

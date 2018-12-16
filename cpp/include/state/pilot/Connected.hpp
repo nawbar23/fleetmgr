@@ -25,7 +25,7 @@ namespace pilot
 class Connected : public IState
 {
 public:
-    Connected(IState&, com::fleetmgr::interfaces::Role, const std::vector<com::fleetmgr::interfaces::Channel>&);
+    Connected(IState&, com::fleetmgr::interfaces::Role, const std::shared_ptr<std::vector<com::fleetmgr::interfaces::Channel>>);
 
     std::unique_ptr<IState> start() override;
 

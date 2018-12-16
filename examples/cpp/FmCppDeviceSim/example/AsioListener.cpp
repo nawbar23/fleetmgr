@@ -58,9 +58,9 @@ std::shared_ptr<fm::traffic::socket::ISocket> AsioListener::createSocket(const f
     switch (protocol)
     {
     case ISocket::TCP:
-        return std::make_shared<AsioTcpClient>();
+        return std::unique_ptr<AsioTcpClient>();
 
     case ISocket::UDP:
-        return std::make_shared<AsioUdpClient>();
+        return std::unique_ptr<AsioUdpClient>();
     }
 }

@@ -1,9 +1,13 @@
 #include "state/device/connected/Flying.hpp"
 
+#include "state/device/connected/Ready.hpp"
+
 #include "event/input/connection/Received.hpp"
 
 #include "event/output/ChannelsOpened.hpp"
 #include "event/output/ChannelsClosed.hpp"
+
+#include "backend/ClientBackend.hpp"
 
 using namespace fm;
 using namespace fm::state;
@@ -22,7 +26,7 @@ using event::output::ChannelsClosed;
 
 using com::fleetmgr::interfaces::Channel;
 
-Flying::Flying(IState& state, const std::vector<Channel>& _initialChannels) :
+Flying::Flying(IState& state, std::shared_ptr<std::vector<Channel>> _initialChannels) :
     IState(state),
     initialChannels(_initialChannels)
 {
@@ -66,10 +70,12 @@ std::unique_ptr<IState> Flying::handleMessage(const ControlMessage& message)
     {
     case Command::ATTACH_CHANNELS:
     {
-        std::vector<Channel> openedeChannels(message.attachchannels().channels_size());
+        std::shared_ptr<std::vector<Channel>> openedeChannels =
+                std::make_shared<std::vector<Channel>>();
+        openedeChannels->reserve(message.attachchannels().channels_size());
         for (int i = 0; i < message.attachchannels().channels_size(); ++i)
         {
-            openedeChannels.push_back(message.attachchannels().channels(i));
+            openedeChannels->push_back(message.attachchannels().channels(i));
         }
         attachChannels(openedeChannels);
         return nullptr;
@@ -77,10 +83,12 @@ std::unique_ptr<IState> Flying::handleMessage(const ControlMessage& message)
 
     case Command::RELEASE_CHANNELS:
     {
-        std::vector<long> releasedChannels(message.channels().attachedchannels_size());
+        std::shared_ptr<std::vector<long>> releasedChannels =
+                std::make_shared<std::vector<long>>();
+        releasedChannels->reserve(message.channels().attachedchannels_size());
         for (int i = 0; i < message.channels().attachedchannels_size(); ++i)
         {
-            releasedChannels.push_back(message.channels().attachedchannels(i));
+            releasedChannels->push_back(message.channels().attachedchannels(i));
         }
         releaseChannels(releasedChannels, message.command());
         return nullptr;
@@ -88,9 +96,9 @@ std::unique_ptr<IState> Flying::handleMessage(const ControlMessage& message)
 
     case Command::OPERATION_ENDED:
     {
-        // TODO releaseChannles(backed.getChannelIdsCopy(), message.command());
+        releaseChannels(backend.getChannelIds(), message.command());
         listener.onEvent(std::make_shared<FacadeEvent>(FacadeEvent::OPERATION_ENDED));
-        return nullptr;
+        return std::make_unique<Ready>(*this);
     }
 
     default:
@@ -98,24 +106,31 @@ std::unique_ptr<IState> Flying::handleMessage(const ControlMessage& message)
     }
 }
 
-void Flying::attachChannels(const std::vector<Channel>& channels)
+void Flying::attachChannels(std::shared_ptr<std::vector<Channel>> channels)
 {
-    // TODO backend->validateChannels(channels);
-    listener.onEvent(std::make_shared<ChannelsOpened>());
+    std::shared_ptr<std::vector<std::shared_ptr<traffic::Channel>>> result =
+            backend.validateChannels(*channels);
+    listener.onEvent(std::make_shared<ChannelsOpened>(result));
     ClientMessage response;
     response.set_command(Command::ATTACH_CHANNELS);
     response.set_response(Response::ACCEPTED);
-    // TODO response.mutable_attachchannels()->...
+    for (std::shared_ptr<traffic::Channel> c : *result)
+    {
+        response.mutable_attachchannels()->add_attachedchannels(c->getId());
+    }
     send(response);
 }
 
-void Flying::releaseChannels(const std::vector<long>& channels, Command command)
+void Flying::releaseChannels(std::shared_ptr<std::vector<long>> channels, Command command)
 {
-    // TODO backend->closeChannels(channels);
-    listener.onEvent(std::make_shared<ChannelsOpened>());
+    listener.onEvent(std::make_shared<ChannelsClosed>(channels));
+    backend.closeChannels(*channels);
     ClientMessage response;
     response.set_command(command);
     response.set_response(Response::ACCEPTED);
-    // TODO response.mutable_attachchannels()->...
+    for (long id : *channels)
+    {
+        response.mutable_attachchannels()->add_attachedchannels(id);
+    }
     send(response);
 }

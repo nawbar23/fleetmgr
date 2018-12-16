@@ -21,5 +21,6 @@ bool ISimulator::isDone()
 
 void ISimulator::onEvent(const std::shared_ptr<const FacadeEvent> event)
 {
+    trace("Handling FacadeEvent: " + event->toString());
     handleEvent(event);
 }

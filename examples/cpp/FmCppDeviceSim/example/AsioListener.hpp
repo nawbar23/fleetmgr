@@ -23,17 +23,17 @@ public:
 
     bool isDone();
 
-    virtual void onEvent(const std::shared_ptr<const fm::event::output::FacadeEvent> event) override;
+    virtual void onEvent(const std::shared_ptr<const fm::event::output::FacadeEvent>) override;
 
     void execute(std::function<void(void)>) override;
 
-    void trace(const std::string& message) override;
+    void trace(const std::string&) override;
 
     std::unique_ptr<com::fleetmgr::interfaces::Location> getLocation() override;
 
     std::shared_ptr<fm::timer::ITimer> createTimer() override;
 
-    std::shared_ptr<fm::traffic::socket::ISocket> createSocket(const fm::traffic::socket::ISocket::Protocol protocol) override;
+    std::shared_ptr<fm::traffic::socket::ISocket> createSocket(const fm::traffic::socket::ISocket::Protocol) override;
 
 private:
     boost::asio::io_service& ioService;

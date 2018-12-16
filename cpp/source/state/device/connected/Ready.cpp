@@ -67,12 +67,13 @@ std::unique_ptr<IState> Ready::handleMessage(const ControlMessage& message)
     {
     case Command::ATTACH_CHANNELS:
     {
-        std::vector<Channel> openedeChannels(message.attachchannels().channels_size());
+        std::shared_ptr<std::vector<Channel>> openedChannels =
+                std::make_shared<std::vector<Channel>>(message.attachchannels().channels_size());
         for (int i = 0; i < message.attachchannels().channels_size(); ++i)
         {
-            openedeChannels.push_back(message.attachchannels().channels(i));
+            openedChannels->at(i) = message.attachchannels().channels(i);
         }
-        return std::make_unique<Flying>(*this, openedeChannels);
+        return std::make_unique<Flying>(*this, openedChannels);
     }
 
     default:

@@ -11,6 +11,10 @@
 namespace fm
 {
 
+namespace traffic {
+class Channel;
+}
+
 namespace state
 {
 
@@ -28,7 +32,7 @@ namespace connected
 class ValidatingChannels : public IState
 {
 public:
-    ValidatingChannels(IState&, com::fleetmgr::interfaces::Role, const std::vector<com::fleetmgr::interfaces::Channel>&);
+    ValidatingChannels(IState&, com::fleetmgr::interfaces::Role, std::shared_ptr<std::vector<com::fleetmgr::interfaces::Channel>>);
 
     std::unique_ptr<IState> start() override;
 
@@ -41,7 +45,8 @@ public:
 private:
     com::fleetmgr::interfaces::Role role;
 
-    const std::vector<com::fleetmgr::interfaces::Channel> toValidate;
+    std::shared_ptr<std::vector<com::fleetmgr::interfaces::Channel>> toValidate;
+    std::shared_ptr<std::vector<std::shared_ptr<traffic::Channel>>> validated;
 
     std::unique_ptr<IState> handleMessage(const com::fleetmgr::interfaces::facade::control::ControlMessage&);
 };

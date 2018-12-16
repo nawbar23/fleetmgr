@@ -3,6 +3,11 @@
 
 #include "event/output/FacadeEvent.hpp"
 
+#include "traffic/Channel.hpp"
+
+#include <vector>
+#include <memory>
+
 namespace fm
 {
 
@@ -20,11 +25,14 @@ namespace output
 class ChannelsOpened : public FacadeEvent
 {
 public:
-    ChannelsOpened();
+    ChannelsOpened(std::shared_ptr<std::vector<std::shared_ptr<traffic::Channel>>>);
+
+    const std::vector<std::shared_ptr<traffic::Channel>>& getChannels() const;
 
     std::string toString() const;
 
 private:
+    std::shared_ptr<std::vector<std::shared_ptr<traffic::Channel>>> channels;
 };
 
 } // output

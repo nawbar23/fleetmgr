@@ -23,11 +23,14 @@ namespace user
 class ReleaseRejected : public UserEvent
 {
 public:
-    ReleaseRejected();
+    ReleaseRejected(const std::string&);
+
+    const std::string& getMessage() const;
 
     std::string toString() const override;
 
 private:
+    std::string message;
 };
 
 } // user

@@ -3,6 +3,9 @@
 
 #include "event/output/FacadeEvent.hpp"
 
+#include <vector>
+#include <memory>
+
 namespace fm
 {
 
@@ -20,11 +23,14 @@ namespace output
 class OperationEnded : public FacadeEvent
 {
 public:
-    OperationEnded();
+    OperationEnded(std::shared_ptr<std::vector<long>>);
+
+    const std::vector<long>& getChannels() const;
 
     std::string toString() const;
 
 private:
+    std::shared_ptr<std::vector<long>> channels;
 };
 
 } // output

@@ -27,11 +27,11 @@ void DeviceSimulator::handleEvent(const std::shared_ptr<const FacadeEvent> event
 {
     switch (event->getType())
     {
-    case FacadeEvent::ATTACHED:
-//        execute([this] ()
-//        {
-//            device->notifyEvent(std::make_shared<UserEvent>(UserEvent::RELEASE));
-//        });
+    case FacadeEvent::OPERATION_ENDED:
+        execute([this] ()
+        {
+            device->notifyEvent(std::make_shared<UserEvent>(UserEvent::RELEASE));
+        });
         break;
 
     case FacadeEvent::ERROR:
