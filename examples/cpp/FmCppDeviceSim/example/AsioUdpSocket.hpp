@@ -4,8 +4,10 @@
 #include "traffic/socket/ISocket.hpp"
 
 #include <boost/asio.hpp>
+#include <boost/circular_buffer.hpp>
 
-#include <array>
+#include <deque>
+#include <vector>
 
 class AsioUdpSocket : public fm::traffic::socket::ISocket
 {
@@ -14,15 +16,19 @@ public:
 
     void connect(const std::string&, const int) override;
 
-    void disconnect() override;
+    size_t readBlocking(uint8_t*, size_t) override;
+
+    void startReading() override;
 
     void send(const DataPacket) override;
 
-    size_t readBlocking(uint8_t*, size_t) override;
+    void disconnect() override;
 
 private:
-    static constexpr size_t READ_BUFFER_SIZE = 1024;
-    std::array<uint8_t, READ_BUFFER_SIZE> readBuffer;
+    // TODO Bartek change buffers to more memory efficnient structures
+    // TODO Bartek for example boost::circular_buffer
+    std::deque<std::vector<uint8_t>> sendBuffer;
+    std::deque<std::vector<uint8_t>> readBuffer;
 
     boost::asio::io_service& ioService;
     boost::asio::ip::udp::socket socket;

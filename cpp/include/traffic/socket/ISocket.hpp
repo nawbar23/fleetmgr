@@ -45,11 +45,13 @@ public:
 
     virtual void connect(const std::string&, const int) = 0;
 
-    virtual void disconnect() = 0;
+    virtual size_t readBlocking(uint8_t* buffer, size_t size) = 0;
+
+    virtual void startReading() = 0;
 
     virtual void send(const DataPacket) = 0;
 
-    virtual size_t readBlocking(uint8_t* buffer, size_t size) = 0;
+    virtual void disconnect() = 0;
 
 protected:
     std::atomic<Listener*> listener;

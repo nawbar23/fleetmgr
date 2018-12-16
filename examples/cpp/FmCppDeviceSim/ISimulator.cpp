@@ -80,27 +80,25 @@ void ISimulator::addChannels(const ChannelsOpened& event)
     }
     if (wasEmpty)
     {
-        trafficThread = std::thread([this] ()
-        {
-            std::vector<std::string> buffers;
-            while (true)
-            {
-                std::this_thread::sleep_for(std::chrono::seconds(1));
-                std::lock_guard<std::mutex> lock(channelsLock);
-                if (channels.empty())
-                {
-                    break;
-                }
-                buffers.resize(channels.size());
-                int i = 0;
-                for (auto& pair : channels)
-                {
-                    buffers.at(i) = std::string("Channel id: " + std::to_string(pair.first) + " test message " + std::to_string(clock()));
-                    pair.second->send(traffic::socket::ISocket::DataPacket(reinterpret_cast<const uint8_t*>(buffers.at(i).data()), buffers.at(i).size()));
-                    ++i;
-                }
-            }
-            trace("Closing traffic thread");
-        });
+        trafficThread = std::thread(&ISimulator::trafficSimulator, this);
     }
+}
+
+void ISimulator::trafficSimulator()
+{
+    while (true)
+    {
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+        std::lock_guard<std::mutex> lock(channelsLock);
+        if (channels.empty())
+        {
+            break;
+        }
+        for (auto& pair : channels)
+        {
+            std::string message("Channel id: " + std::to_string(pair.first) + " test message " + std::to_string(clock()));
+            pair.second->send(traffic::socket::ISocket::DataPacket(reinterpret_cast<const uint8_t*>(message.data()), message.size()));
+        }
+    }
+    trace("Closing traffic thread");
 }

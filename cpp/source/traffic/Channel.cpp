@@ -62,12 +62,13 @@ bool Channel::open(const std::string& ip, const int port, const std::string& key
         std::cout << "Could not parse response" << std::endl;
     }
 
+    socket->startReading();
+
     return response.result() == Result::VALIDATION_ACCEPTED;
 }
 
 void Channel::close()
 {
-    std::cout << "Channel::close" << std::endl;
     socket->disconnect();
 }
 

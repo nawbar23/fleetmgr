@@ -50,6 +50,8 @@ private:
     std::thread trafficThread;
 
     void addChannels(const fm::event::output::ChannelsOpened&);
+
+    void trafficSimulator();
 };
 
 #endif // ISIMULATOR_HPP

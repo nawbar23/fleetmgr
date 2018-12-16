@@ -19,15 +19,18 @@ void AsioTcpSocket::connect(const std::string& host, const int port)
     {
         if (!ec)
         {
-            doRead();
         }
     });
 }
 
-void AsioTcpSocket::disconnect()
+size_t AsioTcpSocket::readBlocking(uint8_t* _buffer, size_t _size)
 {
-    //std::cout << "AsioTcpSocket::disconnect" << std::endl;
-    listener.load()->onClosed();
+    return socket.read_some(buffer(_buffer, _size));
+}
+
+void AsioTcpSocket::startReading()
+{
+    doRead();
 }
 
 void AsioTcpSocket::send(const DataPacket dataPacket)
@@ -43,9 +46,10 @@ void AsioTcpSocket::send(const DataPacket dataPacket)
     });
 }
 
-size_t AsioTcpSocket::readBlocking(uint8_t* _buffer, size_t _size)
+void AsioTcpSocket::disconnect()
 {
-    return socket.read_some(buffer(_buffer, _size));
+    //std::cout << "AsioTcpSocket::disconnect" << std::endl;
+    listener.load()->onClosed();
 }
 
 void AsioTcpSocket::doRead()
