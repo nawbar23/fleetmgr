@@ -156,10 +156,12 @@ public class ClientBackend implements StreamObserver<ControlMessage> {
 
     public void closeChannels(Collection<Long> channels) {
         for (Long c : channels) {
-            trace("Closing channel id: " + c);
+            trace("Closing channel, id: " + c);
             Channel s = sockets.remove(c);
             if (s != null) {
                 s.close();
+            } else {
+                trace("Warning, trying to close not existing channel, id: " + c);
             }
         }
     }
