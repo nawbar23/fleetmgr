@@ -26,7 +26,7 @@ public abstract class Socket {
 
     public abstract void startReading();
 
-    public abstract byte[] readBlocking() throws IOException;
+    public abstract int readBlocking(byte[] data) throws IOException;
 
     public abstract void send(byte[] data, int size) throws IOException;
 

@@ -6,6 +6,7 @@ import com.fleetmgr.interfaces.ValidateChannelResponse;
 import com.fleetmgr.sdk.client.traffic.socket.Socket;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
 
 public class Channel implements Socket.Listener {
 
@@ -40,9 +41,11 @@ public class Channel implements Socket.Listener {
 
         socket.send(validateChannelRequest.toByteArray(), validateChannelRequest.getSerializedSize());
 
-        byte[] buffer = socket.readBlocking();
+        byte[] buffer = new byte[256];
+        int received = socket.readBlocking(buffer);
 
-        ValidateChannelResponse response = ValidateChannelResponse.parseFrom(buffer);
+        ByteBuffer byteBuffer = ByteBuffer.wrap(buffer, 0, received);
+        ValidateChannelResponse response = ValidateChannelResponse.parseFrom(byteBuffer);
         if (response.getResult() != Result.VALIDATION_ACCEPTED) {
             throw new IOException("Channel validation rejected");
         }

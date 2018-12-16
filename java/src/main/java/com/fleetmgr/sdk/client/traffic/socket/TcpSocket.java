@@ -20,8 +20,8 @@ public class TcpSocket extends Socket {
     }
 
     @Override
-    public byte[] readBlocking() throws IOException {
-        return new byte[0];
+    public int readBlocking(byte[] data) throws IOException {
+        return 0;
     }
 
     @Override

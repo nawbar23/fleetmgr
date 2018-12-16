@@ -37,16 +37,10 @@ public class UdpSocket extends Socket {
     }
 
     @Override
-    public byte[] readBlocking() throws IOException {
-        byte[] buffer = new byte[256];
-        DatagramPacket packet = new DatagramPacket(buffer, 256);
-
+    public int readBlocking(byte[] data) throws IOException {
+        DatagramPacket packet = new DatagramPacket(data, data.length);
         socket.receive(packet);
-
-        byte[] result = new byte[packet.getLength()];
-        System.arraycopy(buffer, 0, result, 0, packet.getLength());
-
-        return result;
+        return packet.getLength();
     }
 
     @Override
