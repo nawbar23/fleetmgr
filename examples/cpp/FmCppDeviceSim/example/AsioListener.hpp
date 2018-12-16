@@ -5,9 +5,6 @@
 
 #include "event/output/FacadeEvent.hpp"
 
-#include "AsioTcpClient.hpp"
-#include "AsioUdpClient.hpp"
-
 #include "TimerThread.hpp"
 
 #include <boost/asio.hpp>

@@ -1,8 +1,8 @@
 #include "AsioListener.hpp"
 
 #include "Timer.hpp"
-#include "AsioTcpClient.hpp"
-#include "AsioUdpClient.hpp"
+#include "AsioTcpSocket.hpp"
+#include "AsioUdpSocket.hpp"
 
 #include <iostream>
 
@@ -58,9 +58,9 @@ std::shared_ptr<fm::traffic::socket::ISocket> AsioListener::createSocket(const f
     switch (protocol)
     {
     case ISocket::TCP:
-        return std::unique_ptr<AsioTcpClient>();
+        return std::make_unique<AsioTcpSocket>(ioService);
 
     case ISocket::UDP:
-        return std::unique_ptr<AsioUdpClient>();
+        return std::make_unique<AsioUdpSocket>(ioService);
     }
 }

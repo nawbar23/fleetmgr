@@ -30,10 +30,10 @@ set(FILES
     ${PROJECT_SOURCE_DIR}/example/AsioHttpsClient.hpp
     ${PROJECT_SOURCE_DIR}/example/AsioListener.cpp
     ${PROJECT_SOURCE_DIR}/example/AsioListener.hpp
-    ${PROJECT_SOURCE_DIR}/example/AsioTcpClient.cpp
-    ${PROJECT_SOURCE_DIR}/example/AsioTcpClient.hpp
-    ${PROJECT_SOURCE_DIR}/example/AsioUdpClient.cpp
-    ${PROJECT_SOURCE_DIR}/example/AsioUdpClient.hpp
+    ${PROJECT_SOURCE_DIR}/example/AsioTcpSocket.cpp
+    ${PROJECT_SOURCE_DIR}/example/AsioTcpSocket.hpp
+    ${PROJECT_SOURCE_DIR}/example/AsioUdpSocket.cpp
+    ${PROJECT_SOURCE_DIR}/example/AsioUdpSocket.hpp
     ${PROJECT_SOURCE_DIR}/example/Timer.cpp
     ${PROJECT_SOURCE_DIR}/example/Timer.hpp
     ${PROJECT_SOURCE_DIR}/example/TimerThread.cpp

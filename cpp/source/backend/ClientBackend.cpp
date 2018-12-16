@@ -181,7 +181,7 @@ std::shared_ptr<std::vector<long>> ClientBackend::getChannelIds() const
 {
     std::shared_ptr<std::vector<long>> result = std::make_shared<std::vector<long>>();
     result->reserve(channels.size());
-    for (const auto pair : channels)
+    for (auto& pair : channels)
     {
         result->push_back(pair.first);
     }
