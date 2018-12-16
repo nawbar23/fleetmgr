@@ -26,7 +26,7 @@ void PilotSimulator::start(AsioHttpsClient& core, const std::string& facadeCertP
     if (response.devices_size() > 0)
     {
         long deviceId = response.devices(0).id();
-        std::shared_ptr<std::vector<long>> channels = std::make_shared<std::vector<long>>(std::initializer_list<long>({1, 3, 8}));
+        std::shared_ptr<std::vector<long>> channels = std::make_shared<std::vector<long>>(std::initializer_list<long>({1, 8}));
         std::shared_ptr<const Operate> o = std::make_shared<const Operate>(deviceId, channels);
         execute([this, o] ()
         {
@@ -45,11 +45,15 @@ void PilotSimulator::handleEvent(const std::shared_ptr<const FacadeEvent> event)
     {
     case FacadeEvent::CHANNELS_OPENED:
     {
-        std::shared_ptr<UserEvent> e = std::make_shared<UserEvent>(UserEvent::RELEASE);
-        execute([this, e] ()
+        std::thread t([this] ()
         {
-            pilot->notifyEvent(e);
+            std::this_thread::sleep_for(std::chrono::seconds(10));
+            execute([this] ()
+            {
+                pilot->notifyEvent(std::make_shared<UserEvent>(UserEvent::RELEASE));
+            });
         });
+        t.detach();
         break;
     }
 

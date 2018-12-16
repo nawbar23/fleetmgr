@@ -18,12 +18,15 @@ public:
 
     void send(const DataPacket) override;
 
+    size_t readBlocking(uint8_t*, size_t) override;
+
 private:
     static constexpr size_t READ_BUFFER_SIZE = 1024;
     std::array<uint8_t, READ_BUFFER_SIZE> readBuffer;
 
     boost::asio::io_service& ioService;
-    boost::asio::ip::udp::endpoint endpoint;
+    boost::asio::ip::udp::socket socket;
+    boost::asio::ip::udp::endpoint remoteEndpoint;
 
     void doRead();
 };

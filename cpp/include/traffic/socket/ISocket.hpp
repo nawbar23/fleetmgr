@@ -32,11 +32,11 @@ public:
     class Listener
     {
     public:
-        virtual void onConnected() = 0;
-
-        virtual void onDisconnected() = 0;
+        virtual ~Listener();
 
         virtual void onReceived(const DataPacket) = 0;
+
+        virtual void onClosed() = 0;
     };
 
     virtual ~ISocket();
@@ -48,6 +48,8 @@ public:
     virtual void disconnect() = 0;
 
     virtual void send(const DataPacket) = 0;
+
+    virtual size_t readBlocking(uint8_t* buffer, size_t size) = 0;
 
 protected:
     std::atomic<Listener*> listener;

@@ -47,14 +47,14 @@ std::unique_ptr<Location> AsioListener::getLocation()
 
 std::shared_ptr<fm::timer::ITimer> AsioListener::createTimer()
 {
-    std::cout << "AsioListener::createTimer" << std::endl;
+    //std::cout << "AsioListener::createTimer" << std::endl;
     return std::make_shared<Timer>(timerThread);
 }
 
 std::shared_ptr<fm::traffic::socket::ISocket> AsioListener::createSocket(const fm::traffic::socket::ISocket::Protocol protocol)
 {
+    //std::cout << "AsioListener::createSocket" << std::endl;
     using fm::traffic::socket::ISocket;
-    std::cout << "AsioListener::createSocket" << std::endl;
     switch (protocol)
     {
     case ISocket::TCP:
