@@ -15,6 +15,11 @@ bool Channel::open(const std::string& ip, const int port, const std::string& key
     return true;
 }
 
+void Channel::close()
+{
+
+}
+
 long Channel::getId() const
 {
     return id;

@@ -143,20 +143,38 @@ std::shared_ptr<std::vector<std::shared_ptr<traffic::Channel>>> ClientBackend::v
         {
             trace("Channel id: " + std::to_string(c.id()) + " validated");
             channels.insert({c.id(), channel});
+            result->push_back(channel);
         }
-        result->push_back(channel);
     }
     return result;
 }
 
-void ClientBackend::closeChannels(const std::vector<long>&)
+void ClientBackend::closeChannels(const std::vector<long>& toClose)
 {
-    trace("TODO ClientBackend::closeChannels missing implemenatation");
+    for (long id : toClose)
+    {
+        auto c = channels.find(id);
+        if (c != channels.end())
+        {
+            trace("Closing channel, id: " + std::to_string(id));
+            c->second->close();
+            channels.erase(c);
+        }
+        else
+        {
+            trace("Warning, trying to close not existing channel, id: " + std::to_string(id));
+        }
+    }
 }
 
 void ClientBackend::closeAllChannels()
 {
-    trace("TODO ClientBackend::closeAllChannels missing implemenatation");
+    for (auto& pair : channels)
+    {
+        trace("Closing channel, id: " + std::to_string(pair.first));
+        pair.second->close();
+    }
+    channels.clear();
 }
 
 std::shared_ptr<std::vector<long>> ClientBackend::getChannelIds() const

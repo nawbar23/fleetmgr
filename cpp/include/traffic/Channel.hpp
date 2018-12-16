@@ -24,6 +24,8 @@ public:
 
     bool open(const std::string&, const int, const std::string&);
 
+    void close();
+
     long getId() const;
 
 private:
