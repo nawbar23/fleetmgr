@@ -12,8 +12,9 @@ AsioUdpSocket::AsioUdpSocket(boost::asio::io_service& _ioService) :
 
 void AsioUdpSocket::connect(const std::string& host, const int port)
 {
-    //std::cout << "AsioUdpSocket::connect" << std::endl;
-    remoteEndpoint = ip::udp::endpoint(ip::address::from_string(host), port);
+    //std::cout << "AsioUdpSocket::connect(" << host << ":" << port << ")" << std::endl;
+    ip::udp::resolver resolver(ioService);
+    remoteEndpoint = *resolver.resolve(host, std::to_string(port));
 }
 
 size_t AsioUdpSocket::readBlocking(uint8_t* _buffer, size_t _size)

@@ -29,6 +29,7 @@ void Channel::setListener(std::shared_ptr<Listener> _listener)
 bool Channel::open(const std::string& ip, const int port, const std::string& key)
 {
     socket->setListener(this);
+
     socket->connect(ip, port);
 
     ValidateChannelRequest request;

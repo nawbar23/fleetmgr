@@ -105,8 +105,9 @@ std::string AsioHttpsClient::execute(const std::string& path, Method method, con
         ec.assign(0, ec.category());
     }
 
-    if(ec)
+    if(ec && ec.value() != 1)
     {
+        std::cout << "ddd" << ec.value() << ec.message() << std::endl;
         throw beast::system_error{ec};
     }
 
