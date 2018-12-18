@@ -141,6 +141,7 @@ set(HEADERS
     ${PROJECT_SOURCE_DIR}/include/IClient.hpp
     ${PROJECT_SOURCE_DIR}/include/Device.hpp
     ${PROJECT_SOURCE_DIR}/include/Pilot.hpp
+    ${PROJECT_SOURCE_DIR}/include/Constants.hpp
     ${PROJECT_SOURCE_DIR}/include/core/CoreClient.hpp
     ${PROJECT_SOURCE_DIR}/include/core/https/IHttpsClient.hpp
     ${PROJECT_SOURCE_DIR}/include/event/input/IInputEvent.hpp
