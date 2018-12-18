@@ -69,12 +69,10 @@ public class ChannelsHandler {
     }
 
     public void closeAllChannels() {
-        System.out.println(channels);
         for (Channel c : channels.values()) {
             trace("Closing channel id: " + c.getChannelId());
             c.close();
         }
-        System.out.println("asdasdasd");
         channels.clear();
     }
 
