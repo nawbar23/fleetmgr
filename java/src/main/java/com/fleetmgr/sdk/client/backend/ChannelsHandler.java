@@ -51,11 +51,11 @@ public class ChannelsHandler {
                 trace("Opening channelImpl, id: " + c.getId());
 
                 Socket socket = new UdpSocket(executor);
-                ChannelImpl channelImpl = new ChannelImpl(c.getId(), socket);
-                channelImpl.open(c.getHost(), c.getPort(), c.getRouteKey());
+                ChannelImpl channel = new ChannelImpl(c.getId(), socket);
+                channel.open(c.getHost(), c.getPort(), c.getKey());
 
-                channels.put(c.getId(), channelImpl);
-                opened.put(c.getId(), channelImpl);
+                channels.put(c.getId(), channel);
+                opened.put(c.getId(), channel);
 
                 trace("ChannelImpl id: " + c.getId() + " validated");
             } catch (IOException e) {
