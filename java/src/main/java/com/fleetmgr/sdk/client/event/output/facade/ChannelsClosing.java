@@ -9,12 +9,12 @@ import java.util.List;
  * Date: 18.09.2018
  * Description:
  */
-public class ChannelsOpened extends FacadeEvent {
+public class ChannelsClosing extends FacadeEvent {
 
     private List<Channel> channels;
 
-    public ChannelsOpened(List<Channel> channels) {
-        super(Type.CHANNELS_OPENED);
+    public ChannelsClosing(List<Channel> channels) {
+        super(Type.CHANNELS_CLOSING);
         this.channels = channels;
     }
 
@@ -24,7 +24,7 @@ public class ChannelsOpened extends FacadeEvent {
 
     @Override
     public String toString() {
-        return "ChannelsOpened{" +
+        return "ChannelsClosing{" +
                 "channels=" + channels +
                 '}';
     }

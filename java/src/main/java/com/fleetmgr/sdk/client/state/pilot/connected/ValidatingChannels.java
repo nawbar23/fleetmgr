@@ -1,12 +1,14 @@
 package com.fleetmgr.sdk.client.state.pilot.connected;
 
+import com.fleetmgr.interfaces.ChannelIndicationList;
+import com.fleetmgr.interfaces.ChannelResponse;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.connection.Received;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;
 import com.fleetmgr.sdk.client.traffic.Channel;
+import com.fleetmgr.sdk.client.traffic.ChannelImpl;
 import com.fleetmgr.sdk.client.event.output.facade.ChannelsOpened;
 import com.fleetmgr.sdk.client.state.State;
-import com.fleetmgr.interfaces.ChannelsResponse;
 import com.fleetmgr.interfaces.Role;
 import com.fleetmgr.interfaces.facade.control.ClientMessage;
 import com.fleetmgr.interfaces.facade.control.Command;
@@ -14,6 +16,8 @@ import com.fleetmgr.interfaces.facade.control.ControlMessage;
 import com.fleetmgr.interfaces.facade.control.Response;
 
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,11 +28,11 @@ import java.util.Map;
 public class ValidatingChannels extends State {
 
     private Role role;
-    private Collection<com.fleetmgr.interfaces.Channel> channels;
+    private List<ChannelResponse> channels;
 
     private Map<Long, Channel> validated;
 
-    public ValidatingChannels(State state, Role role, Collection<com.fleetmgr.interfaces.Channel> channels) {
+    public ValidatingChannels(State state, Role role, List<ChannelResponse> channels) {
         super(state);
         this.role = role;
         this.channels = channels;
@@ -39,8 +43,8 @@ public class ValidatingChannels extends State {
         validated = backend.getChannelsHandler().validateChannels(channels);
         send(ClientMessage.newBuilder()
                 .setCommand(Command.CHANNELS_READY)
-                .setAttachChannels(ChannelsResponse.newBuilder()
-                        .addAllAttachedChannels(validated.keySet())
+                .setChannelsIndication(ChannelIndicationList.newBuilder()
+                        .addAllIds(validated.keySet())
                         .build())
                 .build());
         return null;
@@ -72,7 +76,7 @@ public class ValidatingChannels extends State {
         switch (message.getCommand()) {
             case CHANNELS_READY:
                 if (message.getResponse() == Response.ACCEPTED) {
-                    listener.onEvent(new ChannelsOpened(validated.values()));
+                    listener.onEvent(new ChannelsOpened(new LinkedList<>(validated.values())));
                     switch (role) {
                         case LEADER:
                             return new Controlling(this);

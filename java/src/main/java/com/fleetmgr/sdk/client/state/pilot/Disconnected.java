@@ -2,13 +2,10 @@ package com.fleetmgr.sdk.client.state.pilot;
 
 import com.fleetmgr.sdk.client.Client;
 import com.fleetmgr.sdk.client.backend.ClientBackend;
-import com.fleetmgr.sdk.client.core.CoreClient;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.user.Operate;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;
 import com.fleetmgr.sdk.client.state.State;
-
-import java.util.concurrent.ExecutorService;
 
 /**
  * Created by: Bartosz Nawrot
@@ -38,7 +35,7 @@ public class Disconnected extends State {
             case OPERATE:
                 Operate operate = (Operate)event;
                 return new Connecting(this,
-                        operate.getDeviceRefId(),
+                        operate.getDeviceId(),
                         operate.getChannels());
 
             default:

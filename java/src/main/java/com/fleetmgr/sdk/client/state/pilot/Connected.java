@@ -1,5 +1,6 @@
 package com.fleetmgr.sdk.client.state.pilot;
 
+import com.fleetmgr.interfaces.ChannelResponse;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;
 import com.fleetmgr.sdk.client.state.pilot.connected.Recovering;
@@ -7,10 +8,10 @@ import com.fleetmgr.sdk.client.state.pilot.connected.Released;
 import com.fleetmgr.sdk.client.state.pilot.connected.ValidatingChannels;
 import com.fleetmgr.sdk.client.event.output.facade.OperationStarted;
 import com.fleetmgr.sdk.client.state.State;
-import com.fleetmgr.interfaces.Channel;
 import com.fleetmgr.interfaces.Role;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by: Bartosz Nawrot
@@ -23,7 +24,7 @@ public class Connected extends State {
 
     private Role initialRole;
 
-    Connected(State state, Role role, Collection<Channel> channels) {
+    Connected(State state, Role role, List<ChannelResponse> channels) {
         super(state);
         this.internalState = new ValidatingChannels(this, role, channels);
         this.initialRole = role;

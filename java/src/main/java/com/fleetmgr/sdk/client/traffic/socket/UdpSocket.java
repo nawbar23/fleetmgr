@@ -1,5 +1,7 @@
 package com.fleetmgr.sdk.client.traffic.socket;
 
+import com.fleetmgr.interfaces.Protocol;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -52,6 +54,11 @@ public class UdpSocket extends Socket {
     public void disconnect() {
         socket.close();
         listener.onClosed();
+    }
+
+    @Override
+    public Protocol getProtocol() {
+        return Protocol.UDP;
     }
 
     private void startReception() {

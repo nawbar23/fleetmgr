@@ -1,20 +1,23 @@
 package com.fleetmgr.sdk.client.state.device.connected;
 
+import com.fleetmgr.interfaces.ChannelIndicationList;
+import com.fleetmgr.interfaces.ChannelResponseList;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.connection.Received;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;
+import com.fleetmgr.sdk.client.event.output.facade.ChannelsClosing;
 import com.fleetmgr.sdk.client.traffic.Channel;
-import com.fleetmgr.sdk.client.event.output.facade.ChannelsClosed;
+import com.fleetmgr.sdk.client.traffic.ChannelImpl;
 import com.fleetmgr.sdk.client.event.output.facade.ChannelsOpened;
 import com.fleetmgr.sdk.client.event.output.facade.FacadeEvent;
 import com.fleetmgr.sdk.client.state.State;
-import com.fleetmgr.interfaces.ChannelsResponse;
 import com.fleetmgr.interfaces.facade.control.ClientMessage;
 import com.fleetmgr.interfaces.facade.control.Command;
 import com.fleetmgr.interfaces.facade.control.ControlMessage;
 import com.fleetmgr.interfaces.facade.control.Response;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -25,9 +28,9 @@ import java.util.Map;
  */
 public class Flying extends State {
 
-    private List<com.fleetmgr.interfaces.Channel> initialChannels;
+    private ChannelResponseList initialChannels;
 
-    Flying(State state, List<com.fleetmgr.interfaces.Channel> initialChannels) {
+    Flying(State state, ChannelResponseList initialChannels) {
         super(state);
         this.initialChannels = initialChannels;
     }
@@ -63,25 +66,20 @@ public class Flying extends State {
     private State handleMessage(ControlMessage message) {
         switch (message.getCommand()) {
             case ATTACH_CHANNELS:
-                attachChannels(
-                        message.getAttachChannels().getChannelsList());
+                attachChannels(message.getChannelsResponse());
                 return null;
 
             case RELEASE_CHANNELS:
-                releaseChannels(message.getChannels().getAttachedChannelsList());
+                releaseChannels(message.getChannelsIndication().getIdsList());
                 return null;
 
             case OPERATION_ENDED:
-                Collection<Long> openedChannels = backend.getChannelsHandler().getChannelIds();
-                listener.onEvent(new ChannelsClosed(openedChannels));
+                listener.onEvent(new ChannelsClosing(backend.getChannelsHandler().getChannels()));
                 backend.getChannelsHandler().closeAllChannels();
                 listener.onEvent(new FacadeEvent(FacadeEvent.Type.OPERATION_ENDED));
                 send(ClientMessage.newBuilder()
                         .setCommand(Command.OPERATION_ENDED)
                         .setResponse(Response.ACCEPTED)
-                        .setAttachChannels(ChannelsResponse.newBuilder()
-                                .addAllAttachedChannels(openedChannels)
-                                .build())
                         .build());
                 return new Ready(this);
 
@@ -90,27 +88,27 @@ public class Flying extends State {
         }
     }
 
-    private void attachChannels(List<com.fleetmgr.interfaces.Channel> channels) {
-        Map<Long, Channel> validated = backend.getChannelsHandler().validateChannels(channels);
-        listener.onEvent(new ChannelsOpened(validated.values()));
+    private void attachChannels(ChannelResponseList channels) {
+        Map<Long, Channel> validated =
+                backend.getChannelsHandler().validateChannels(channels.getChannelsList());
+        listener.onEvent(new ChannelsOpened(new LinkedList<>(validated.values())));
         send(ClientMessage.newBuilder()
                 .setCommand(Command.ATTACH_CHANNELS)
                 .setResponse(Response.ACCEPTED)
-                .setAttachChannels(ChannelsResponse.newBuilder()
-                        .addAllAttachedChannels(validated.keySet())
+                .setChannelsIndication(ChannelIndicationList.newBuilder()
+                        .addAllIds(validated.keySet())
                         .build())
                 .build());
     }
 
-    private void releaseChannels(List<Long> channels) {
-        listener.onEvent(new ChannelsClosed(channels));
-        backend.getChannelsHandler().closeChannels(channels);
+    private void releaseChannels(List<Long> channelIds) {
+        List<Channel> channels =
+                backend.getChannelsHandler().getChannels(channelIds);
+        listener.onEvent(new ChannelsClosing(channels));
+        backend.getChannelsHandler().closeChannels(channelIds);
         send(ClientMessage.newBuilder()
                 .setCommand(Command.RELEASE_CHANNELS)
                 .setResponse(Response.ACCEPTED)
-                .setAttachChannels(ChannelsResponse.newBuilder()
-                        .addAllAttachedChannels(channels)
-                        .build())
                 .build());
     }
 

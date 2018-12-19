@@ -1,14 +1,15 @@
 package com.fleetmgr.sdk.client.state.pilot.connected;
 
+import com.fleetmgr.interfaces.ChannelIndicationList;
+import com.fleetmgr.interfaces.ChannelRequestList;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.connection.Received;
 import com.fleetmgr.sdk.client.event.input.user.CloseChannels;
 import com.fleetmgr.sdk.client.event.input.user.OpenChannels;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;
-import com.fleetmgr.sdk.client.event.output.facade.ChannelsClosed;
+import com.fleetmgr.sdk.client.event.output.facade.ChannelsClosing;
 import com.fleetmgr.sdk.client.event.output.facade.FacadeEvent;
 import com.fleetmgr.sdk.client.state.State;
-import com.fleetmgr.interfaces.AddChannelsRequest;
 import com.fleetmgr.interfaces.Role;
 import com.fleetmgr.interfaces.facade.control.ClientMessage;
 import com.fleetmgr.interfaces.facade.control.Command;
@@ -38,8 +39,8 @@ public class Controlling extends State {
                 OpenChannels openChannels = (OpenChannels)event;
                 send(ClientMessage.newBuilder()
                         .setCommand(Command.ADD_CHANNELS)
-                        .setRequestChannels(AddChannelsRequest.newBuilder()
-                                .addAllChannelId(openChannels.getChannels())
+                        .setChannelsRequest(ChannelRequestList.newBuilder()
+                                .addAllChannels(openChannels.getChannels())
                                 .build())
                         .build());
                 return null;
@@ -49,8 +50,8 @@ public class Controlling extends State {
                 backend.getChannelsHandler().closeChannels(closeChannels.getChannels());
                 send(ClientMessage.newBuilder()
                         .setCommand(Command.REMOVE_CHANNELS)
-                        .setRequestChannels(AddChannelsRequest.newBuilder()
-                                .addAllChannelId(closeChannels.getChannels())
+                        .setChannelsIndication(ChannelIndicationList.newBuilder()
+                                .addAllIds(closeChannels.getChannels())
                                 .build())
                         .build());
                 return null;
@@ -82,7 +83,7 @@ public class Controlling extends State {
             case ADD_CHANNELS:
                 if (message.getResponse() == Response.ACCEPTED) {
                     return new ValidatingChannels(this, Role.LEADER,
-                            message.getRequestChannels().getChannelList());
+                            message.getChannelsResponse().getChannelsList());
 
                 } else {
                     return defaultMessageHandle(message);
@@ -90,7 +91,7 @@ public class Controlling extends State {
 
             case REMOVE_CHANNELS:
                 if (message.getResponse() == Response.ACCEPTED) {
-                    listener.onEvent(new ChannelsClosed(null));
+                    listener.onEvent(new ChannelsClosing(null));
                     return null;
 
                 } else {

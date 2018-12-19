@@ -1,6 +1,9 @@
 package com.fleetmgr.sdk.client.event.input.user;
 
-import java.util.Collection;
+import com.fleetmgr.interfaces.ChannelRequest;
+
+import java.util.List;
+
 
 /**
  * Created by: Bartosz Nawrot
@@ -9,14 +12,14 @@ import java.util.Collection;
  */
 public class OpenChannels extends UserEvent {
 
-    private Collection<Long> channels;
+    private List<ChannelRequest> channels;
 
-    public OpenChannels(Collection<Long> channels) {
+    public OpenChannels(List<ChannelRequest> channels) {
         super(Type.OPEN_CHANNELS);
         this.channels = channels;
     }
 
-    public Collection<Long> getChannels() {
+    public List<ChannelRequest> getChannels() {
         return channels;
     }
 

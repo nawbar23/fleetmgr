@@ -4,8 +4,7 @@ package com.fleetmgr.interfaces.facade.control;
 
 option java_multiple_files = true;
 
-import "common/add_channels.proto";
-import "common/attach_channels.proto";
+import "common/channel_management.proto";
 import "common/handover_data.proto";
 
 import "facade/control/setup.proto";
@@ -49,14 +48,11 @@ message ClientMessage {
     Response response = 2;
     string message = 3;
 
-    // requests, defined by Command/Response fields
     SetupRequest attach = 50;
-    AddChannelsRequest requestChannels = 51;
-
-    // responses, defined by Command/Response fields
-    ChannelsResponse attachChannels = 100;
-    HandoverData handoverData = 101;
-    HeartbeatResponse heartbeat = 102;
+    ChannelRequestList channelsRequest = 51;
+    ChannelIndicationList channelsIndication = 53;
+    HandoverData handoverData = 54;
+    HeartbeatResponse heartbeat = 55;
 }
 
 message ControlMessage {
@@ -64,15 +60,11 @@ message ControlMessage {
     Response response = 2;
     string message = 3;
 
-    // responses, defined by Command/Response fields
     SetupResponse attach = 50;
-    AddChannelsResponse requestChannels = 51;
-    HandoverData handoverData = 52;
-
-    // requests, defined by Command/Response fields
-    AttachChannelsRequest attachChannels = 100;
-    ChannelsResponse channels = 101;
-    HeartbeatRequest heartbeat = 102;
+    ChannelResponseList channelsResponse = 51;
+    ChannelIndicationList channelsIndication = 52;
+    HandoverData handoverData = 53;
+    HeartbeatRequest heartbeat = 54;
 }
 
 service FacadeService {

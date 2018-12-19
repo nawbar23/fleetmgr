@@ -1,5 +1,7 @@
 package com.fleetmgr.sdk.client.traffic.socket;
 
+import com.fleetmgr.interfaces.Protocol;
+
 import java.io.IOException;
 
 /**
@@ -31,4 +33,6 @@ public abstract class Socket {
     public abstract void send(byte[] data, int size) throws IOException;
 
     public abstract void disconnect();
+
+    public abstract Protocol getProtocol();
 }

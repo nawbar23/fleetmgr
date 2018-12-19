@@ -1,14 +1,15 @@
 package com.fleetmgr.sdk.client.backend;
 
+import com.fleetmgr.interfaces.ChannelIndicationList;
+import com.fleetmgr.interfaces.ChannelResponse;
 import com.fleetmgr.sdk.client.Client;
 import com.fleetmgr.sdk.client.traffic.Channel;
+import com.fleetmgr.sdk.client.traffic.ChannelImpl;
 import com.fleetmgr.sdk.client.traffic.socket.Socket;
 import com.fleetmgr.sdk.client.traffic.socket.UdpSocket;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -22,7 +23,7 @@ public class ChannelsHandler {
 
     private ExecutorService executor;
 
-    private HashMap<Long, Channel> channels;
+    private HashMap<Long, ChannelImpl> channels;
 
     ChannelsHandler(Client client, ExecutorService executor) {
         this.client = client;
@@ -31,24 +32,32 @@ public class ChannelsHandler {
         this.channels = new HashMap<>();
     }
 
-    public Collection<Long> getChannelIds() {
-        return channels.keySet();
+    public List<Channel> getChannels() {
+        return new LinkedList<>(channels.values());
     }
 
-    public Map<Long, Channel> validateChannels(Collection<com.fleetmgr.interfaces.Channel> toValidate) {
+    public List<Channel> getChannels(List<Long> channels) {
+        LinkedList<Channel> result = new LinkedList<>();
+        for (Long id : channels) {
+            result.add(this.channels.get(id));
+        }
+        return result;
+    }
+
+    public Map<Long, Channel> validateChannels(List<ChannelResponse> toValidate) {
         Map<Long, Channel> opened = new HashMap<>();
-        for (com.fleetmgr.interfaces.Channel c : toValidate) {
+        for (ChannelResponse c : toValidate) {
             try {
-                trace("Opening channel, id: " + c.getId());
+                trace("Opening channelImpl, id: " + c.getId());
 
                 Socket socket = new UdpSocket(executor);
-                Channel channel = new Channel(c.getId(), socket);
-                channel.open(c.getIp(), c.getPort(), c.getRouteKey());
+                ChannelImpl channelImpl = new ChannelImpl(c.getId(), socket);
+                channelImpl.open(c.getHost(), c.getPort(), c.getRouteKey());
 
-                channels.put(c.getId(), channel);
-                opened.put(c.getId(), channel);
+                channels.put(c.getId(), channelImpl);
+                opened.put(c.getId(), channelImpl);
 
-                trace("Channel id: " + c.getId() + " validated");
+                trace("ChannelImpl id: " + c.getId() + " validated");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -56,10 +65,10 @@ public class ChannelsHandler {
         return opened;
     }
 
-    public void closeChannels(Collection<Long> channels) {
+    public void closeChannels(List<Long> channels) {
         for (Long c : channels) {
             trace("Closing channel, id: " + c);
-            Channel s = this.channels.remove(c);
+            ChannelImpl s = this.channels.remove(c);
             if (s != null) {
                 s.close();
             } else {
@@ -69,10 +78,12 @@ public class ChannelsHandler {
     }
 
     public void closeAllChannels() {
-        for (Channel c : channels.values()) {
-            trace("Closing channel id: " + c.getChannelId());
+        System.out.println(channels);
+        for (ChannelImpl c : channels.values()) {
+            trace("Closing channel id: " + c.getId());
             c.close();
         }
+        System.out.println("asdasdasd");
         channels.clear();
     }
 

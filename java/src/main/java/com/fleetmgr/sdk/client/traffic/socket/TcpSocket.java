@@ -1,5 +1,7 @@
 package com.fleetmgr.sdk.client.traffic.socket;
 
+import com.fleetmgr.interfaces.Protocol;
+
 import java.io.IOException;
 
 /**
@@ -32,5 +34,10 @@ public class TcpSocket extends Socket {
     @Override
     public void disconnect() {
 
+    }
+
+    @Override
+    public Protocol getProtocol() {
+        return Protocol.TCP;
     }
 }

@@ -1,17 +1,14 @@
 package com.fleetmgr.sdk.client.state.pilot;
 
+import com.fleetmgr.interfaces.*;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.connection.Received;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;
 import com.fleetmgr.sdk.client.state.State;
-import com.fleetmgr.interfaces.AddChannelsRequest;
-import com.fleetmgr.interfaces.OperateRequest;
-import com.fleetmgr.interfaces.OperateResponse;
-import com.fleetmgr.interfaces.Role;
 import com.fleetmgr.interfaces.facade.control.*;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by: Bartosz Nawrot
@@ -20,14 +17,14 @@ import java.util.Collection;
  */
 public class Connecting extends State {
 
-    private long deviceRefId;
-    private Collection<Long> channels;
+    private long deviceId;
+    private List<ChannelRequest> channels;
 
     private Role role;
 
-    Connecting(State state, long deviceRefId, Collection<Long> channels) {
+    Connecting(State state, long deviceId, List<ChannelRequest> channels) {
         super(state);
-        this.deviceRefId = deviceRefId;
+        this.deviceId = deviceId;
         this.channels = channels;
     }
 
@@ -36,7 +33,7 @@ public class Connecting extends State {
         try {
             OperateResponse operateResponse = backend.getCore().operate(
                     OperateRequest.newBuilder()
-                    .setRequestedDeviceId(deviceRefId)
+                    .setRequestedDeviceId(deviceId)
                     .build());
             backend.openFacadeConnection(
                     operateResponse.getHost(),
@@ -47,8 +44,8 @@ public class Connecting extends State {
                     .setAttach(SetupRequest.newBuilder()
                             .setKey(operateResponse.getKey())
                             .build())
-                    .setRequestChannels(AddChannelsRequest.newBuilder()
-                            .addAllChannelId(channels)
+                    .setChannelsRequest(ChannelRequestList.newBuilder()
+                            .addAllChannels(channels)
                             .build())
                     .build());
         } catch (IOException e) {
@@ -78,7 +75,7 @@ public class Connecting extends State {
             case SETUP:
                 if (message.getResponse() == Response.ACCEPTED) {
                     return new Connected(this, role,
-                            message.getRequestChannels().getChannelList());
+                            message.getChannelsResponse().getChannelsList());
 
                 } else {
                     return defaultMessageHandle(message);

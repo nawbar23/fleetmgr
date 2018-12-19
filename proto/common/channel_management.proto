@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package com.fleetmgr.interfaces;
+
+option java_multiple_files = true;
+
+enum Protocol {
+    UNDEFINED_PROTOCOL = 0;
+
+    UDP = 1;
+    TCP = 2;
+    SCTP = 3;
+}
+
+enum Priority {
+    UNDEFINED_PRIORITY = 0;
+
+    HARD_REAL_TIME = 1; // for example video streaming
+    NEAR_REAL_TIME = 2; // for example autopilot commands channels
+    BEST_EFFORT = 3; // for example offline sensors data stream
+}
+
+message ChannelRequest {
+    int64 id = 1;
+    Protocol protocol = 2;
+    Priority priority = 3;
+}
+
+message ChannelRequestList {
+    repeated ChannelRequest channels = 1;
+}
+
+message ChannelResponse {
+    int64 id = 1;
+    string host = 2;
+    int32 port = 3;
+    string routeKey = 4;
+}
+
+message ChannelResponseList {
+    repeated ChannelResponse channels = 1;
+}
+
+message ChannelIndicationList {
+    repeated uint64 ids = 1;
+}

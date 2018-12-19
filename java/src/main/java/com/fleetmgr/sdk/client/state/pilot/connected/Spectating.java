@@ -1,23 +1,20 @@
 package com.fleetmgr.sdk.client.state.pilot.connected;
 
+import com.fleetmgr.interfaces.ChannelIndicationList;
+import com.fleetmgr.interfaces.ChannelRequestList;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.connection.Received;
 import com.fleetmgr.sdk.client.event.input.user.CloseChannels;
 import com.fleetmgr.sdk.client.event.input.user.OpenChannels;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;
-import com.fleetmgr.sdk.client.event.output.facade.ChannelsClosed;
+import com.fleetmgr.sdk.client.event.output.facade.ChannelsClosing;
 import com.fleetmgr.sdk.client.event.output.facade.FacadeEvent;
-import com.fleetmgr.sdk.client.event.output.facade.OperationEnded;
 import com.fleetmgr.sdk.client.state.State;
-import com.fleetmgr.interfaces.AddChannelsRequest;
 import com.fleetmgr.interfaces.Role;
 import com.fleetmgr.interfaces.facade.control.ClientMessage;
 import com.fleetmgr.interfaces.facade.control.Command;
 import com.fleetmgr.interfaces.facade.control.ControlMessage;
 import com.fleetmgr.interfaces.facade.control.Response;
-
-import java.util.Collection;
-import java.util.LinkedList;
 
 /**
  * Created by: Bartosz Nawrot
@@ -42,8 +39,8 @@ public class Spectating extends State {
                 OpenChannels openChannels = (OpenChannels)event;
                 send(ClientMessage.newBuilder()
                         .setCommand(Command.ADD_CHANNELS)
-                        .setRequestChannels(AddChannelsRequest.newBuilder()
-                                .addAllChannelId(openChannels.getChannels())
+                        .setChannelsRequest(ChannelRequestList.newBuilder()
+                                .addAllChannels(openChannels.getChannels())
                                 .build())
                         .build());
                 return null;
@@ -53,8 +50,8 @@ public class Spectating extends State {
                 backend.getChannelsHandler().closeChannels(closeChannels.getChannels());
                 send(ClientMessage.newBuilder()
                         .setCommand(Command.REMOVE_CHANNELS)
-                        .setRequestChannels(AddChannelsRequest.newBuilder()
-                                .addAllChannelId(closeChannels.getChannels())
+                        .setChannelsIndication(ChannelIndicationList.newBuilder()
+                                .addAllIds(closeChannels.getChannels())
                                 .build())
                         .build());
                 return null;
@@ -89,7 +86,7 @@ public class Spectating extends State {
             case ADD_CHANNELS:
                 if (message.getResponse() == Response.ACCEPTED) {
                     return new ValidatingChannels(this, Role.PILOT,
-                            message.getRequestChannels().getChannelList());
+                            message.getChannelsResponse().getChannelsList());
 
                 } else {
                     return defaultMessageHandle(message);
@@ -97,7 +94,7 @@ public class Spectating extends State {
 
             case REMOVE_CHANNELS:
                 if (message.getResponse() == Response.ACCEPTED) {
-                    listener.onEvent(new ChannelsClosed(null));
+                    listener.onEvent(new ChannelsClosing(null));
                     return null;
 
                 } else {
@@ -109,9 +106,9 @@ public class Spectating extends State {
                 return null;
 
             case OPERATION_ENDED:
-                Collection<Long> openedChannels = backend.getChannelsHandler().getChannelIds();
-                listener.onEvent(new OperationEnded(new LinkedList<>(openedChannels)));
+                listener.onEvent(new ChannelsClosing(backend.getChannelsHandler().getChannels()));
                 backend.getChannelsHandler().closeAllChannels();
+                listener.onEvent(new FacadeEvent(FacadeEvent.Type.OPERATION_ENDED));
                 send(ClientMessage.newBuilder()
                         .setCommand(Command.OPERATION_ENDED)
                         .setResponse(Response.ACCEPTED)

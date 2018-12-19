@@ -1,6 +1,6 @@
 package com.fleetmgr.sdk.client.event.input.user;
 
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by: Bartosz Nawrot
@@ -9,14 +9,14 @@ import java.util.Collection;
  */
 public class CloseChannels extends UserEvent {
 
-    private Collection<Long> channels;
+    private List<Long> channels;
 
-    public CloseChannels(Collection<Long> channels) {
+    public CloseChannels(List<Long> channels) {
         super(Type.CLOSE_CHANNELS);
         this.channels = channels;
     }
 
-    public Collection<Long> getChannels() {
+    public List<Long> getChannels() {
         return channels;
     }
 
