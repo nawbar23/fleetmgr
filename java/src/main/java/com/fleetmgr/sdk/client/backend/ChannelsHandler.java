@@ -32,7 +32,7 @@ public class ChannelsHandler {
         this.channels = new HashMap<>();
     }
 
-    public List<Channel> getChannels() {
+    public Collection<Channel> getChannels() {
         return new LinkedList<>(channels.values());
     }
 
@@ -44,7 +44,7 @@ public class ChannelsHandler {
         return result;
     }
 
-    public Map<Long, Channel> validateChannels(List<ChannelResponse> toValidate) {
+    public Map<Long, Channel> validateChannels(Collection<ChannelResponse> toValidate) {
         Map<Long, Channel> opened = new HashMap<>();
         for (ChannelResponse c : toValidate) {
             try {
@@ -65,7 +65,7 @@ public class ChannelsHandler {
         return opened;
     }
 
-    public void closeChannels(List<Long> channels) {
+    public void closeChannels(Collection<Long> channels) {
         for (Long c : channels) {
             trace("Closing channel, id: " + c);
             ChannelImpl s = this.channels.remove(c);

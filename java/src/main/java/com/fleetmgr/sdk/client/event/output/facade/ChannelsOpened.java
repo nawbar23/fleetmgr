@@ -2,7 +2,7 @@ package com.fleetmgr.sdk.client.event.output.facade;
 
 import com.fleetmgr.sdk.client.traffic.Channel;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Created by: Bartosz Nawrot
@@ -11,14 +11,14 @@ import java.util.List;
  */
 public class ChannelsOpened extends FacadeEvent {
 
-    private List<Channel> channels;
+    private Collection<Channel> channels;
 
-    public ChannelsOpened(List<Channel> channels) {
+    public ChannelsOpened(Collection<Channel> channels) {
         super(Type.CHANNELS_OPENED);
         this.channels = channels;
     }
 
-    public List<Channel> getChannels() {
+    public Collection<Channel> getChannels() {
         return channels;
     }
 

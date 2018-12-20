@@ -8,6 +8,7 @@ import com.fleetmgr.sdk.client.state.State;
 import com.fleetmgr.interfaces.facade.control.*;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -18,11 +19,11 @@ import java.util.List;
 public class Connecting extends State {
 
     private long deviceId;
-    private List<ChannelRequest> channels;
+    private Collection<ChannelRequest> channels;
 
     private Role role;
 
-    Connecting(State state, long deviceId, List<ChannelRequest> channels) {
+    Connecting(State state, long deviceId, Collection<ChannelRequest> channels) {
         super(state);
         this.deviceId = deviceId;
         this.channels = channels;

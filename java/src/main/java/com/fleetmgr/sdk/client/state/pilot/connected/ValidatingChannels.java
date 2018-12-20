@@ -76,7 +76,7 @@ public class ValidatingChannels extends State {
         switch (message.getCommand()) {
             case CHANNELS_READY:
                 if (message.getResponse() == Response.ACCEPTED) {
-                    listener.onEvent(new ChannelsOpened(new LinkedList<>(validated.values())));
+                    listener.onEvent(new ChannelsOpened(validated.values()));
                     switch (role) {
                         case LEADER:
                             return new Controlling(this);

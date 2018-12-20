@@ -91,7 +91,7 @@ public class Flying extends State {
     private void attachChannels(ChannelResponseList channels) {
         Map<Long, Channel> validated =
                 backend.getChannelsHandler().validateChannels(channels.getChannelsList());
-        listener.onEvent(new ChannelsOpened(new LinkedList<>(validated.values())));
+        listener.onEvent(new ChannelsOpened(validated.values()));
         send(ClientMessage.newBuilder()
                 .setCommand(Command.ATTACH_CHANNELS)
                 .setResponse(Response.ACCEPTED)

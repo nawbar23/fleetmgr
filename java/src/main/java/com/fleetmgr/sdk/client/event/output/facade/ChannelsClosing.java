@@ -2,7 +2,7 @@ package com.fleetmgr.sdk.client.event.output.facade;
 
 import com.fleetmgr.sdk.client.traffic.Channel;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Created by: Bartosz Nawrot
@@ -11,14 +11,14 @@ import java.util.List;
  */
 public class ChannelsClosing extends FacadeEvent {
 
-    private List<Channel> channels;
+    private Collection<Channel> channels;
 
-    public ChannelsClosing(List<Channel> channels) {
+    public ChannelsClosing(Collection<Channel> channels) {
         super(Type.CHANNELS_CLOSING);
         this.channels = channels;
     }
 
-    public List<Channel> getChannels() {
+    public Collection<Channel> getChannels() {
         return channels;
     }
 

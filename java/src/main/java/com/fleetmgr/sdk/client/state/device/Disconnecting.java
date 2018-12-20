@@ -28,9 +28,7 @@ public class Disconnecting extends State {
     public State start() {
         backend.getHeartbeatHandler().end();
         if (wasRecovering) {
-            backend.closeFacadeChannel();
-            listener.onEvent(new FacadeEvent(FacadeEvent.Type.RELEASED));
-            return new Disconnected(this);
+            return handleRelease();
 
         } else {
             return null;
@@ -49,13 +47,17 @@ public class Disconnecting extends State {
     public State notifyConnection(ConnectionEvent event) {
         switch (event.getType()) {
             case CLOSED:
-                backend.closeFacadeChannel();
-                listener.onEvent(new FacadeEvent(FacadeEvent.Type.RELEASED));
-                return new Disconnected(this);
+                return handleRelease();
 
             default:
                 return defaultEventHandle(event.toString());
         }
+    }
+
+    private State handleRelease() {
+        backend.closeFacadeChannel();
+        listener.onEvent(new FacadeEvent(FacadeEvent.Type.RELEASED));
+        return new Disconnected(this);
     }
 
     @Override

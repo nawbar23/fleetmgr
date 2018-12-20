@@ -2,7 +2,7 @@ package com.fleetmgr.sdk.client.event.input.user;
 
 import com.fleetmgr.interfaces.ChannelRequest;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * Created by: Bartosz Nawrot
@@ -13,9 +13,9 @@ public class Operate extends UserEvent {
 
     private long deviceId;
 
-    private List<ChannelRequest> channels;
+    private Collection<ChannelRequest> channels;
 
-    public Operate(long deviceId, List<ChannelRequest> channels) {
+    public Operate(long deviceId, Collection<ChannelRequest> channels) {
         super(Type.OPERATE);
         this.deviceId = deviceId;
         this.channels = channels;
@@ -25,7 +25,7 @@ public class Operate extends UserEvent {
         return deviceId;
     }
 
-    public List<ChannelRequest> getChannels() {
+    public Collection<ChannelRequest> getChannels() {
         return channels;
     }
 
