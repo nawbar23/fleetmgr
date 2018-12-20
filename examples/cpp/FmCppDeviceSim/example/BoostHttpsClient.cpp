@@ -1,4 +1,4 @@
-#include "AsioHttpsClient.hpp"
+#include "BoostHttpsClient.hpp"
 
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
@@ -19,12 +19,12 @@ namespace net = boost::asio;    // from <boost/asio.hpp>
 namespace ssl = net::ssl;       // from <boost/asio/ssl.hpp>
 using tcp = net::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
 
-AsioHttpsClient::AsioHttpsClient(const std::string& host, const int port, const std::string& apiKey) :
+BoostHttpsClient::BoostHttpsClient(const std::string& host, const int port, const std::string& apiKey) :
     fm::core::https::IHttpsClient(host, port, apiKey)
 {
 }
 
-std::string AsioHttpsClient::execute(const std::string& path, Method method, const std::string& body)
+std::string BoostHttpsClient::execute(const std::string& path, Method method, const std::string& body)
 {
     std::cout << "Executing HTTPS request, path:" << path << " body: " << (body.empty() ? "-" : body) << std::endl;
 

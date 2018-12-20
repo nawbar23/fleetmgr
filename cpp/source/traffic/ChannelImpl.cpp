@@ -1,4 +1,4 @@
-#include "traffic/Channel.hpp"
+#include "traffic/ChannelImpl.hpp"
 
 #include "common/channel_validation.pb.h"
 
@@ -10,23 +10,19 @@ using com::fleetmgr::interfaces::ValidateChannelRequest;
 using com::fleetmgr::interfaces::ValidateChannelResponse;
 using com::fleetmgr::interfaces::Result;
 
-Channel::Listener::~Listener()
-{
-}
-
-Channel::Channel(long _id, std::shared_ptr<ISocket> _socket) :
+ChannelImpl::ChannelImpl(long _id, std::shared_ptr<ISocket> _socket) :
     id(_id),
     socket(_socket),
     listener(nullptr)
 {
 }
 
-void Channel::setListener(std::shared_ptr<Listener> _listener)
+void ChannelImpl::setListener(std::shared_ptr<Listener> _listener)
 {
     listener.swap(_listener);
 }
 
-bool Channel::open(const std::string& ip, const int port, const std::string& key)
+bool ChannelImpl::open(const std::string& ip, const int port, const std::string& key)
 {
     socket->setListener(this);
     socket->connect(ip, port);
@@ -67,22 +63,22 @@ bool Channel::open(const std::string& ip, const int port, const std::string& key
     return response.result() == Result::VALIDATION_ACCEPTED;
 }
 
-void Channel::close()
+void ChannelImpl::close()
 {
     socket->disconnect();
 }
 
-void Channel::send(const socket::ISocket::DataPacket dataPacket)
+void ChannelImpl::send(const socket::ISocket::DataPacket dataPacket)
 {
     socket->send(dataPacket);
 }
 
-long Channel::getId() const
+long ChannelImpl::getId() const
 {
     return id;
 }
 
-void Channel::onReceived(const ISocket::DataPacket data)
+void ChannelImpl::onReceived(const ISocket::DataPacket data)
 {
     if (nullptr != listener.get())
     {
@@ -90,7 +86,7 @@ void Channel::onReceived(const ISocket::DataPacket data)
     }
 }
 
-void Channel::onClosed()
+void ChannelImpl::onClosed()
 {
     if (nullptr != listener.get())
     {

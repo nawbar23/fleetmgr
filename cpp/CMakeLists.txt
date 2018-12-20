@@ -82,12 +82,11 @@ set(SOURCES
     ${PROJECT_SOURCE_DIR}/source/event/input/connection/ConnectionEvent.cpp
     ${PROJECT_SOURCE_DIR}/source/event/input/connection/Received.cpp
     ${PROJECT_SOURCE_DIR}/source/event/output/FacadeEvent.cpp
-    ${PROJECT_SOURCE_DIR}/source/event/output/ChannelsClosed.cpp
+    ${PROJECT_SOURCE_DIR}/source/event/output/ChannelsClosing.cpp
     ${PROJECT_SOURCE_DIR}/source/event/output/ChannelsOpened.cpp
     ${PROJECT_SOURCE_DIR}/source/event/output/Error.cpp
     ${PROJECT_SOURCE_DIR}/source/event/output/HandoverAccepted.cpp
     ${PROJECT_SOURCE_DIR}/source/event/output/HandoverRejected.cpp
-    ${PROJECT_SOURCE_DIR}/source/event/output/OperationEnded.cpp
     ${PROJECT_SOURCE_DIR}/source/event/output/OperationStarted.cpp
     ${PROJECT_SOURCE_DIR}/source/backend/ClientBackend.cpp
     ${PROJECT_SOURCE_DIR}/source/backend/HeartbeatHandler.cpp
@@ -115,7 +114,8 @@ set(SOURCES
     ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/Spectating.cpp
     ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/ValidatingChannels.cpp
     ${PROJECT_SOURCE_DIR}/source/timer/ITimer.cpp
-    ${PROJECT_SOURCE_DIR}/source/traffic/Channel.cpp
+    ${PROJECT_SOURCE_DIR}/source/traffic/IChannel.cpp
+    ${PROJECT_SOURCE_DIR}/source/traffic/ChannelImpl.cpp
     ${PROJECT_SOURCE_DIR}/source/traffic/socket/ISocket.cpp
     # TODO genetated files should be automatically generated and added to sources :)
     ${PROJECT_SOURCE_DIR}/generated/common/channel_management.pb.cc
@@ -150,14 +150,12 @@ set(HEADERS
     ${PROJECT_SOURCE_DIR}/include/event/input/connection/ConnectionEvent.hpp
     ${PROJECT_SOURCE_DIR}/include/event/input/connection/Received.hpp
     ${PROJECT_SOURCE_DIR}/include/event/output/FacadeEvent.hpp
-    ${PROJECT_SOURCE_DIR}/include/event/output/ChannelsClosed.hpp
+    ${PROJECT_SOURCE_DIR}/include/event/output/ChannelsClosing.hpp
     ${PROJECT_SOURCE_DIR}/include/event/output/ChannelsOpened.hpp
     ${PROJECT_SOURCE_DIR}/include/event/output/Error.hpp
     ${PROJECT_SOURCE_DIR}/include/event/output/HandoverAccepted.hpp
     ${PROJECT_SOURCE_DIR}/include/event/output/HandoverRejected.hpp
-    ${PROJECT_SOURCE_DIR}/include/event/output/OperationEnded.hpp
     ${PROJECT_SOURCE_DIR}/include/event/output/OperationStarted.hpp
-    ${PROJECT_SOURCE_DIR}/include/event/output/ChannelsClosed.hpp
     ${PROJECT_SOURCE_DIR}/include/backend/ClientBackend.hpp
     ${PROJECT_SOURCE_DIR}/include/backend/HeartbeatHandler.hpp
     ${PROJECT_SOURCE_DIR}/include/backend/ChannelsHandler.hpp
@@ -184,7 +182,8 @@ set(HEADERS
     ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/Spectating.hpp
     ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/ValidatingChannels.hpp
     ${PROJECT_SOURCE_DIR}/include/timer/ITimer.hpp
-    ${PROJECT_SOURCE_DIR}/include/traffic/Channel.hpp
+    ${PROJECT_SOURCE_DIR}/include/traffic/IChannel.hpp
+    ${PROJECT_SOURCE_DIR}/include/traffic/ChannelImpl.hpp
     ${PROJECT_SOURCE_DIR}/include/traffic/socket/ISocket.hpp
     )
 

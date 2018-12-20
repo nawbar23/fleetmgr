@@ -1,5 +1,5 @@
-#ifndef ASIOLISTENER_HPP
-#define ASIOLISTENER_HPP
+#ifndef BOOSTLISTENER_HPP
+#define BOOSTLISTENER_HPP
 
 #include "IClient.hpp"
 
@@ -11,10 +11,10 @@
 
 #include <memory>
 
-class AsioListener : public fm::IClient::Listener
+class BoostListener : public fm::IClient::Listener
 {
 public:
-    AsioListener(boost::asio::io_service&);
+    BoostListener(boost::asio::io_service&);
 
     ~AsioListener() override;
 
@@ -30,7 +30,7 @@ public:
 
     std::shared_ptr<fm::timer::ITimer> createTimer() override;
 
-    std::shared_ptr<fm::traffic::socket::ISocket> createSocket(const fm::traffic::socket::ISocket::Protocol) override;
+    std::shared_ptr<fm::traffic::socket::ISocket> createSocket(const com::fleetmgr::interfaces::Protocol) override;
 
 private:
     boost::asio::io_service& ioService;
@@ -40,4 +40,4 @@ private:
     std::atomic<bool> done;
 };
 
-#endif // ASIOLISTENER_HPP
+#endif // BOOSTLISTENER_HPP

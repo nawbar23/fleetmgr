@@ -1,10 +1,10 @@
 #ifndef ISIMULATOR_HPP
 #define ISIMULATOR_HPP
 
-#include "AsioHttpsClient.hpp"
-#include "AsioListener.hpp"
+#include "BoostHttpsClient.hpp"
+#include "BoostListener.hpp"
 
-#include "traffic/Channel.hpp"
+#include "traffic/IChannel.hpp"
 
 #include "Device.hpp"
 
@@ -13,13 +13,13 @@
 #include <deque>
 #include <mutex>
 
-class ISimulator : public AsioListener
+class ISimulator : public BoostListener
 {
 public:
-    class ChannelListener : public fm::traffic::Channel::Listener
+    class ChannelListener : public fm::traffic::IChannel::Listener
     {
     public:
-        ChannelListener(std::unordered_map<long, std::shared_ptr<fm::traffic::Channel>>&, std::mutex&);
+        ChannelListener(std::unordered_map<long, std::shared_ptr<fm::traffic::IChannel>>&, std::mutex&);
 
         void onReceived(fm::traffic::Channel&, const fm::traffic::socket::ISocket::DataPacket) override;
 
@@ -44,7 +44,7 @@ protected:
     virtual void handleEvent(const std::shared_ptr<const fm::event::output::FacadeEvent> event) = 0;
 
 private:
-    std::unordered_map<long, std::shared_ptr<fm::traffic::Channel>> channels;
+    std::unordered_map<long, std::shared_ptr<fm::traffic::IChannel>> channels;
     std::mutex channelsLock;
 
     std::thread trafficThread;

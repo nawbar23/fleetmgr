@@ -23,12 +23,6 @@ class ISocket
 public:
     typedef std::pair<const uint8_t* const, const size_t> DataPacket;
 
-    enum Protocol
-    {
-        UDP,
-        TCP,
-    };
-
     class Listener
     {
     public:

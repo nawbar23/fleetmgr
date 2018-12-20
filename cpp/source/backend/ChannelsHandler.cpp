@@ -12,16 +12,16 @@ ChannelsHandler::ChannelsHandler(ClientBackend& _backend) :
 {
 }
 
-std::shared_ptr<std::vector<std::shared_ptr<traffic::Channel>>> ChannelsHandler::validateChannels(const std::vector<Channel>& toValidate)
+std::shared_ptr<std::vector<std::shared_ptr<traffic::ChannelImpl>>> ChannelsHandler::validateChannels(const std::vector<ChannelResponse>& toValidate)
 {
-    std::shared_ptr<std::vector<std::shared_ptr<traffic::Channel>>> result =
-            std::make_shared<std::vector<std::shared_ptr<traffic::Channel>>>();
-    for (const Channel& c : toValidate)
+    std::shared_ptr<std::vector<std::shared_ptr<traffic::ChannelImpl>>> result =
+            std::make_shared<std::vector<std::shared_ptr<traffic::ChannelImpl>>>();
+    for (const ChannelResponse& c : toValidate)
     {
         trace("Opening channel id: " + std::to_string(c.id()));
-        std::shared_ptr<traffic::socket::ISocket> socket = backend.createSocket(traffic::socket::ISocket::UDP);
-        std::shared_ptr<traffic::Channel> channel = std::make_shared<traffic::Channel>(c.id(), socket);
-        if (channel->open(c.ip(), c.port(), c.routekey()))
+        std::shared_ptr<traffic::socket::ISocket> socket = backend.createSocket(Protocol::UDP);
+        std::shared_ptr<traffic::ChannelImpl> channel = std::make_shared<traffic::ChannelImpl>(c.id(), socket);
+        if (channel->open(c.host(), c.port(), c.key()))
         {
             trace("Channel id: " + std::to_string(c.id()) + " validated");
             channels.insert({c.id(), channel});

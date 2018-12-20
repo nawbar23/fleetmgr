@@ -1,5 +1,5 @@
-#ifndef ASIOUDPSOCKET_HPP
-#define ASIOUDPSOCKET_HPP
+#ifndef BOOSTUDPSOCKET_HPP
+#define BOOSTUDPSOCKET_HPP
 
 #include "traffic/socket/ISocket.hpp"
 
@@ -9,10 +9,10 @@
 #include <deque>
 #include <vector>
 
-class AsioUdpSocket : public fm::traffic::socket::ISocket
+class BoostUdpSocket : public fm::traffic::socket::ISocket
 {
 public:
-    AsioUdpSocket(boost::asio::io_service&);
+    BoostUdpSocket(boost::asio::io_service&);
 
     void connect(const std::string&, const int) override;
 
@@ -37,4 +37,4 @@ private:
     void doRead();
 };
 
-#endif // ASIOUDPSOCKET_HPP
+#endif // BOOSTUDPSOCKET_HPP

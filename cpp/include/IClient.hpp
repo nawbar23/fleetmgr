@@ -11,6 +11,7 @@
 
 #include "timer/ITimer.hpp"
 
+#include "common/channel_management.pb.h"
 #include "common/location.pb.h"
 
 #include <memory>
@@ -53,7 +54,7 @@ public:
 
         virtual std::shared_ptr<timer::ITimer> createTimer() = 0;
 
-        virtual std::shared_ptr<traffic::socket::ISocket> createSocket(const traffic::socket::ISocket::Protocol) = 0;
+        virtual std::shared_ptr<traffic::socket::ISocket> createSocket(const com::fleetmgr::interfaces::Protocol) = 0;
     };
 
     virtual ~IClient();

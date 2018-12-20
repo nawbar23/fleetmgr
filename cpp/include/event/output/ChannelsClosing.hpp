@@ -1,5 +1,5 @@
-#ifndef FM_EVENT_OUTPUT_CHANNELSOPENED_HPP
-#define FM_EVENT_OUTPUT_CHANNELSOPENED_HPP
+#ifndef FM_EVENT_OUTPUT_CHANNELSCLOSING_HPP
+#define FM_EVENT_OUTPUT_CHANNELSCLOSING_HPP
 
 #include "event/output/FacadeEvent.hpp"
 
@@ -22,10 +22,10 @@ namespace output
  * Date: 2018-12-09
  * Description:
  */
-class ChannelsOpened : public FacadeEvent
+class ChannelsClosing : public FacadeEvent
 {
 public:
-    ChannelsOpened(std::shared_ptr<std::vector<std::shared_ptr<traffic::IChannel>>>);
+    ChannelsClosing(std::shared_ptr<std::vector<std::shared_ptr<traffic::IChannel>>>);
 
     const std::vector<std::shared_ptr<traffic::IChannel>>& getChannels() const;
 
@@ -41,4 +41,4 @@ private:
 
 } // fm
 
-#endif // FM_EVENT_OUTPUT_CHANNELSOPENED_HPP
+#endif // FM_EVENT_OUTPUT_CHANNELSCLOSING_HPP

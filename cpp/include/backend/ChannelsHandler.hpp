@@ -1,7 +1,7 @@
 #ifndef FM_BACKEND_CHANNELSHANDLER_HPP
 #define FM_BACKEND_CHANNELSHANDLER_HPP
 
-#include "traffic/Channel.hpp"
+#include "traffic/ChannelImpl.hpp"
 
 #include "common/channel_management.pb.h"
 
@@ -29,7 +29,7 @@ public:
 
     std::shared_ptr<std::vector<long>> getChannelIds() const;
 
-    std::shared_ptr<std::vector<std::shared_ptr<traffic::Channel>>> validateChannels(const std::vector<com::fleetmgr::interfaces::ChannelResponse>&);
+    std::shared_ptr<std::vector<std::shared_ptr<traffic::ChannelImpl>>> validateChannels(const std::vector<com::fleetmgr::interfaces::ChannelResponse>&);
 
     void closeChannels(const std::vector<long>&);
 
@@ -38,7 +38,7 @@ public:
 private:
     ClientBackend& backend;
 
-    std::unordered_map<long, std::shared_ptr<traffic::Channel>> channels;
+    std::unordered_map<long, std::shared_ptr<traffic::ChannelImpl>> channels;
 
     void trace(const std::string& message);
 };

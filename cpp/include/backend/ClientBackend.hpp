@@ -3,7 +3,7 @@
 
 #include "IClient.hpp"
 
-#include "traffic/Channel.hpp"
+#include "traffic/ChannelImpl.hpp"
 
 #include "core/CoreClient.hpp"
 
@@ -40,7 +40,7 @@ public:
 
     std::unique_ptr<com::fleetmgr::interfaces::Location> getLocation();
 
-    std::shared_ptr<traffic::socket::ISocket> createSocket(const traffic::socket::ISocket::Protocol);
+    std::shared_ptr<traffic::socket::ISocket> createSocket(const com::fleetmgr::interfaces::Protocol);
 
     void openFacadeConnection(const std::string&, const int);
 

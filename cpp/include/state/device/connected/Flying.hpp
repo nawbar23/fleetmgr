@@ -3,7 +3,7 @@
 
 #include "state/IState.hpp"
 
-#include "common/channel.pb.h"
+#include "common/channel_management.pb.h"
 #include "facade/control/facade_service.pb.h"
 
 #include <vector>

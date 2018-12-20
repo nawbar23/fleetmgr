@@ -6,7 +6,9 @@
 using namespace fm;
 using namespace fm::event::input::user;
 
-Operate::Operate(long _deviceId, std::shared_ptr<std::vector<long>> _channels) :
+using namespace com::fleetmgr::interfaces;
+
+Operate::Operate(long _deviceId, std::shared_ptr<std::vector<std::shared_ptr<ChannelRequest>>> _channels) :
     UserEvent(OPERATE),
     deviceId(_deviceId),
     channels(_channels)
@@ -18,7 +20,7 @@ long Operate::getDeviceId() const
     return deviceId;
 }
 
-const std::vector<long>& Operate::getChannels() const
+const std::vector<std::shared_ptr<ChannelRequest>>& Operate::getChannels() const
 {
     return *channels;
 }
@@ -26,11 +28,9 @@ const std::vector<long>& Operate::getChannels() const
 std::string Operate::toString() const
 {
     std::ostringstream oss;
-    if (!channels->empty())
+    for (std::shared_ptr<ChannelRequest> c : *channels)
     {
-        std::copy(channels->begin(), channels->end()-1,
-                  std::ostream_iterator<long>(oss, ","));
-        oss << channels->back();
+        oss << c->id() << ",";
     }
     return "OPERATE: " + std::to_string(deviceId) + " channels: " + oss.str();
 }

@@ -1,5 +1,5 @@
-#ifndef ASIOTCPSOCKET_HPP
-#define ASIOTCPSOCKET_HPP
+#ifndef BOOSTTCPSOCKET_HPP
+#define BOOSTTCPSOCKET_HPP
 
 #include "traffic/socket/ISocket.hpp"
 
@@ -7,10 +7,10 @@
 
 #include <array>
 
-class AsioTcpSocket : public fm::traffic::socket::ISocket
+class BoostTcpSocket : public fm::traffic::socket::ISocket
 {
 public:
-    AsioTcpSocket(boost::asio::io_service&);
+    BoostTcpSocket(boost::asio::io_service&);
 
     void connect(const std::string&, const int) override;
 
@@ -36,4 +36,4 @@ private:
     void doRead();
 };
 
-#endif // ASIOTCPSOCKET_HPP
+#endif // BOOSTTCPSOCKET_HPP

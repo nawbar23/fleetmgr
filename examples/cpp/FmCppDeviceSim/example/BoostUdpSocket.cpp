@@ -1,33 +1,33 @@
-#include "AsioUdpSocket.hpp"
+#include "BoostUdpSocket.hpp"
 
 #include <iostream>
 
 using namespace boost::asio;
 
-AsioUdpSocket::AsioUdpSocket(boost::asio::io_service& _ioService) :
+BoostUdpSocket::BoostUdpSocket(boost::asio::io_service& _ioService) :
     ioService(_ioService),
     socket(ioService, ip::udp::endpoint(ip::udp::v4(), 0))
 {
 }
 
-void AsioUdpSocket::connect(const std::string& host, const int port)
+void BoostUdpSocket::connect(const std::string& host, const int port)
 {
     //std::cout << "AsioUdpSocket::connect(" << host << ":" << port << ")" << std::endl;
     ip::udp::resolver resolver(ioService);
     remoteEndpoint = *resolver.resolve(host, std::to_string(port));
 }
 
-size_t AsioUdpSocket::readBlocking(uint8_t* _buffer, size_t _size)
+size_t BoostUdpSocket::readBlocking(uint8_t* _buffer, size_t _size)
 {
     return socket.receive_from(buffer(_buffer, _size), remoteEndpoint);
 }
 
-void AsioUdpSocket::startReading()
+void BoostUdpSocket::startReading()
 {
     doRead();
 }
 
-void AsioUdpSocket::send(const DataPacket dataPacket)
+void BoostUdpSocket::send(const DataPacket dataPacket)
 {
     //std::cout << "AsioUdpSocket::send" << std::endl;
     sendBuffer.emplace_back(dataPacket.first, dataPacket.first + dataPacket.second);
@@ -42,13 +42,13 @@ void AsioUdpSocket::send(const DataPacket dataPacket)
     });
 }
 
-void AsioUdpSocket::disconnect()
+void BoostUdpSocket::disconnect()
 {
     //std::cout << "AsioUdpSocket::disconnect" << std::endl;
     listener.load()->onClosed();
 }
 
-void AsioUdpSocket::doRead()
+void BoostUdpSocket::doRead()
 {
     //std::cout << "AsioUdpSocket::doRead" << std::endl;
     readBuffer.emplace_back(1024);

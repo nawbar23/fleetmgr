@@ -1,16 +1,16 @@
-#include "AsioTcpSocket.hpp"
+#include "BoostTcpSocket.hpp"
 
 #include <iostream>
 
 using namespace boost::asio;
 
-AsioTcpSocket::AsioTcpSocket(boost::asio::io_service& _ioService) :
+BoostTcpSocket::BoostTcpSocket(boost::asio::io_service& _ioService) :
     ioService(_ioService),
     socket(ioService)
 {
 }
 
-void AsioTcpSocket::connect(const std::string& host, const int port)
+void BoostTcpSocket::connect(const std::string& host, const int port)
 {
     //std::cout << "AsioTcpSocket::connect" << std::endl;
     ip::tcp::resolver resolver(ioService);
@@ -23,17 +23,17 @@ void AsioTcpSocket::connect(const std::string& host, const int port)
     });
 }
 
-size_t AsioTcpSocket::readBlocking(uint8_t* _buffer, size_t _size)
+size_t BoostTcpSocket::readBlocking(uint8_t* _buffer, size_t _size)
 {
     return socket.read_some(buffer(_buffer, _size));
 }
 
-void AsioTcpSocket::startReading()
+void BoostTcpSocket::startReading()
 {
     doRead();
 }
 
-void AsioTcpSocket::send(const DataPacket dataPacket)
+void BoostTcpSocket::send(const DataPacket dataPacket)
 {
     //std::cout << "AsioTcpSocket::send" << std::endl;
     async_write(socket, buffer(dataPacket.first, dataPacket.second),
@@ -46,13 +46,13 @@ void AsioTcpSocket::send(const DataPacket dataPacket)
     });
 }
 
-void AsioTcpSocket::disconnect()
+void BoostTcpSocket::disconnect()
 {
     //std::cout << "AsioTcpSocket::disconnect" << std::endl;
     listener.load()->onClosed();
 }
 
-void AsioTcpSocket::doRead()
+void BoostTcpSocket::doRead()
 {
     //std::cout << "AsioTcpSocket::doRead" << std::endl;
     socket.async_read_some(buffer(readBuffer.data(), READ_BUFFER_SIZE),

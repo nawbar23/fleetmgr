@@ -8,7 +8,9 @@
 
 #include "event/input/connection/Received.hpp"
 
-#include "traffic/Channel.hpp"
+#include "traffic/ChannelImpl.hpp"
+
+#include "common/channel_management.pb.h"
 
 #include <fstream>
 #include <sstream>
@@ -53,7 +55,7 @@ std::unique_ptr<Location> ClientBackend::getLocation()
     return listener.getLocation();
 }
 
-std::shared_ptr<traffic::socket::ISocket> ClientBackend::createSocket(const traffic::socket::ISocket::Protocol protocol)
+std::shared_ptr<traffic::socket::ISocket> ClientBackend::createSocket(const Protocol protocol)
 {
     return listener.createSocket(protocol);
 }
