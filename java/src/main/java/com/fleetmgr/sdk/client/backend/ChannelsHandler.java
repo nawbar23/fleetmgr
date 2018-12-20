@@ -48,7 +48,7 @@ public class ChannelsHandler {
         Map<Long, Channel> opened = new HashMap<>();
         for (ChannelResponse c : toValidate) {
             try {
-                trace("Opening channelImpl, id: " + c.getId());
+                trace("Opening channel, id: " + c.getId());
 
                 Socket socket = new UdpSocket(executor);
                 ChannelImpl channel = new ChannelImpl(c.getId(), socket);
@@ -57,7 +57,7 @@ public class ChannelsHandler {
                 channels.put(c.getId(), channel);
                 opened.put(c.getId(), channel);
 
-                trace("ChannelImpl id: " + c.getId() + " validated");
+                trace("Channel id: " + c.getId() + " validated");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -83,7 +83,6 @@ public class ChannelsHandler {
             trace("Closing channel id: " + c.getId());
             c.close();
         }
-        System.out.println("asdasdasd");
         channels.clear();
     }
 

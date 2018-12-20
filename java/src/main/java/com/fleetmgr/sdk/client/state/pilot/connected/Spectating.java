@@ -94,7 +94,7 @@ public class Spectating extends State {
 
             case REMOVE_CHANNELS:
                 if (message.getResponse() == Response.ACCEPTED) {
-                    listener.onEvent(new ChannelsClosing(null));
+                    listener.onEvent(new FacadeEvent(FacadeEvent.Type.CHANNELS_CLOSED));
                     return null;
 
                 } else {
