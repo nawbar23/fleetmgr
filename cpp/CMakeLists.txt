@@ -13,9 +13,7 @@ set(PROTO_PATH "${CMAKE_SOURCE_DIR}/../proto")
 
 # Protocol Buffers objects to be generated
 set(PROTOS
-    "common/add_channels"
-    "common/attach_channels"
-    "common/channel"
+    "common/channel_management"
     "common/channel_validation"
     "common/connection_state"
     "common/handover_data"
@@ -120,9 +118,7 @@ set(SOURCES
     ${PROJECT_SOURCE_DIR}/source/traffic/Channel.cpp
     ${PROJECT_SOURCE_DIR}/source/traffic/socket/ISocket.cpp
     # TODO genetated files should be automatically generated and added to sources :)
-    ${PROJECT_SOURCE_DIR}/generated/common/add_channels.pb.cc
-    ${PROJECT_SOURCE_DIR}/generated/common/attach_channels.pb.cc
-    ${PROJECT_SOURCE_DIR}/generated/common/channel.pb.cc
+    ${PROJECT_SOURCE_DIR}/generated/common/channel_management.pb.cc
     ${PROJECT_SOURCE_DIR}/generated/common/channel_validation.pb.cc
     ${PROJECT_SOURCE_DIR}/generated/common/connection_state.pb.cc
     ${PROJECT_SOURCE_DIR}/generated/common/handover_data.pb.cc

@@ -3,7 +3,7 @@
 
 #include "traffic/Channel.hpp"
 
-#include "common/channel.pb.h"
+#include "common/channel_management.pb.h"
 
 #include <memory>
 #include <vector>
@@ -29,7 +29,7 @@ public:
 
     std::shared_ptr<std::vector<long>> getChannelIds() const;
 
-    std::shared_ptr<std::vector<std::shared_ptr<traffic::Channel>>> validateChannels(const std::vector<com::fleetmgr::interfaces::Channel>&);
+    std::shared_ptr<std::vector<std::shared_ptr<traffic::Channel>>> validateChannels(const std::vector<com::fleetmgr::interfaces::ChannelResponse>&);
 
     void closeChannels(const std::vector<long>&);
 

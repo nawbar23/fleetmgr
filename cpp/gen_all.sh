@@ -1,7 +1,5 @@
 mkdir -p generated
-protoc -I ../proto --cpp_out=generated ../proto/common/add_channels.proto
-protoc -I ../proto --cpp_out=generated ../proto/common/attach_channels.proto
-protoc -I ../proto --cpp_out=generated ../proto/common/channel.proto
+protoc -I ../proto --cpp_out=generated ../proto/common/channel_management.proto
 protoc -I ../proto --cpp_out=generated ../proto/common/channel_validation.proto
 protoc -I ../proto --cpp_out=generated ../proto/common/connection_state.proto
 protoc -I ../proto --cpp_out=generated ../proto/common/handover_data.proto
