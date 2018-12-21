@@ -50,7 +50,8 @@ public class Ready extends State {
     private State handleMessage(ControlMessage message) {
         switch (message.getCommand()) {
             case ATTACH_CHANNELS:
-                return new Flying(this, message.getChannelsResponse());
+                return new Flying(this,
+                        message.getChannelsResponse().getChannelsList());
 
             default:
                 return defaultMessageHandle(message);

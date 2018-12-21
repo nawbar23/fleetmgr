@@ -1,6 +1,7 @@
 package com.fleetmgr.sdk.client.state.device.connected;
 
 import com.fleetmgr.interfaces.ChannelIndicationList;
+import com.fleetmgr.interfaces.ChannelResponse;
 import com.fleetmgr.interfaces.ChannelResponseList;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.connection.Received;
@@ -28,9 +29,9 @@ import java.util.Map;
  */
 public class Flying extends State {
 
-    private ChannelResponseList initialChannels;
+    private Collection<ChannelResponse> initialChannels;
 
-    Flying(State state, ChannelResponseList initialChannels) {
+    Flying(State state, Collection<ChannelResponse> initialChannels) {
         super(state);
         this.initialChannels = initialChannels;
     }
@@ -66,7 +67,7 @@ public class Flying extends State {
     private State handleMessage(ControlMessage message) {
         switch (message.getCommand()) {
             case ATTACH_CHANNELS:
-                attachChannels(message.getChannelsResponse());
+                attachChannels(message.getChannelsResponse().getChannelsList());
                 return null;
 
             case RELEASE_CHANNELS:
@@ -88,9 +89,9 @@ public class Flying extends State {
         }
     }
 
-    private void attachChannels(ChannelResponseList channels) {
+    private void attachChannels(Collection<ChannelResponse> channels) {
         Map<Long, Channel> validated =
-                backend.getChannelsHandler().validateChannels(channels.getChannelsList());
+                backend.getChannelsHandler().validateChannels(channels);
         listener.onEvent(new ChannelsOpened(validated.values()));
         send(ClientMessage.newBuilder()
                 .setCommand(Command.ATTACH_CHANNELS)
