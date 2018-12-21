@@ -108,7 +108,6 @@ public class Spectating extends State {
             case OPERATION_ENDED:
                 listener.onEvent(new ChannelsClosing(backend.getChannelsHandler().getChannels()));
                 backend.getChannelsHandler().closeAllChannels();
-                listener.onEvent(new FacadeEvent(FacadeEvent.Type.OPERATION_ENDED));
                 send(ClientMessage.newBuilder()
                         .setCommand(Command.OPERATION_ENDED)
                         .setResponse(Response.ACCEPTED)
