@@ -1,22 +1,22 @@
 #include "PilotSimulator.hpp"
 
-#include "AsioHttpsClient.hpp"
+#include "BoostHttpsClient.hpp"
 
 int main(int, char**)
 {
     const std::string apiKey = "ApiKey at+ya8GFZpVrCAKHKMi4DhiP5YS14uk6OR+NHR85Tdf7ocxdO4BoMSmoqAEjVexyoeh1hzNfpcrZX1aQOQa/ijCj0gY+F5//QQOJZRGWQUFLUP3WlkyVFzKhD26Faane";
 
-    const std::string host = "edge.zhjixouahfpdviebd.com";
-    const int port = 443;
+//    const std::string host = "edge.zhjixouahfpdviebd.com";
+//    const int port = 443;
 
-//    const std::string host = "192.168.1.69";
-//    const int port = 14010;
+    const std::string host = "192.168.1.52";
+    const int port = 14010;
 
     const std::string facadeCertPath = "../../../cpp/grpc_facade.crt";
 
     std::cout << "Staring Pilot simulation..." << std::endl;
 
-    AsioHttpsClient core(host, port, apiKey);
+    BoostHttpsClient core(host, port, apiKey);
 
     boost::asio::io_service ioService;
 

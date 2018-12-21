@@ -4,7 +4,7 @@
 #include "state/IState.hpp"
 
 #include "common/role.pb.h"
-#include "common/channel.pb.h"
+#include "common/channel_management.pb.h"
 
 #include <vector>
 
@@ -25,7 +25,7 @@ namespace pilot
 class Connected : public IState
 {
 public:
-    Connected(IState&, com::fleetmgr::interfaces::Role, const std::shared_ptr<std::vector<com::fleetmgr::interfaces::Channel>>);
+    Connected(IState&, com::fleetmgr::interfaces::Role, std::shared_ptr<std::vector<com::fleetmgr::interfaces::ChannelResponse>>);
 
     std::unique_ptr<IState> start() override;
 

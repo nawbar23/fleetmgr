@@ -27,9 +27,11 @@ class ChannelsHandler
 public:
     ChannelsHandler(ClientBackend&);
 
-    std::shared_ptr<std::vector<long>> getChannelIds() const;
+    std::shared_ptr<std::vector<traffic::IChannel*>> getChannels();
 
-    std::shared_ptr<std::vector<std::shared_ptr<traffic::ChannelImpl>>> validateChannels(const std::vector<com::fleetmgr::interfaces::ChannelResponse>&);
+    std::shared_ptr<std::vector<traffic::IChannel*>> getChannels(const std::vector<long>&);
+
+    std::shared_ptr<std::vector<traffic::IChannel*>> validateChannels(const std::vector<com::fleetmgr::interfaces::ChannelResponse>&);
 
     void closeChannels(const std::vector<long>&);
 
@@ -38,7 +40,7 @@ public:
 private:
     ClientBackend& backend;
 
-    std::unordered_map<long, std::shared_ptr<traffic::ChannelImpl>> channels;
+    std::unordered_map<long, traffic::ChannelImpl> channels;
 
     void trace(const std::string& message);
 };

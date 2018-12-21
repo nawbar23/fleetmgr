@@ -16,7 +16,7 @@ class BoostListener : public fm::IClient::Listener
 public:
     BoostListener(boost::asio::io_service&);
 
-    ~AsioListener() override;
+    ~BoostListener() override;
 
     bool isDone();
 

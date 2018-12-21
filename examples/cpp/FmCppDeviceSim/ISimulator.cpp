@@ -11,35 +11,35 @@ using fm::event::input::user::UserEvent;
 using fm::event::output::FacadeEvent;
 using fm::event::output::ChannelsOpened;
 
-ISimulator::ChannelListener::ChannelListener(std::unordered_map<long, std::shared_ptr<fm::traffic::Channel>>& _channels, std::mutex& _channelsLock) :
+ISimulator::ChannelListener::ChannelListener(std::unordered_map<long, fm::traffic::IChannel*>& _channels, std::mutex& _channelsLock) :
     channels(_channels),
     channelsLock(_channelsLock)
 {
 }
 
-void ISimulator::ChannelListener::onReceived(fm::traffic::Channel& channel, const fm::traffic::socket::ISocket::DataPacket dataPacket)
+void ISimulator::ChannelListener::onReceived(fm::traffic::IChannel* channel, const fm::traffic::socket::ISocket::DataPacket dataPacket)
 {
     std::string message(reinterpret_cast<const char*>(dataPacket.first), dataPacket.second);
-    std::cout << "Received[" << channel.getId() << "]: " << message << std::endl;
+    std::cout << "Received[" << channel->getId() << "]: " << message << std::endl;
 }
 
-void ISimulator::ChannelListener::onClosed(fm::traffic::Channel& channel)
+void ISimulator::ChannelListener::onClosed(fm::traffic::IChannel* channel)
 {
     std::lock_guard<std::mutex> lock(channelsLock);
-    auto c = channels.find(channel.getId());
+    auto c = channels.find(channel->getId());
     if (c != channels.end())
     {
-        std::cout << "Removing channel, id: " << channel.getId() << std::endl;
+        std::cout << "Removing channel, id: " << channel->getId() << std::endl;
         channels.erase(c);
     }
     else
     {
-        std::cout << "Closed not existing channel, id: " << channel.getId() << std::endl;
+        std::cout << "Closed not existing channel, id: " << channel->getId() << std::endl;
     }
 }
 
 ISimulator::ISimulator(boost::asio::io_service& ioService) :
-    AsioListener(ioService),
+    BoostListener(ioService),
     done(false)
 {
 }
@@ -72,7 +72,7 @@ void ISimulator::onEvent(const std::shared_ptr<const FacadeEvent> event)
 void ISimulator::addChannels(const ChannelsOpened& event)
 {
     bool wasEmpty = channels.empty();
-    for (std::shared_ptr<traffic::Channel> c : event.getChannels())
+    for (traffic::IChannel* c : *event.getChannels())
     {
         std::shared_ptr<ChannelListener> listener = std::make_shared<ChannelListener>(channels, channelsLock);
         c->setListener(listener);

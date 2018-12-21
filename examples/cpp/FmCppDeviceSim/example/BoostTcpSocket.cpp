@@ -12,7 +12,7 @@ BoostTcpSocket::BoostTcpSocket(boost::asio::io_service& _ioService) :
 
 void BoostTcpSocket::connect(const std::string& host, const int port)
 {
-    //std::cout << "AsioTcpSocket::connect" << std::endl;
+    //std::cout << "BoostTcpSocket::connect" << std::endl;
     ip::tcp::resolver resolver(ioService);
     auto endpoint = resolver.resolve(host, std::to_string(port));
     async_connect(socket, endpoint, [this] (std::error_code ec, ip::tcp::endpoint)
@@ -35,26 +35,26 @@ void BoostTcpSocket::startReading()
 
 void BoostTcpSocket::send(const DataPacket dataPacket)
 {
-    //std::cout << "AsioTcpSocket::send" << std::endl;
+    //std::cout << "BoostTcpSocket::send" << std::endl;
     async_write(socket, buffer(dataPacket.first, dataPacket.second),
                 [this](boost::system::error_code ec, std::size_t /*length*/)
     {
         if (ec)
         {
-            std::cout << "AsioTcpSocket::send error: " + ec.message() << std::endl;
+            std::cout << "BoostTcpSocket::send error: " + ec.message() << std::endl;
         }
     });
 }
 
 void BoostTcpSocket::disconnect()
 {
-    //std::cout << "AsioTcpSocket::disconnect" << std::endl;
+    //std::cout << "BoostTcpSocket::disconnect" << std::endl;
     listener.load()->onClosed();
 }
 
 void BoostTcpSocket::doRead()
 {
-    //std::cout << "AsioTcpSocket::doRead" << std::endl;
+    //std::cout << "BoostTcpSocket::doRead" << std::endl;
     socket.async_read_some(buffer(readBuffer.data(), READ_BUFFER_SIZE),
                            [this](boost::system::error_code ec, std::size_t length)
     {
@@ -65,7 +65,7 @@ void BoostTcpSocket::doRead()
         }
         else
         {
-            std::cout << "AsioTcpSocket::doRead error: " + ec.message() << std::endl;
+            std::cout << "BoostTcpSocket::doRead error: " + ec.message() << std::endl;
         }
     });
 }

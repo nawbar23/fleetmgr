@@ -28,14 +28,14 @@ namespace user
 class OpenChannels : public UserEvent
 {
 public:
-    OpenChannels(std::shared_ptr<std::vector<std::shared_ptr<com::fleetmgr::interfaces::ChannelRequest>>>);
+    OpenChannels(std::shared_ptr<std::vector<com::fleetmgr::interfaces::ChannelRequest>>);
 
-    const std::vector<std::shared_ptr<com::fleetmgr::interfaces::ChannelRequest>>& getChannels() const;
+    std::shared_ptr<std::vector<com::fleetmgr::interfaces::ChannelRequest>> getChannels() const;
 
     std::string toString() const override;
 
 private:
-    std::shared_ptr<std::vector<std::shared_ptr<com::fleetmgr::interfaces::ChannelRequest>>> channels;
+    std::shared_ptr<std::vector<com::fleetmgr::interfaces::ChannelRequest>> channels;
 };
 
 } // user

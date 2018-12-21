@@ -51,9 +51,9 @@ std::unique_ptr<IState> Controlling::handleUserEvent(const UserEvent& event)
         const OpenChannels& openChannels = reinterpret_cast<const OpenChannels&>(event);
         ClientMessage message;
         message.set_command(Command::ADD_CHANNELS);
-        for (long c : openChannels.getChannels())
+        for (const ChannelRequest& c : *openChannels.getChannels())
         {
-            message.mutable_requestchannels()->add_channelid(c);
+            message.mutable_channelsrequest()->add_channels()->CopyFrom(c);
         }
         send(message);
         return nullptr;
@@ -67,7 +67,7 @@ std::unique_ptr<IState> Controlling::handleUserEvent(const UserEvent& event)
         message.set_command(Command::REMOVE_CHANNELS);
         for (long c : closeChannels.getChannels())
         {
-            message.mutable_requestchannels()->add_channelid(c);
+            message.mutable_channelsindication()->add_ids(c);
         }
         send(message);
         return nullptr;
@@ -103,7 +103,13 @@ std::unique_ptr<IState> Controlling::handleMessage(const ControlMessage& message
     case Command::ADD_CHANNELS:
         if (message.response() == Response::ACCEPTED)
         {
-            std::shared_ptr<std::vector<Channel>> toOpen = std::make_shared<std::vector<Channel>>();
+            std::shared_ptr<std::vector<ChannelResponse>> toOpen =
+                    std::make_shared<std::vector<ChannelResponse>>();
+            toOpen->reserve(message.channelsresponse().channels_size());
+            for (int i = 0; i < message.channelsresponse().channels_size(); ++i)
+            {
+                toOpen->push_back(message.channelsresponse().channels(i));
+            }
             return std::make_unique<ValidatingChannels>(*this, Role::LEADER, toOpen);
         }
         else
@@ -115,6 +121,7 @@ std::unique_ptr<IState> Controlling::handleMessage(const ControlMessage& message
     case Command::REMOVE_CHANNELS:
         if (message.response() == Response::ACCEPTED)
         {
+            listener.onEvent(std::make_shared<FacadeEvent>(FacadeEvent::CHANNELS_CLOSED));
             return nullptr;
         }
         else

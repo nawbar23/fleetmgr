@@ -10,7 +10,7 @@ class DeviceSimulator : public ISimulator
 public:
     DeviceSimulator(boost::asio::io_service&);
 
-    void start(AsioHttpsClient&, const std::string&);
+    void start(BoostHttpsClient&, const std::string&);
 
 private:
     std::unique_ptr<fm::Device> device;

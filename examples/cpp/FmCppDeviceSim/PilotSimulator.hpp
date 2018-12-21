@@ -10,7 +10,7 @@ class PilotSimulator : public ISimulator
 public:
     PilotSimulator(boost::asio::io_service&);
 
-    void start(AsioHttpsClient&, const std::string&);
+    void start(BoostHttpsClient&, const std::string&);
 
 private:
     std::unique_ptr<fm::Pilot> pilot;

@@ -17,7 +17,7 @@ ChannelImpl::ChannelImpl(long _id, std::shared_ptr<ISocket> _socket) :
 {
 }
 
-void ChannelImpl::setListener(std::shared_ptr<Listener> _listener)
+void ChannelImpl::setListener(std::shared_ptr<IChannel::Listener> _listener)
 {
     listener.swap(_listener);
 }
@@ -82,7 +82,7 @@ void ChannelImpl::onReceived(const ISocket::DataPacket data)
 {
     if (nullptr != listener.get())
     {
-        listener->onReceived(*this, data);
+        listener->onReceived(this, data);
     }
 }
 
@@ -90,6 +90,6 @@ void ChannelImpl::onClosed()
 {
     if (nullptr != listener.get())
     {
-        listener->onClosed(*this);
+        listener->onClosed(this);
     }
 }

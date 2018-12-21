@@ -5,6 +5,8 @@
 using namespace fm;
 using namespace fm::event;
 
+using namespace com::fleetmgr::interfaces;
+
 using fm::event::input::user::UserEvent;
 using fm::event::output::FacadeEvent;
 
@@ -14,7 +16,7 @@ DeviceSimulator::DeviceSimulator(boost::asio::io_service& ioService) :
 {
 }
 
-void DeviceSimulator::start(AsioHttpsClient& core, const std::string& facadeCertPath)
+void DeviceSimulator::start(BoostHttpsClient& core, const std::string& facadeCertPath)
 {
     device = std::make_unique<fm::Device>(*this, core, facadeCertPath);
     execute([this] ()

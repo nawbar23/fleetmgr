@@ -20,7 +20,7 @@ using event::input::connection::Received;
 
 using event::output::FacadeEvent;
 
-using com::fleetmgr::interfaces::Channel;
+using com::fleetmgr::interfaces::ChannelResponse;
 
 Ready::Ready(IState& state) :
     IState(state)
@@ -67,11 +67,12 @@ std::unique_ptr<IState> Ready::handleMessage(const ControlMessage& message)
     {
     case Command::ATTACH_CHANNELS:
     {
-        std::shared_ptr<std::vector<Channel>> openedChannels =
-                std::make_shared<std::vector<Channel>>(message.attachchannels().channels_size());
-        for (int i = 0; i < message.attachchannels().channels_size(); ++i)
+        std::shared_ptr<std::vector<ChannelResponse>> openedChannels =
+                std::make_shared<std::vector<ChannelResponse>>();
+        openedChannels->reserve(message.channelsresponse().channels_size());
+        for (int i = 0; i < message.channelsresponse().channels_size(); ++i)
         {
-            openedChannels->at(i) = message.attachchannels().channels(i);
+            openedChannels->emplace_back(message.channelsresponse().channels(i));
         }
         return std::make_unique<Flying>(*this, openedChannels);
     }

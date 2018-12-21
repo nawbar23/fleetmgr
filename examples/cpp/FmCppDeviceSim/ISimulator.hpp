@@ -19,14 +19,14 @@ public:
     class ChannelListener : public fm::traffic::IChannel::Listener
     {
     public:
-        ChannelListener(std::unordered_map<long, std::shared_ptr<fm::traffic::IChannel>>&, std::mutex&);
+        ChannelListener(std::unordered_map<long, fm::traffic::IChannel*>&, std::mutex&);
 
-        void onReceived(fm::traffic::Channel&, const fm::traffic::socket::ISocket::DataPacket) override;
+        void onReceived(fm::traffic::IChannel*, const fm::traffic::socket::ISocket::DataPacket) override;
 
-        void onClosed(fm::traffic::Channel&) override;
+        void onClosed(fm::traffic::IChannel*) override;
 
     private:
-        std::unordered_map<long, std::shared_ptr<fm::traffic::Channel>>& channels;
+        std::unordered_map<long, fm::traffic::IChannel*>& channels;
         std::mutex& channelsLock;
     };
 
@@ -44,7 +44,7 @@ protected:
     virtual void handleEvent(const std::shared_ptr<const fm::event::output::FacadeEvent> event) = 0;
 
 private:
-    std::unordered_map<long, std::shared_ptr<fm::traffic::IChannel>> channels;
+    std::unordered_map<long, fm::traffic::IChannel*> channels;
     std::mutex channelsLock;
 
     std::thread trafficThread;

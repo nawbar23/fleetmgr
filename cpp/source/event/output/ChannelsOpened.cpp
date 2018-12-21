@@ -6,22 +6,22 @@
 using namespace fm;
 using namespace fm::event::output;
 
-ChannelsOpened::ChannelsOpened(std::shared_ptr<std::vector<std::shared_ptr<traffic::IChannel>>> _channels) :
+ChannelsOpened::ChannelsOpened(std::shared_ptr<std::vector<traffic::IChannel*>> _channels) :
     FacadeEvent(CHANNELS_OPENED),
     channels(_channels)
 {
 }
 
-const std::vector<std::shared_ptr<traffic::IChannel>>& ChannelsOpened::getChannels() const
+std::shared_ptr<std::vector<traffic::IChannel*>> ChannelsOpened::getChannels() const
 {
-    return *channels;
+    return channels;
 }
 
 std::string ChannelsOpened::toString() const
 {
     std::ostringstream oss;
     oss << "[";
-    for (std::shared_ptr<traffic::IChannel> c : *channels)
+    for (auto c : *channels)
     {
         oss << c->getId() << ",";
     }

@@ -4,7 +4,7 @@
 #include "state/IState.hpp"
 
 #include "common/role.pb.h"
-#include "common/channel.pb.h"
+#include "common/channel_management.pb.h"
 
 #include <vector>
 
@@ -12,7 +12,7 @@ namespace fm
 {
 
 namespace traffic {
-class Channel;
+class IChannel;
 }
 
 namespace state
@@ -32,7 +32,7 @@ namespace connected
 class ValidatingChannels : public IState
 {
 public:
-    ValidatingChannels(IState&, com::fleetmgr::interfaces::Role, std::shared_ptr<std::vector<com::fleetmgr::interfaces::Channel>>);
+    ValidatingChannels(IState&, com::fleetmgr::interfaces::Role, std::shared_ptr<std::vector<com::fleetmgr::interfaces::ChannelResponse>>);
 
     std::unique_ptr<IState> start() override;
 
@@ -45,8 +45,8 @@ public:
 private:
     com::fleetmgr::interfaces::Role role;
 
-    std::shared_ptr<std::vector<com::fleetmgr::interfaces::Channel>> toValidate;
-    std::shared_ptr<std::vector<std::shared_ptr<traffic::Channel>>> validated;
+    std::shared_ptr<std::vector<com::fleetmgr::interfaces::ChannelResponse>> toValidate;
+    std::shared_ptr<std::vector<traffic::IChannel*>> validated;
 
     std::unique_ptr<IState> handleMessage(const com::fleetmgr::interfaces::facade::control::ControlMessage&);
 };

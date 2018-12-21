@@ -13,7 +13,7 @@ namespace traffic
 
 /**
  * Created by: Bartosz Nawrot
- * Date: 2018-11-25
+ * Date: 2018-21-21
  * Description:
  */
 class IChannel
@@ -24,9 +24,9 @@ public:
     public:
         virtual ~Listener();
 
-        virtual void onReceived(IChannel&, const socket::ISocket::DataPacket) = 0;
+        virtual void onReceived(IChannel*, const socket::ISocket::DataPacket) = 0;
 
-        virtual void onClosed(IChannel&) = 0;
+        virtual void onClosed(IChannel*) = 0;
     };
 
     ~IChannel();

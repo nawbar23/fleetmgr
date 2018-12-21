@@ -17,9 +17,9 @@ using event::output::FacadeEvent;
 using event::output::OperationStarted;
 
 using com::fleetmgr::interfaces::Role;
-using com::fleetmgr::interfaces::Channel;
+using com::fleetmgr::interfaces::ChannelResponse;
 
-Connected::Connected(IState& state, Role _initialRole, std::shared_ptr<std::vector<Channel>> openedChannels) :
+Connected::Connected(IState& state, Role _initialRole, std::shared_ptr<std::vector<ChannelResponse>> openedChannels) :
     IState(state),
     internalState(std::make_unique<connected::ValidatingChannels>(*this, _initialRole, openedChannels)),
     initialRole(_initialRole)

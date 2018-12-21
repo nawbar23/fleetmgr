@@ -12,7 +12,7 @@ BoostUdpSocket::BoostUdpSocket(boost::asio::io_service& _ioService) :
 
 void BoostUdpSocket::connect(const std::string& host, const int port)
 {
-    //std::cout << "AsioUdpSocket::connect(" << host << ":" << port << ")" << std::endl;
+    //std::cout << "BoostUdpSocket::connect(" << host << ":" << port << ")" << std::endl;
     ip::udp::resolver resolver(ioService);
     remoteEndpoint = *resolver.resolve(host, std::to_string(port));
 }
@@ -29,7 +29,7 @@ void BoostUdpSocket::startReading()
 
 void BoostUdpSocket::send(const DataPacket dataPacket)
 {
-    //std::cout << "AsioUdpSocket::send" << std::endl;
+    //std::cout << "BoostUdpSocket::send" << std::endl;
     sendBuffer.emplace_back(dataPacket.first, dataPacket.first + dataPacket.second);
     socket.async_send_to(buffer(sendBuffer.back().data(), sendBuffer.back().size()), remoteEndpoint,
                          [this](boost::system::error_code ec, std::size_t /*length*/)
@@ -37,20 +37,20 @@ void BoostUdpSocket::send(const DataPacket dataPacket)
         sendBuffer.pop_front();
         if (ec)
         {
-            std::cout << "AsioUdpSocket::send error: " + ec.message() << std::endl;
+            std::cout << "BoostUdpSocket::send error: " + ec.message() << std::endl;
         }
     });
 }
 
 void BoostUdpSocket::disconnect()
 {
-    //std::cout << "AsioUdpSocket::disconnect" << std::endl;
+    //std::cout << "BoostUdpSocket::disconnect" << std::endl;
     listener.load()->onClosed();
 }
 
 void BoostUdpSocket::doRead()
 {
-    //std::cout << "AsioUdpSocket::doRead" << std::endl;
+    //std::cout << "BoostUdpSocket::doRead" << std::endl;
     readBuffer.emplace_back(1024);
     socket.async_receive_from(buffer(readBuffer.back(), 1024), remoteEndpoint,
                               [this](boost::system::error_code ec, std::size_t length)
@@ -63,7 +63,7 @@ void BoostUdpSocket::doRead()
         }
         else
         {
-            std::cout << "AsioUdpSocket::doRead error: " + ec.message() << std::endl;
+            std::cout << "BoostUdpSocket::doRead error: " + ec.message() << std::endl;
         }
     });
 }

@@ -26,9 +26,9 @@ using event::output::ChannelsOpened;
 using event::output::Error;
 
 using com::fleetmgr::interfaces::Role;
-using com::fleetmgr::interfaces::Channel;
+using com::fleetmgr::interfaces::ChannelResponse;
 
-ValidatingChannels::ValidatingChannels(IState& state, Role _role, std::shared_ptr<std::vector<Channel>> openedChannels) :
+ValidatingChannels::ValidatingChannels(IState& state, Role _role, std::shared_ptr<std::vector<ChannelResponse>> openedChannels) :
     IState(state),
     role(_role),
     toValidate(openedChannels)
@@ -40,9 +40,9 @@ std::unique_ptr<IState> ValidatingChannels::start()
     validated = backend.getChannelsHandler().validateChannels(*toValidate);
     ClientMessage response;
     response.set_command(Command::CHANNELS_READY);
-    for (std::shared_ptr<traffic::Channel> c : *validated)
+    for (traffic::IChannel* c : *validated)
     {
-        response.mutable_attachchannels()->add_attachedchannels(c->getId());
+        response.mutable_channelsindication()->add_ids(c->getId());
     }
     send(response);
     return nullptr;
