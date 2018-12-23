@@ -1,30 +1,39 @@
 package com.fleetmgr.sdk.client.state.pilot.connected;
 
-import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
-import com.fleetmgr.sdk.client.event.input.connection.Received;
-import com.fleetmgr.sdk.client.event.input.user.UserEvent;
-import com.fleetmgr.sdk.client.state.State;
+import com.fleetmgr.interfaces.ChannelRequest;
+import com.fleetmgr.interfaces.ChannelRequestList;
 import com.fleetmgr.interfaces.facade.control.ClientMessage;
 import com.fleetmgr.interfaces.facade.control.Command;
 import com.fleetmgr.interfaces.facade.control.ControlMessage;
 import com.fleetmgr.interfaces.facade.control.Response;
+import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
+import com.fleetmgr.sdk.client.event.input.connection.Received;
+import com.fleetmgr.sdk.client.event.input.user.UserEvent;
+import com.fleetmgr.sdk.client.state.State;
+
+import java.util.Collection;
 
 /**
  * Created by: Bartosz Nawrot
- * Date: 24.09.2018
+ * Date: 23.12.2018
  * Description:
  */
-public class Releasing extends State {
+public class OpeningChannels extends State  {
 
-    Releasing(State state) {
+    private Collection<ChannelRequest> channelsToOpen;
+
+    OpeningChannels(State state, Collection<ChannelRequest> channelsToClose) {
         super(state);
+        this.channelsToOpen = channelsToClose;
     }
 
     @Override
     public State start() {
-        backend.getChannelsHandler().closeAllChannels();
         send(ClientMessage.newBuilder()
-                .setCommand(Command.RELEASE)
+                .setCommand(Command.ADD_CHANNELS)
+                .setChannelsRequest(ChannelRequestList.newBuilder()
+                        .addAllChannels(channelsToOpen)
+                        .build())
                 .build());
         return null;
     }
@@ -47,17 +56,12 @@ public class Releasing extends State {
 
     private State handleMessage(ControlMessage message) {
         switch (message.getCommand()) {
-            case RELEASE:
+            case ADD_CHANNELS:
                 if (message.getResponse() == Response.ACCEPTED) {
-                    return new Released(this);
+                    return new ValidatingChannels(this,
+                            message.getChannelsResponse().getChannelsList());
 
-                } else {
-                    return defaultMessageHandle(message);
                 }
-
-            case HEARTBEAT:
-                trace("Heartbeat ignored during release procedure");
-                return null;
 
             default:
                 return defaultMessageHandle(message);
@@ -66,6 +70,6 @@ public class Releasing extends State {
 
     @Override
     public String toString() {
-        return "Releasing";
+        return "OpeningChannels";
     }
 }

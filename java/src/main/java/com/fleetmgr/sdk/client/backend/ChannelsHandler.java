@@ -1,6 +1,5 @@
 package com.fleetmgr.sdk.client.backend;
 
-import com.fleetmgr.interfaces.ChannelIndicationList;
 import com.fleetmgr.interfaces.ChannelResponse;
 import com.fleetmgr.sdk.client.Client;
 import com.fleetmgr.sdk.client.traffic.Channel;
@@ -36,12 +35,16 @@ public class ChannelsHandler {
         return new LinkedList<>(channels.values());
     }
 
-    public List<Channel> getChannels(List<Long> channels) {
+    public List<Channel> getChannels(Collection<Long> channels) {
         LinkedList<Channel> result = new LinkedList<>();
         for (Long id : channels) {
             result.add(this.channels.get(id));
         }
         return result;
+    }
+
+    public Collection<Long> getChannelsIds() {
+        return channels.keySet();
     }
 
     public Map<Long, Channel> validateChannels(Collection<ChannelResponse> toValidate) {

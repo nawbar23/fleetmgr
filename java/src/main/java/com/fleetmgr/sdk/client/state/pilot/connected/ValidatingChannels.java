@@ -2,17 +2,16 @@ package com.fleetmgr.sdk.client.state.pilot.connected;
 
 import com.fleetmgr.interfaces.ChannelIndicationList;
 import com.fleetmgr.interfaces.ChannelResponse;
-import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
-import com.fleetmgr.sdk.client.event.input.connection.Received;
-import com.fleetmgr.sdk.client.event.input.user.UserEvent;
-import com.fleetmgr.sdk.client.traffic.Channel;
-import com.fleetmgr.sdk.client.event.output.facade.ChannelsOpened;
-import com.fleetmgr.sdk.client.state.State;
-import com.fleetmgr.interfaces.Role;
 import com.fleetmgr.interfaces.facade.control.ClientMessage;
 import com.fleetmgr.interfaces.facade.control.Command;
 import com.fleetmgr.interfaces.facade.control.ControlMessage;
 import com.fleetmgr.interfaces.facade.control.Response;
+import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
+import com.fleetmgr.sdk.client.event.input.connection.Received;
+import com.fleetmgr.sdk.client.event.input.user.UserEvent;
+import com.fleetmgr.sdk.client.event.output.facade.ChannelsOpened;
+import com.fleetmgr.sdk.client.state.State;
+import com.fleetmgr.sdk.client.traffic.Channel;
 
 import java.util.List;
 import java.util.Map;
@@ -48,9 +47,6 @@ public class ValidatingChannels extends State {
     @Override
     public State notifyEvent(UserEvent event) {
         switch (event.getType()) {
-            case RELEASE:
-                return new Releasing(this);
-
             default:
                 return defaultEventHandle(event.toString());
         }
