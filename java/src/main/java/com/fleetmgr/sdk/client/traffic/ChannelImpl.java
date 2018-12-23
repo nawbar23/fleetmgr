@@ -17,11 +17,11 @@ public class ChannelImpl implements Channel, Socket.Listener {
 
     private boolean owner;
 
-    public ChannelImpl(long id, Socket socket, boolean owner) {
+    public ChannelImpl(long id, Socket socket) {
         this.id = id;
         this.socket = socket;
         this.listener = null;
-        this.owner = owner;
+        this.owner = false;
     }
 
     @Override

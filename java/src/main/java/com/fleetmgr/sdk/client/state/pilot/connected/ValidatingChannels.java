@@ -13,6 +13,7 @@ import com.fleetmgr.sdk.client.event.output.facade.ChannelsOpened;
 import com.fleetmgr.sdk.client.state.State;
 import com.fleetmgr.sdk.client.traffic.Channel;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -67,6 +68,8 @@ public class ValidatingChannels extends State {
         switch (message.getCommand()) {
             case CHANNELS_READY:
                 if (message.getResponse() == Response.ACCEPTED) {
+                    Collection<Long> owned = message.getChannelsIndication().getIdsList();
+                    backend.getChannelsHandler().setOwned(owned);
                     listener.onEvent(new ChannelsOpened(validated.values()));
                     return new Operating(this);
 

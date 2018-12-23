@@ -51,10 +51,10 @@ public class ChannelsHandler {
         Map<Long, Channel> opened = new HashMap<>();
         for (ChannelResponse c : toValidate) {
             try {
-                trace("Opening channel, id: " + c.getId() + ", owner: " + c.getOwner());
+                trace("Opening channel, id: " + c.getId());
 
                 Socket socket = new UdpSocket(executor);
-                ChannelImpl channel = new ChannelImpl(c.getId(), socket, c.getOwner());
+                ChannelImpl channel = new ChannelImpl(c.getId(), socket);
                 channel.open(c.getHost(), c.getPort(), c.getKey());
 
                 channels.put(c.getId(), channel);
@@ -91,5 +91,12 @@ public class ChannelsHandler {
 
     public void trace(String message) {
         client.trace(message);
+    }
+
+    public void setOwned(Collection<Long> owned) {
+        for (Long id : owned) {
+            trace("Setting channel id: " + id + " as owned");
+            channels.get(id).setOwner(true);
+        }
     }
 }
