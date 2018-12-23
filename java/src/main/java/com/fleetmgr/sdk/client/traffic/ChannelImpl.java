@@ -15,10 +15,13 @@ public class ChannelImpl implements Channel, Socket.Listener {
 
     private Listener listener;
 
-    public ChannelImpl(long id, Socket socket) {
+    private boolean owner;
+
+    public ChannelImpl(long id, Socket socket, boolean owner) {
         this.id = id;
         this.socket = socket;
         this.listener = null;
+        this.owner = owner;
     }
 
     @Override
@@ -52,6 +55,10 @@ public class ChannelImpl implements Channel, Socket.Listener {
         socket.disconnect();
     }
 
+    public void setOwner(boolean owner) {
+        this.owner = owner;
+    }
+
     @Override
     public void send(byte[] data, int size) throws IOException {
         socket.send(data, size);
@@ -60,6 +67,11 @@ public class ChannelImpl implements Channel, Socket.Listener {
     @Override
     public long getId() {
         return id;
+    }
+
+    @Override
+    public boolean isOwner() {
+        return owner;
     }
 
     @Override

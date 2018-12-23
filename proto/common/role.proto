@@ -7,6 +7,5 @@ option java_multiple_files = true;
 enum Role {
     UNDEFINED_ROLE = 0;
     DEVICE = 1;
-    LEADER = 2;
-    PILOT = 3;
+    PILOT = 2;
 }

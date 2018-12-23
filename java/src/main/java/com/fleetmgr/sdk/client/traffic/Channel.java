@@ -20,4 +20,6 @@ public interface Channel {
     void send(byte[] data, int size) throws IOException;
 
     long getId();
+
+    boolean isOwner();
 }

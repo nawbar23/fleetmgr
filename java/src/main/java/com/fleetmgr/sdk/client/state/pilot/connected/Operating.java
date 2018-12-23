@@ -2,6 +2,10 @@ package com.fleetmgr.sdk.client.state.pilot.connected;
 
 import com.fleetmgr.interfaces.ChannelIndicationList;
 import com.fleetmgr.interfaces.ChannelRequestList;
+import com.fleetmgr.interfaces.facade.control.ClientMessage;
+import com.fleetmgr.interfaces.facade.control.Command;
+import com.fleetmgr.interfaces.facade.control.ControlMessage;
+import com.fleetmgr.interfaces.facade.control.Response;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.connection.Received;
 import com.fleetmgr.sdk.client.event.input.user.CloseChannels;
@@ -10,20 +14,15 @@ import com.fleetmgr.sdk.client.event.input.user.UserEvent;
 import com.fleetmgr.sdk.client.event.output.facade.ChannelsClosing;
 import com.fleetmgr.sdk.client.event.output.facade.FacadeEvent;
 import com.fleetmgr.sdk.client.state.State;
-import com.fleetmgr.interfaces.Role;
-import com.fleetmgr.interfaces.facade.control.ClientMessage;
-import com.fleetmgr.interfaces.facade.control.Command;
-import com.fleetmgr.interfaces.facade.control.ControlMessage;
-import com.fleetmgr.interfaces.facade.control.Response;
 
 /**
  * Created by: Bartosz Nawrot
  * Date: 23.09.2018
  * Description:
  */
-public class Controlling extends State {
+public class Operating extends State {
 
-    Controlling(State state) {
+    Operating(State state) {
         super(state);
     }
 
@@ -56,6 +55,9 @@ public class Controlling extends State {
                         .build());
                 return null;
 
+            case REQUEST_CONTROL:
+                return new RequestingControl(this);
+
             case RELEASE:
                 return new Releasing(this);
 
@@ -82,7 +84,7 @@ public class Controlling extends State {
         switch (message.getCommand()) {
             case ADD_CHANNELS:
                 if (message.getResponse() == Response.ACCEPTED) {
-                    return new ValidatingChannels(this, Role.LEADER,
+                    return new ValidatingChannels(this,
                             message.getChannelsResponse().getChannelsList());
 
                 } else {
@@ -98,12 +100,21 @@ public class Controlling extends State {
                     return defaultMessageHandle(message);
                 }
 
-            case DEVICE_UNREACHABLE:
-                listener.onEvent(new FacadeEvent(FacadeEvent.Type.DEVICE_UNREACHABLE));
+            case OPERATION_UPDATED:
+                listener.onEvent(new FacadeEvent(FacadeEvent.Type.OPERATION_UPDATED));
                 return null;
 
             case RELEASE_CONTROL:
                 return new ReleasingControl(this);
+
+            case OPERATION_ENDED:
+                listener.onEvent(new ChannelsClosing(backend.getChannelsHandler().getChannels()));
+                backend.getChannelsHandler().closeAllChannels();
+                send(ClientMessage.newBuilder()
+                        .setCommand(Command.OPERATION_ENDED)
+                        .setResponse(Response.ACCEPTED)
+                        .build());
+                return new Released(this);
 
             default:
                 return defaultMessageHandle(message);
@@ -112,6 +123,6 @@ public class Controlling extends State {
 
     @Override
     public String toString() {
-        return "Controlling";
+        return "Operating";
     }
 }

@@ -3,14 +3,13 @@ package com.fleetmgr.sdk.client.state.pilot;
 import com.fleetmgr.interfaces.ChannelResponse;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;
+import com.fleetmgr.sdk.client.event.output.facade.FacadeEvent;
 import com.fleetmgr.sdk.client.state.pilot.connected.Recovering;
 import com.fleetmgr.sdk.client.state.pilot.connected.Released;
 import com.fleetmgr.sdk.client.state.pilot.connected.ValidatingChannels;
-import com.fleetmgr.sdk.client.event.output.facade.OperationStarted;
 import com.fleetmgr.sdk.client.state.State;
 import com.fleetmgr.interfaces.Role;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -22,20 +21,16 @@ public class Connected extends State {
 
     private State internalState;
 
-    private Role initialRole;
-
-    Connected(State state, Role role, List<ChannelResponse> channels) {
+    Connected(State state, List<ChannelResponse> channels) {
         super(state);
-        this.internalState = new ValidatingChannels(this, role, channels);
-        this.initialRole = role;
+        this.internalState = new ValidatingChannels(this, channels);
     }
 
     @Override
     public State start() {
         internalState.start();
         backend.getHeartbeatHandler().start();
-        listener.onEvent(new OperationStarted(initialRole));
-        initialRole = null;
+        listener.onEvent(new FacadeEvent(FacadeEvent.Type.OPERATION_STARTED));
         return null;
     }
 

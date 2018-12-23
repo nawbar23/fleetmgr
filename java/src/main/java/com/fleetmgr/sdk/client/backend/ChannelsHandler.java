@@ -48,10 +48,10 @@ public class ChannelsHandler {
         Map<Long, Channel> opened = new HashMap<>();
         for (ChannelResponse c : toValidate) {
             try {
-                trace("Opening channel, id: " + c.getId());
+                trace("Opening channel, id: " + c.getId() + ", owner: " + c.getOwner());
 
                 Socket socket = new UdpSocket(executor);
-                ChannelImpl channel = new ChannelImpl(c.getId(), socket);
+                ChannelImpl channel = new ChannelImpl(c.getId(), socket, c.getOwner());
                 channel.open(c.getHost(), c.getPort(), c.getKey());
 
                 channels.put(c.getId(), channel);

@@ -8,12 +8,12 @@ package com.fleetmgr.sdk.client.event.output.facade;
 public class FacadeEvent {
 
     public enum Type {
+        ERROR,
         ATTACHED,
         RELEASED,
-        ERROR,
-        MESSAGE,
-        CHANNELS_OPENED,
         OPERATION_STARTED,
+        OPERATION_UPDATED,
+        CHANNELS_OPENED,
         HANDOVER_ACCEPTED,
         REQUEST_CONTROL,
         RELEASE_CONTROL,
@@ -25,9 +25,6 @@ public class FacadeEvent {
         OPERATION_ENDED,
         CONNECTION_LOST,
         CONNECTION_RECOVERED,
-        DEVICE_UNREACHABLE,
-        LEADER_UNREACHABLE,
-        DEVICE_RECOVERED,
     }
 
     private Type type;

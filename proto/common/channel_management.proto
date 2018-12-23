@@ -35,6 +35,7 @@ message ChannelResponse {
     string host = 2;
     int32 port = 3;
     string key = 4;
+    bool owner = 5;
 }
 
 message ChannelResponseList {

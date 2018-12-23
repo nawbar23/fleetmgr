@@ -6,7 +6,6 @@ import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.connection.Received;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;
 import com.fleetmgr.sdk.client.traffic.Channel;
-import com.fleetmgr.sdk.client.traffic.ChannelImpl;
 import com.fleetmgr.sdk.client.event.output.facade.ChannelsOpened;
 import com.fleetmgr.sdk.client.state.State;
 import com.fleetmgr.interfaces.Role;
@@ -15,8 +14,6 @@ import com.fleetmgr.interfaces.facade.control.Command;
 import com.fleetmgr.interfaces.facade.control.ControlMessage;
 import com.fleetmgr.interfaces.facade.control.Response;
 
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,14 +24,12 @@ import java.util.Map;
  */
 public class ValidatingChannels extends State {
 
-    private Role role;
     private List<ChannelResponse> channels;
 
     private Map<Long, Channel> validated;
 
-    public ValidatingChannels(State state, Role role, List<ChannelResponse> channels) {
+    public ValidatingChannels(State state, List<ChannelResponse> channels) {
         super(state);
-        this.role = role;
         this.channels = channels;
     }
 
@@ -77,12 +72,7 @@ public class ValidatingChannels extends State {
             case CHANNELS_READY:
                 if (message.getResponse() == Response.ACCEPTED) {
                     listener.onEvent(new ChannelsOpened(validated.values()));
-                    switch (role) {
-                        case LEADER:
-                            return new Controlling(this);
-                        case PILOT:
-                            return new Spectating(this);
-                    }
+                    return new Operating(this);
 
                 } else {
                     return defaultMessageHandle(message);

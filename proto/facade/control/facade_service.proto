@@ -29,12 +29,11 @@ enum Command {
     CONTROL_READY = 24;
 
     OPERATION_ENDED = 31;
+    OPERATION_UPDATED = 32;
 
-
-    DEVICE_UNREACHABLE = 41;
-    LEADER_UNREACHABLE = 42;
+    CONNECTION_LOST = 41;
     RECOVERY = 43;
-    DEVICE_RECOVERED = 44;
+    RECOVERED = 44;
 }
 
 enum Response {

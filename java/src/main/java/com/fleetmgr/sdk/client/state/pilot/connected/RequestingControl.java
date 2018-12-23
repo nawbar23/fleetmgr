@@ -66,13 +66,13 @@ public class RequestingControl extends State {
 
                 } else {
                     listener.onEvent(new HandoverRejected(message.getMessage()));
-                    return new Spectating(this);
+                    return new Operating(this);
                 }
 
             case CONTROL_READY:
                 if (message.getResponse() == Response.ACCEPTED) {
                     listener.onEvent(new FacadeEvent(FacadeEvent.Type.HANDOVER_DONE));
-                    return new Controlling(this);
+                    return new Operating(this);
 
                 } else {
                     return defaultMessageHandle(message);

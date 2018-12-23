@@ -51,7 +51,7 @@ public class ReleasingControl extends State {
                         .setResponse(Response.REJECTED)
                         .setMessage(releaseRejected.getMessage())
                         .build());
-                return new Controlling(this);
+                return new Operating(this);
 
             default:
                 return defaultEventHandle(event.toString());
@@ -77,7 +77,7 @@ public class ReleasingControl extends State {
                         .setCommand(Command.CONTROL_RELEASED)
                         .setResponse(Response.ACCEPTED)
                         .build());
-                return new Spectating(this);
+                return new Operating(this);
 
             default:
                 return defaultMessageHandle(message);

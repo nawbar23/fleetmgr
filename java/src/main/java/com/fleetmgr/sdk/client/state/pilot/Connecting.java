@@ -39,7 +39,6 @@ public class Connecting extends State {
             backend.openFacadeConnection(
                     operateResponse.getHost(),
                     operateResponse.getPort());
-            role = operateResponse.getRole();
             send(ClientMessage.newBuilder()
                     .setCommand(Command.SETUP)
                     .setAttach(SetupRequest.newBuilder()
@@ -75,7 +74,7 @@ public class Connecting extends State {
         switch (message.getCommand()) {
             case SETUP:
                 if (message.getResponse() == Response.ACCEPTED) {
-                    return new Connected(this, role,
+                    return new Connected(this,
                             message.getChannelsResponse().getChannelsList());
 
                 } else {
