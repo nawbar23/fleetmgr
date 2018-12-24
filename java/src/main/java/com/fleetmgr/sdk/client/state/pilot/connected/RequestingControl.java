@@ -13,6 +13,8 @@ import com.fleetmgr.interfaces.facade.control.Command;
 import com.fleetmgr.interfaces.facade.control.ControlMessage;
 import com.fleetmgr.interfaces.facade.control.Response;
 
+import java.util.Collections;
+
 /**
  * Created by: Bartosz Nawrot
  * Date: 23.09.2018
@@ -79,6 +81,7 @@ public class RequestingControl extends State {
             case CONTROL_READY:
                 if (message.getResponse() == Response.ACCEPTED) {
                     listener.onEvent(new FacadeEvent(FacadeEvent.Type.HANDOVER_DONE));
+                    backend.getChannelsHandler().setOwned(Collections.singleton(channelId));
                     return new Operating(this);
 
                 } else {
