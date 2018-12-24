@@ -98,6 +98,7 @@ public class ChannelImpl implements Channel, Socket.Listener {
         return "Channel{" +
                 "id=" + id +
                 ", protocol=" + socket.getProtocol() +
+                ", owner=" + owner +
                 '}';
     }
 }

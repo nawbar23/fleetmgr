@@ -81,7 +81,6 @@ public class ChannelsHandler {
     }
 
     public void closeAllChannels() {
-        System.out.println(channels);
         for (ChannelImpl c : channels.values()) {
             trace("Closing channel id: " + c.getId());
             c.close();
