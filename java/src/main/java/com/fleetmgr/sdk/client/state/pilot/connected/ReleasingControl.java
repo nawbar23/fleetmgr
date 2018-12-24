@@ -6,6 +6,7 @@ import com.fleetmgr.sdk.client.event.input.user.ReleaseAccepted;
 import com.fleetmgr.sdk.client.event.input.user.ReleaseRejected;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;
 import com.fleetmgr.sdk.client.event.output.facade.FacadeEvent;
+import com.fleetmgr.sdk.client.event.output.facade.ReleaseControl;
 import com.fleetmgr.sdk.client.state.State;
 import com.fleetmgr.interfaces.HandoverData;
 import com.fleetmgr.interfaces.facade.control.ClientMessage;
@@ -20,13 +21,16 @@ import com.fleetmgr.interfaces.facade.control.Response;
  */
 public class ReleasingControl extends State {
 
-    ReleasingControl(State state) {
+    private long channelId;
+
+    ReleasingControl(State state, long channelId) {
         super(state);
+        this.channelId = channelId;
     }
 
     @Override
     public State start() {
-        listener.onEvent(new FacadeEvent(FacadeEvent.Type.RELEASE_CONTROL));
+        listener.onEvent(new ReleaseControl(channelId));
         return null;
     }
 

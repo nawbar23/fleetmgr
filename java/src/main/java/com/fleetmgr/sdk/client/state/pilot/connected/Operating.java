@@ -8,6 +8,7 @@ import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.connection.Received;
 import com.fleetmgr.sdk.client.event.input.user.CloseChannels;
 import com.fleetmgr.sdk.client.event.input.user.OpenChannels;
+import com.fleetmgr.sdk.client.event.input.user.RequestControl;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;
 import com.fleetmgr.sdk.client.event.output.facade.ChannelsClosing;
 import com.fleetmgr.sdk.client.event.output.facade.FacadeEvent;
@@ -45,7 +46,8 @@ public class Operating extends State {
                 return new ClosingChannels(this, backend.getChannelsHandler().getChannelsIds());
 
             case REQUEST_CONTROL:
-                return new RequestingControl(this);
+                RequestControl requestControl = (RequestControl)event;
+                return new RequestingControl(this, requestControl.getChannelId());
 
             default:
                 return defaultEventHandle(event.toString());
@@ -73,7 +75,8 @@ public class Operating extends State {
                 return null;
 
             case RELEASE_CONTROL:
-                return new ReleasingControl(this);
+                return new ReleasingControl(this,
+                        message.getChannelsIndication().getIds(0));
 
             case RELEASE:
                 listener.onEvent(new ChannelsClosing(

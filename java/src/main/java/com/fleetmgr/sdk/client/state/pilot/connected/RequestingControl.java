@@ -1,5 +1,6 @@
 package com.fleetmgr.sdk.client.state.pilot.connected;
 
+import com.fleetmgr.interfaces.ChannelIndicationList;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.connection.Received;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;
@@ -19,14 +20,20 @@ import com.fleetmgr.interfaces.facade.control.Response;
  */
 public class RequestingControl extends State {
 
-    RequestingControl(State state) {
+    private long channelId;
+
+    RequestingControl(State state, long channelId) {
         super(state);
+        this.channelId = channelId;
     }
 
     @Override
     public State start() {
         send(ClientMessage.newBuilder()
                 .setCommand(Command.REQUEST_CONTROL)
+                .setChannelsIndication(ChannelIndicationList.newBuilder()
+                        .addIds(channelId)
+                        .build())
                 .build());
         return null;
     }
