@@ -21,5 +21,5 @@ public interface Channel {
 
     long getId();
 
-    boolean isOwner();
+    boolean isOwned();
 }

@@ -70,7 +70,7 @@ public class ChannelImpl implements Channel, Socket.Listener {
     }
 
     @Override
-    public boolean isOwner() {
+    public boolean isOwned() {
         return owner;
     }
 
