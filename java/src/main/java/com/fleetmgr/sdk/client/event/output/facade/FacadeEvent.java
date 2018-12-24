@@ -21,7 +21,6 @@ public class FacadeEvent {
         HANDOVER_DONE,
         CONTROL_RELEASED,
         CHANNELS_CLOSING,
-        CHANNELS_CLOSED,
         OPERATION_ENDED,
         CONNECTION_LOST,
         CONNECTION_RECOVERED,
