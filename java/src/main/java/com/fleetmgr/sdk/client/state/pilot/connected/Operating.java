@@ -1,11 +1,15 @@
 package com.fleetmgr.sdk.client.state.pilot.connected;
 
+import com.fleetmgr.interfaces.facade.control.ClientMessage;
+import com.fleetmgr.interfaces.facade.control.Command;
 import com.fleetmgr.interfaces.facade.control.ControlMessage;
+import com.fleetmgr.interfaces.facade.control.Response;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.connection.Received;
 import com.fleetmgr.sdk.client.event.input.user.CloseChannels;
 import com.fleetmgr.sdk.client.event.input.user.OpenChannels;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;
+import com.fleetmgr.sdk.client.event.output.facade.ChannelsClosing;
 import com.fleetmgr.sdk.client.event.output.facade.FacadeEvent;
 import com.fleetmgr.sdk.client.state.State;
 
@@ -70,6 +74,16 @@ public class Operating extends State {
 
             case RELEASE_CONTROL:
                 return new ReleasingControl(this);
+
+            case RELEASE:
+                listener.onEvent(new ChannelsClosing(
+                        backend.getChannelsHandler().getChannels()));
+                backend.getChannelsHandler().closeAllChannels();
+                send(ClientMessage.newBuilder()
+                        .setCommand(Command.RELEASE)
+                        .setResponse(Response.ACCEPTED)
+                        .build());
+                return new Released(this);
 
             default:
                 return defaultMessageHandle(message);
