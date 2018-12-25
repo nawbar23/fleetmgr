@@ -27,6 +27,8 @@ public class Operating extends State {
 
     @Override
     public State start() {
+        // recall deferred Facade request, if there are any
+        client.recall();
         return null;
     }
 
@@ -72,6 +74,8 @@ public class Operating extends State {
         switch (message.getCommand()) {
             case OPERATION_UPDATED:
                 listener.onEvent(new FacadeEvent(FacadeEvent.Type.OPERATION_UPDATED));
+                // recall deferred Facade request, if there are any
+                client.recall();
                 return null;
 
             case RELEASE_CONTROL:

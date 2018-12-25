@@ -2,7 +2,9 @@ package com.fleetmgr.sdk.system.machine;
 
 import com.fleetmgr.sdk.system.capsule.Capsule;
 
+import java.util.Deque;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  * Created by: Bartosz Nawrot
@@ -13,9 +15,12 @@ public abstract class StateMachine<Event> extends Capsule {
 
     private State<Event> state;
 
+    private Deque<Event> deferred;
+
     public StateMachine(ExecutorService executor, State<Event> initial) {
         super(executor);
         this.state = initial;
+        this.deferred = new LinkedBlockingDeque<>();
     }
 
     public void notifyEvent(Event event) {
@@ -33,6 +38,23 @@ public abstract class StateMachine<Event> extends Capsule {
     protected void setState(State<Event> state) {
         this.state = state;
         this.state.start();
+    }
+
+    public void defer(Event event) {
+        trace("Deferring: " + event +  " @ " + state);
+        deferred.add(event);
+    }
+
+    public void recall() {
+        if (!deferred.isEmpty()) {
+            Event event = deferred.poll();
+            trace("Recalling: " + event +  " @ " + state + ", remaining queue: " + deferred);
+            notifyEvent(event);
+        }
+    }
+
+    public final Deque<Event> getDeffered() {
+        return deferred;
     }
 
     public String getStateName() {

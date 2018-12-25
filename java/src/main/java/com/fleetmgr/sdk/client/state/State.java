@@ -1,9 +1,11 @@
 package com.fleetmgr.sdk.client.state;
 
+import com.fleetmgr.interfaces.facade.control.Response;
 import com.fleetmgr.sdk.client.Client;
 import com.fleetmgr.sdk.client.backend.ClientBackend;
 import com.fleetmgr.sdk.client.event.input.Event;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
+import com.fleetmgr.sdk.client.event.input.connection.Received;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;
 import com.fleetmgr.interfaces.facade.control.ClientMessage;
 import com.fleetmgr.interfaces.facade.control.Command;
@@ -64,13 +66,27 @@ public abstract class State implements
     }
 
     protected State defaultMessageHandle(ControlMessage message) {
-        if (message.getCommand() == Command.HEARTBEAT && message.hasHeartbeat()) {
+        if (isProcedureInitiation(message)) {
+            // Incoming procedure initiation from the Facade has to be deferred
+            // because it is possible to have collision - both Facade and User
+            // can request procedure at the same time.
+            // Then Facade will reject User request and SM will be moved
+            // to Operating state, where recall has to be called.
+            client.defer(new Received(message));
+
+        } else if (message.getCommand() == Command.HEARTBEAT && message.hasHeartbeat()) {
             backend.getHeartbeatHandler().handleHeartbeat(message);
 
         } else {
             trace("Unexpected ControlMessage received:\n" + message + " @ " + toString());
         }
         return null;
+    }
+
+    private boolean isProcedureInitiation(ControlMessage message) {
+        return message.getResponse() == Response.UNDEFINED_RSP &&
+                (message.getCommand() == Command.RELEASE_CONTROL ||
+                        message.getCommand() == Command.RELEASE);
     }
 
     protected void trace(String message) {
