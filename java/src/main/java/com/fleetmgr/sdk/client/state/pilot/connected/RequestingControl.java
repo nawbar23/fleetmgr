@@ -4,7 +4,7 @@ import com.fleetmgr.interfaces.ChannelIndicationList;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.connection.Received;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;
-import com.fleetmgr.sdk.client.event.output.facade.HandoverRejected;
+import com.fleetmgr.sdk.client.event.output.facade.ProcedureRejected;
 import com.fleetmgr.sdk.client.event.output.facade.FacadeEvent;
 import com.fleetmgr.sdk.client.event.output.facade.HandoverAccepted;
 import com.fleetmgr.sdk.client.state.State;
@@ -74,7 +74,8 @@ public class RequestingControl extends State {
                     return null;
 
                 } else {
-                    listener.onEvent(new HandoverRejected(message.getMessage()));
+                    listener.onEvent(new ProcedureRejected(Command.REQUEST_CONTROL,
+                            message.getMessage()));
                     return new Operating(this);
                 }
 

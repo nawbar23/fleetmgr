@@ -9,6 +9,7 @@ import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.connection.Received;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;
 import com.fleetmgr.sdk.client.event.output.facade.ChannelsClosing;
+import com.fleetmgr.sdk.client.event.output.facade.ProcedureRejected;
 import com.fleetmgr.sdk.client.state.State;
 
 import java.util.Collection;
@@ -58,14 +59,21 @@ public class ClosingChannels extends State {
     private State handleMessage(ControlMessage message) {
         switch (message.getCommand()) {
             case REMOVE_CHANNELS:
-                listener.onEvent(new ChannelsClosing(
-                        backend.getChannelsHandler().getChannels(channelsToClose)));
-                backend.getChannelsHandler().closeChannels(channelsToClose);
-                send(ClientMessage.newBuilder()
-                        .setCommand(Command.REMOVE_CHANNELS)
-                        .setResponse(Response.ACCEPTED)
-                        .build());
-                return new Operating(this);
+                if (message.getResponse() == Response.ACCEPTED) {
+                    listener.onEvent(new ChannelsClosing(
+                            backend.getChannelsHandler().getChannels(channelsToClose)));
+                    backend.getChannelsHandler().closeChannels(channelsToClose);
+                    send(ClientMessage.newBuilder()
+                            .setCommand(Command.REMOVE_CHANNELS)
+                            .setResponse(Response.ACCEPTED)
+                            .build());
+                    return new Operating(this);
+
+                } else {
+                    listener.onEvent(new ProcedureRejected(Command.REMOVE_CHANNELS,
+                            message.getMessage()));
+                    return new Operating(this);
+                }
 
             case RELEASE:
                 listener.onEvent(new ChannelsClosing(

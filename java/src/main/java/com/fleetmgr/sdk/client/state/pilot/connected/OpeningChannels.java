@@ -9,6 +9,7 @@ import com.fleetmgr.interfaces.facade.control.Response;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.connection.Received;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;
+import com.fleetmgr.sdk.client.event.output.facade.ProcedureRejected;
 import com.fleetmgr.sdk.client.state.State;
 
 import java.util.Collection;
@@ -61,6 +62,10 @@ public class OpeningChannels extends State  {
                     return new ValidatingChannels(this,
                             message.getChannelsResponse().getChannelsList());
 
+                } else {
+                    listener.onEvent(new ProcedureRejected(Command.ADD_CHANNELS,
+                            message.getMessage()));
+                    return new Operating(this);
                 }
 
             default:

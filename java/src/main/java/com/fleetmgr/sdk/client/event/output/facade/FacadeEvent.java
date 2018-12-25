@@ -17,7 +17,7 @@ public class FacadeEvent {
         HANDOVER_ACCEPTED,
         REQUEST_CONTROL,
         RELEASE_CONTROL,
-        HANDOVER_REJECTED,
+        PROCEDURE_REJECTED,
         HANDOVER_DONE,
         CONTROL_RELEASED,
         CHANNELS_CLOSING,
