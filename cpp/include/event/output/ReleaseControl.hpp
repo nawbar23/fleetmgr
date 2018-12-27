@@ -22,7 +22,7 @@ class ReleaseControl : public FacadeEvent
 public:
     ReleaseControl(long);
 
-    long getDeviceId() const;
+    long getChannelId() const;
 
     std::string toString() const override;
 

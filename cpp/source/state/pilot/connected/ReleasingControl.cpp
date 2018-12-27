@@ -7,16 +7,16 @@ using namespace fm::state;
 using namespace fm::state::pilot;
 using namespace fm::state::pilot::connected;
 
+using namespace com::fleetmgr::interfaces;
 using namespace com::fleetmgr::interfaces::facade::control;
 
-using event::input::user::UserEvent;
-using event::input::connection::ConnectionEvent;
-using event::input::connection::Received;
+using namespace event::input::user;
+using namespace event::input::connection;
+using namespace event::output;
 
-using event::output::FacadeEvent;
-
-ReleasingControl::ReleasingControl(IState& state) :
-    IState(state)
+ReleasingControl::ReleasingControl(IState& state, long _channelId) :
+    IState(state),
+    channelId(_channelId)
 {
 }
 

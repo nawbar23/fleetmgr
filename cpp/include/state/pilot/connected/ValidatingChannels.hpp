@@ -32,7 +32,7 @@ namespace connected
 class ValidatingChannels : public IState
 {
 public:
-    ValidatingChannels(IState&, com::fleetmgr::interfaces::Role, std::shared_ptr<std::vector<com::fleetmgr::interfaces::ChannelResponse>>);
+    ValidatingChannels(IState&, const std::vector<com::fleetmgr::interfaces::ChannelResponse>&);
 
     std::unique_ptr<IState> start() override;
 
@@ -43,10 +43,8 @@ public:
     std::unique_ptr<IState> handleConnectionEvent(const event::input::connection::ConnectionEvent&) override;
 
 private:
-    com::fleetmgr::interfaces::Role role;
-
-    std::shared_ptr<std::vector<com::fleetmgr::interfaces::ChannelResponse>> toValidate;
-    std::shared_ptr<std::vector<traffic::IChannel*>> validated;
+    std::vector<com::fleetmgr::interfaces::ChannelResponse> toValidate;
+    std::vector<traffic::IChannel*> validated;
 
     std::unique_ptr<IState> handleMessage(const com::fleetmgr::interfaces::facade::control::ControlMessage&);
 };

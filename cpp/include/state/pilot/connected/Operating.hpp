@@ -1,5 +1,5 @@
-#ifndef FM_STATE_PILOT_CONNECTED_RELEASEING_HPP
-#define FM_STATE_PILOT_CONNECTED_RELEASEING_HPP
+#ifndef FM_STATE_PILOT_CONNECTED_OPERATING_HPP
+#define FM_STATE_PILOT_CONNECTED_OPERATING_HPP
 
 #include "state/IState.hpp"
 
@@ -20,10 +20,10 @@ namespace connected
  * Date: 2018-12-09
  * Description:
  */
-class Releasing : public IState
+class Operating : public IState
 {
 public:
-    Releasing(IState&);
+    Operating(IState&);
 
     std::unique_ptr<IState> start() override;
 
@@ -45,4 +45,4 @@ private:
 
 } // fm
 
-#endif // FM_STATE_PILOT_CONNECTED_RELEASEING_HPP
+#endif // FM_STATE_PILOT_CONNECTED_OPERATING_HPP

@@ -13,7 +13,8 @@ using com::fleetmgr::interfaces::Result;
 ChannelImpl::ChannelImpl(long _id, std::shared_ptr<ISocket> _socket) :
     id(_id),
     socket(_socket),
-    listener(nullptr)
+    listener(nullptr),
+    owned(false)
 {
 }
 
@@ -68,6 +69,11 @@ void ChannelImpl::close()
     socket->disconnect();
 }
 
+void ChannelImpl::setOwned(const bool _owned)
+{
+    owned = _owned;
+}
+
 void ChannelImpl::send(const socket::ISocket::DataPacket dataPacket)
 {
     socket->send(dataPacket);
@@ -76,6 +82,11 @@ void ChannelImpl::send(const socket::ISocket::DataPacket dataPacket)
 long ChannelImpl::getId() const
 {
     return id;
+}
+
+bool ChannelImpl::isOwned() const
+{
+    return owned;
 }
 
 void ChannelImpl::onReceived(const ISocket::DataPacket data)

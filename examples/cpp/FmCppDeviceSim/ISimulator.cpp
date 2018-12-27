@@ -72,7 +72,7 @@ void ISimulator::onEvent(const std::shared_ptr<const FacadeEvent> event)
 void ISimulator::addChannels(const ChannelsOpened& event)
 {
     bool wasEmpty = channels.empty();
-    for (traffic::IChannel* c : *event.getChannels())
+    for (traffic::IChannel* c : event.getChannels())
     {
         std::shared_ptr<ChannelListener> listener = std::make_shared<ChannelListener>(channels, channelsLock);
         c->setListener(listener);

@@ -8,11 +8,12 @@ using namespace fm;
 using namespace fm::state;
 using namespace fm::state::pilot;
 
-using event::input::user::UserEvent;
-using event::input::user::Operate;
-using event::input::connection::ConnectionEvent;
+using namespace com::fleetmgr::interfaces;
+using namespace com::fleetmgr::interfaces::facade::control;
 
-using event::output::FacadeEvent;
+using namespace event::input::user;
+using namespace event::input::connection;
+using namespace event::output;
 
 Disconnected::Disconnected(IState& state) :
     IState(state)

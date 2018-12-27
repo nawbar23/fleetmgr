@@ -11,7 +11,7 @@ ReleaseControl::ReleaseControl(long _channelId) :
 
 long ReleaseControl::getChannelId() const
 {
-    return role;
+    return channelId;
 }
 
 std::string ReleaseControl::toString() const

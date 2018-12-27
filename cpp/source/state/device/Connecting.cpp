@@ -18,13 +18,12 @@ using namespace fm::state::device;
 
 using namespace com::fleetmgr::interfaces::facade::control;
 
-using event::input::user::UserEvent;
-using event::input::connection::ConnectionEvent;
-using event::input::connection::Received;
+using namespace com::fleetmgr::interfaces;
+using namespace com::fleetmgr::interfaces::facade::control;
 
-using event::output::FacadeEvent;
-using event::output::Error;
-
+using namespace event::input::user;
+using namespace event::input::connection;
+using namespace event::output;
 using com::fleetmgr::interfaces::AttachResponse;
 
 Connecting::Connecting(IState& state) :

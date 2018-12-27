@@ -106,14 +106,14 @@ set(SOURCES
     ${PROJECT_SOURCE_DIR}/source/state/pilot/Connecting.cpp
     ${PROJECT_SOURCE_DIR}/source/state/pilot/Connected.cpp
     ${PROJECT_SOURCE_DIR}/source/state/pilot/Disconnecting.cpp
-    ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/Controlling.cpp
+    ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/Operating.cpp
     ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/Recovering.cpp
     ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/Released.cpp
-    ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/Releasing.cpp
     ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/ReleasingControl.cpp
     ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/RequestingControl.cpp
-    ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/Spectating.cpp
     ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/ValidatingChannels.cpp
+    ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/OpeningChannels.cpp
+    ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/ClosingChannels.cpp
     ${PROJECT_SOURCE_DIR}/source/timer/ITimer.cpp
     ${PROJECT_SOURCE_DIR}/source/traffic/IChannel.cpp
     ${PROJECT_SOURCE_DIR}/source/traffic/ChannelImpl.cpp
@@ -175,14 +175,14 @@ set(HEADERS
     ${PROJECT_SOURCE_DIR}/include/state/pilot/Connecting.hpp
     ${PROJECT_SOURCE_DIR}/include/state/pilot/Connected.hpp
     ${PROJECT_SOURCE_DIR}/include/state/pilot/Disconnecting.hpp
-    ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/Controlling.hpp
+    ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/Operating.hpp
     ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/Recovering.hpp
     ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/Released.hpp
-    ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/Releasing.hpp
     ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/ReleasingControl.hpp
     ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/RequestingControl.hpp
-    ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/Spectating.hpp
     ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/ValidatingChannels.hpp
+    ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/OpeningChannels.hpp
+    ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/ClosingChannels.hpp
     ${PROJECT_SOURCE_DIR}/include/timer/ITimer.hpp
     ${PROJECT_SOURCE_DIR}/include/traffic/IChannel.hpp
     ${PROJECT_SOURCE_DIR}/include/traffic/ChannelImpl.hpp

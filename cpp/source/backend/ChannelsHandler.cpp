@@ -12,34 +12,42 @@ ChannelsHandler::ChannelsHandler(ClientBackend& _backend) :
 {
 }
 
-std::shared_ptr<std::vector<traffic::IChannel*>> ChannelsHandler::getChannels()
+std::vector<traffic::IChannel*> ChannelsHandler::getChannels()
 {
-    std::shared_ptr<std::vector<traffic::IChannel*>> result =
-            std::make_shared<std::vector<traffic::IChannel*>>();
-    result->reserve(channels.size());
+    std::vector<traffic::IChannel*> result;
+    result.reserve(channels.size());
     for (auto& pair : channels)
     {
-        result->push_back(&(pair.second));
+        result.push_back(&(pair.second));
     }
     return result;
 }
 
-std::shared_ptr<std::vector<traffic::IChannel*>> ChannelsHandler::getChannels(const std::vector<long>& ids)
+std::vector<traffic::IChannel*> ChannelsHandler::getChannels(const std::vector<long>& ids)
 {
-    std::shared_ptr<std::vector<traffic::IChannel*>> result =
-            std::make_shared<std::vector<traffic::IChannel*>>();
-    result->reserve(ids.size());
+    std::vector<traffic::IChannel*> result;
+    result.reserve(ids.size());
     for (long id : ids)
     {
-        result->push_back(&channels.find(id)->second);
+        result.push_back(&channels.find(id)->second);
     }
     return result;
 }
 
-std::shared_ptr<std::vector<traffic::IChannel*>> ChannelsHandler::validateChannels(const std::vector<ChannelResponse>& toValidate)
+std::vector<long> ChannelsHandler::getChannelsIds()
 {
-    std::shared_ptr<std::vector<traffic::IChannel*>> result =
-            std::make_shared<std::vector<traffic::IChannel*>>();
+    std::vector<long> result;
+    result.reserve(channels.size());
+    for (auto& pair : channels)
+    {
+        result.push_back(pair.first);
+    }
+    return result;
+}
+
+std::vector<traffic::IChannel*> ChannelsHandler::validateChannels(const std::vector<ChannelResponse>& toValidate)
+{
+    std::vector<traffic::IChannel*> result;
     for (const ChannelResponse& c : toValidate)
     {
         trace("Opening channel id: " + std::to_string(c.id()));
@@ -51,10 +59,11 @@ std::shared_ptr<std::vector<traffic::IChannel*>> ChannelsHandler::validateChanne
         if (channel->open(c.host(), c.port(), c.key()))
         {
             trace("Channel id: " + std::to_string(c.id()) + " validated");
-            result->push_back(channel);
+            result.push_back(channel);
         }
         else
         {
+            trace("Error!, Could not validate channel id: " + std::to_string(c.id()));
             channels.erase(c.id());
         }
     }

@@ -24,7 +24,7 @@ namespace pilot
 class Connecting : public IState
 {
 public:
-    Connecting(IState&, long, std::shared_ptr<std::vector<com::fleetmgr::interfaces::ChannelRequest>>);
+    Connecting(IState&, long, const std::vector<com::fleetmgr::interfaces::ChannelRequest>&);
 
     std::unique_ptr<IState> start() override;
 
@@ -38,9 +38,7 @@ public:
 
 private:
     long deviceId;
-    std::shared_ptr<std::vector<com::fleetmgr::interfaces::ChannelRequest>> channels;
-
-    com::fleetmgr::interfaces::Role initialRole;
+    std::vector<com::fleetmgr::interfaces::ChannelRequest> channels;
 };
 
 } // pilot

@@ -16,21 +16,14 @@ using namespace fm;
 using namespace fm::state;
 using namespace fm::state::pilot;
 
+using namespace com::fleetmgr::interfaces;
 using namespace com::fleetmgr::interfaces::facade::control;
 
-using event::input::user::UserEvent;
-using event::input::connection::ConnectionEvent;
-using event::input::connection::Received;
+using namespace event::input::user;
+using namespace event::input::connection;
+using namespace event::output;
 
-using event::output::FacadeEvent;
-using event::output::Error;
-
-using com::fleetmgr::interfaces::OperateRequest;
-using com::fleetmgr::interfaces::OperateResponse;
-using com::fleetmgr::interfaces::ChannelRequest;
-using com::fleetmgr::interfaces::ChannelResponse;
-
-Connecting::Connecting(IState& state, long _deviceId, std::shared_ptr<std::vector<ChannelRequest>> _channels) :
+Connecting::Connecting(IState& state, long _deviceId, const std::vector<ChannelRequest>& _channels) :
     IState(state),
     deviceId(_deviceId),
     channels(_channels)
@@ -48,12 +41,11 @@ std::unique_ptr<IState> Connecting::start()
         backend.openFacadeConnection(
                     operateResponse.host(),
                     operateResponse.port());
-        initialRole = operateResponse.role();
 
         ClientMessage message;
         message.set_command(Command::SETUP);
         message.mutable_attach()->set_key(operateResponse.key());
-        for (ChannelRequest& c : *channels)
+        for (ChannelRequest& c : channels)
         {
             message.mutable_channelsrequest()->add_channels()->CopyFrom(c);
         }
@@ -93,14 +85,13 @@ std::unique_ptr<IState> Connecting::handleMessage(const ControlMessage& message)
     case Command::SETUP:
         if (message.response() == Response::ACCEPTED)
         {
-            std::shared_ptr<std::vector<ChannelResponse>> openedChannels =
-                    std::make_shared<std::vector<ChannelResponse>>();
-            openedChannels->reserve(message.channelsresponse().channels_size());
+            std::vector<ChannelResponse> openedChannels;
+            openedChannels.reserve(message.channelsresponse().channels_size());
             for (int i = 0; i < message.channelsresponse().channels_size(); ++i)
             {
-                openedChannels->push_back(message.channelsresponse().channels(i));
+                openedChannels.push_back(message.channelsresponse().channels(i));
             }
-            return std::make_unique<Connected>(*this, initialRole, openedChannels);
+            return std::make_unique<Connected>(*this, openedChannels);
         }
         else
         {

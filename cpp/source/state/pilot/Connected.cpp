@@ -2,27 +2,22 @@
 
 #include "state/pilot/connected/ValidatingChannels.hpp"
 
-#include "event/output/OperationStarted.hpp"
-
 #include "backend/ClientBackend.hpp"
 
 using namespace fm;
 using namespace fm::state;
 using namespace fm::state::pilot;
 
-using event::input::user::UserEvent;
-using event::input::connection::ConnectionEvent;
+using namespace com::fleetmgr::interfaces;
+using namespace com::fleetmgr::interfaces::facade::control;
 
-using event::output::FacadeEvent;
-using event::output::OperationStarted;
+using namespace event::input::user;
+using namespace event::input::connection;
+using namespace event::output;
 
-using com::fleetmgr::interfaces::Role;
-using com::fleetmgr::interfaces::ChannelResponse;
-
-Connected::Connected(IState& state, Role _initialRole, std::shared_ptr<std::vector<ChannelResponse>> openedChannels) :
+Connected::Connected(IState& state, const std::vector<ChannelResponse>& openedChannels) :
     IState(state),
-    internalState(std::make_unique<connected::ValidatingChannels>(*this, _initialRole, openedChannels)),
-    initialRole(_initialRole)
+    internalState(std::make_unique<connected::ValidatingChannels>(*this, openedChannels))
 {
 }
 
@@ -30,7 +25,7 @@ std::unique_ptr<IState> Connected::start()
 {
     backend.getHeartbeatHandler().start();
     internalState->start();
-    listener.onEvent(std::make_shared<OperationStarted>(initialRole));
+    listener.onEvent(std::make_shared<FacadeEvent>(FacadeEvent::OPERATION_STARTED));
     return nullptr;
 }
 

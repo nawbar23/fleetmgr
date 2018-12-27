@@ -26,17 +26,16 @@ void PilotSimulator::start(BoostHttpsClient& core, const std::string& facadeCert
     if (response.devices_size() > 0)
     {
         long deviceId = response.devices(0).id();
-        std::shared_ptr<std::vector<ChannelRequest>> channels =
-                std::make_shared<std::vector<ChannelRequest>>();
+        std::vector<ChannelRequest> channels;
         ChannelRequest channelsReq;
         channelsReq.set_id(1);
         channelsReq.set_protocol(Protocol::UDP);
         channelsReq.set_priority(Priority::NEAR_REAL_TIME);
-        channels->push_back(channelsReq);
+        channels.push_back(channelsReq);
         channelsReq.set_id(8);
-        channels->push_back(channelsReq);
+        channels.push_back(channelsReq);
         channelsReq.set_id(11);
-        channels->push_back(channelsReq);
+        channels.push_back(channelsReq);
         std::shared_ptr<const Operate> o = std::make_shared<const Operate>(deviceId, channels);
         execute([this, o] ()
         {

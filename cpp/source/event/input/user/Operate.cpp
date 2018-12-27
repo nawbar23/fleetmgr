@@ -28,7 +28,7 @@ const std::vector<ChannelRequest>& Operate::getChannels() const
 std::string Operate::toString() const
 {
     std::ostringstream oss;
-    for (const ChannelRequest& c : *channels)
+    for (const ChannelRequest& c : channels)
     {
         oss << c.id() << ",";
     }

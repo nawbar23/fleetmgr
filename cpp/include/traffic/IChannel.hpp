@@ -36,6 +36,8 @@ public:
     virtual void send(const socket::ISocket::DataPacket) = 0;
 
     virtual long getId() const = 0;
+
+    virtual bool isOwned() const = 0;
 };
 
 } // traffic

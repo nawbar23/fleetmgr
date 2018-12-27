@@ -1,7 +1,9 @@
-#ifndef FM_STATE_PILOT_CONNECTED_CONTROLLING_HPP
-#define FM_STATE_PILOT_CONNECTED_CONTROLLING_HPP
+#ifndef FM_STATE_PILOT_CONNECTED_OPENINGCHANNELS_HPP
+#define FM_STATE_PILOT_CONNECTED_OPENINGCHANNELS_HPP
 
 #include "state/IState.hpp"
+
+#include <vector>
 
 namespace fm
 {
@@ -17,13 +19,13 @@ namespace connected
 
 /**
  * Created by: Bartosz Nawrot
- * Date: 2018-12-09
+ * Date: 2018-12-27
  * Description:
  */
-class Controlling : public IState
+class OpeningChannels : public IState
 {
 public:
-    Controlling(IState&);
+    OpeningChannels(IState&, const std::vector<com::fleetmgr::interfaces::ChannelRequest>&);
 
     std::unique_ptr<IState> start() override;
 
@@ -35,6 +37,8 @@ public:
 
 private:
     std::unique_ptr<IState> handleMessage(const com::fleetmgr::interfaces::facade::control::ControlMessage&);
+
+    std::vector<com::fleetmgr::interfaces::ChannelRequest> channelsToOpen;
 };
 
 } // connected
@@ -45,4 +49,4 @@ private:
 
 } // fm
 
-#endif // FM_STATE_PILOT_CONNECTED_CONTROLLING_HPP
+#endif // FM_STATE_PILOT_CONNECTED_OPENINGCHANNELS_HPP

@@ -1,7 +1,6 @@
 #include "state/pilot/connected/ValidatingChannels.hpp"
 
-#include "state/pilot/connected/Controlling.hpp"
-#include "state/pilot/connected/Spectating.hpp"
+#include "state/pilot/connected/Operating.hpp"
 
 #include "event/input/connection/Received.hpp"
 
@@ -15,32 +14,25 @@ using namespace fm::state;
 using namespace fm::state::pilot;
 using namespace fm::state::pilot::connected;
 
+using namespace com::fleetmgr::interfaces;
 using namespace com::fleetmgr::interfaces::facade::control;
 
-using event::input::user::UserEvent;
-using event::input::connection::ConnectionEvent;
-using event::input::connection::Received;
+using namespace event::input::user;
+using namespace event::input::connection;
+using namespace event::output;
 
-using event::output::FacadeEvent;
-using event::output::ChannelsOpened;
-using event::output::Error;
-
-using com::fleetmgr::interfaces::Role;
-using com::fleetmgr::interfaces::ChannelResponse;
-
-ValidatingChannels::ValidatingChannels(IState& state, Role _role, std::shared_ptr<std::vector<ChannelResponse>> openedChannels) :
+ValidatingChannels::ValidatingChannels(IState& state, const std::vector<ChannelResponse>& openedChannels) :
     IState(state),
-    role(_role),
     toValidate(openedChannels)
 {
 }
 
 std::unique_ptr<IState> ValidatingChannels::start()
 {
-    validated = backend.getChannelsHandler().validateChannels(*toValidate);
+    validated = backend.getChannelsHandler().validateChannels(toValidate);
     ClientMessage response;
     response.set_command(Command::CHANNELS_READY);
-    for (traffic::IChannel* c : *validated)
+    for (traffic::IChannel* c : validated)
     {
         response.mutable_channelsindication()->add_ids(c->getId());
     }
@@ -82,14 +74,7 @@ std::unique_ptr<IState> ValidatingChannels::handleMessage(const ControlMessage& 
         if (message.response() == Response::ACCEPTED)
         {
             listener.onEvent(std::make_shared<ChannelsOpened>(validated));
-            switch (role)
-            {
-            case Role::LEADER:
-                return std::make_unique<Controlling>(*this);
-
-            case Role::PILOT:
-                return std::make_unique<Spectating>(*this);
-            }
+            return std::make_unique<Operating>(*this);
         }
         else
         {

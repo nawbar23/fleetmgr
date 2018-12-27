@@ -6,7 +6,7 @@
 using namespace fm;
 using namespace fm::event::input::user;
 
-CloseChannels::CloseChannels(std::vector<long> _channels) :
+CloseChannels::CloseChannels(const std::vector<long>& _channels) :
     UserEvent(CLOSE_CHANNELS),
     channels(_channels)
 {

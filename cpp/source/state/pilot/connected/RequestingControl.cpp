@@ -2,21 +2,23 @@
 
 #include "event/input/connection/Received.hpp"
 
+#include "event/output/ProcedureRejected.hpp"
+
 using namespace fm;
 using namespace fm::state;
 using namespace fm::state::pilot;
 using namespace fm::state::pilot::connected;
 
+using namespace com::fleetmgr::interfaces;
 using namespace com::fleetmgr::interfaces::facade::control;
 
-using event::input::user::UserEvent;
-using event::input::connection::ConnectionEvent;
-using event::input::connection::Received;
+using namespace event::input::user;
+using namespace event::input::connection;
+using namespace event::output;
 
-using event::output::FacadeEvent;
-
-RequestingControl::RequestingControl(IState& state) :
-    IState(state)
+RequestingControl::RequestingControl(IState& state, long _channelId) :
+    IState(state),
+    channelId(_channelId)
 {
 }
 

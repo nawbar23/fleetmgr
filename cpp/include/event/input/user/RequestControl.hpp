@@ -25,7 +25,7 @@ class RequestControl : public UserEvent
 public:
     RequestControl(long);
 
-    long getDeviceId() const;
+    long getChannelId() const;
 
     std::string toString() const override;
 

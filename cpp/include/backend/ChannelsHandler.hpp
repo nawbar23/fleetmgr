@@ -27,11 +27,13 @@ class ChannelsHandler
 public:
     ChannelsHandler(ClientBackend&);
 
-    std::shared_ptr<std::vector<traffic::IChannel*>> getChannels();
+    std::vector<traffic::IChannel*> getChannels();
 
-    std::shared_ptr<std::vector<traffic::IChannel*>> getChannels(const std::vector<long>&);
+    std::vector<traffic::IChannel*> getChannels(const std::vector<long>&);
 
-    std::shared_ptr<std::vector<traffic::IChannel*>> validateChannels(const std::vector<com::fleetmgr::interfaces::ChannelResponse>&);
+    std::vector<long> getChannelsIds();
+
+    std::vector<traffic::IChannel*> validateChannels(const std::vector<com::fleetmgr::interfaces::ChannelResponse>&);
 
     void closeChannels(const std::vector<long>&);
 

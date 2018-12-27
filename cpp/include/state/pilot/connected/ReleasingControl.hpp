@@ -23,7 +23,7 @@ namespace connected
 class ReleasingControl : public IState
 {
 public:
-    ReleasingControl(IState&);
+    ReleasingControl(IState&, long);
 
     std::unique_ptr<IState> start() override;
 
@@ -35,6 +35,8 @@ public:
 
 private:
     std::unique_ptr<IState> handleMessage(const com::fleetmgr::interfaces::facade::control::ControlMessage&);
+
+    long channelId;
 };
 
 } // connected

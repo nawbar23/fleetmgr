@@ -28,15 +28,21 @@ public:
 
     void close();
 
+    void setOwned(const bool);
+
     void send(const socket::ISocket::DataPacket) override;
 
     long getId() const override;
+
+    bool isOwned() const override;
 
 private:
     const long id;
     std::shared_ptr<socket::ISocket> socket;
 
     std::shared_ptr<IChannel::Listener> listener;
+
+    bool owned;
 
     void onReceived(const socket::ISocket::DataPacket) override;
 

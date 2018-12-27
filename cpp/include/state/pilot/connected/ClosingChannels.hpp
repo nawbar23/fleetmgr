@@ -1,7 +1,9 @@
-#ifndef FM_STATE_PILOT_CONNECTED_SPECTATING_HPP
-#define FM_STATE_PILOT_CONNECTED_SPECTATING_HPP
+#ifndef FM_STATE_PILOT_CONNECTED_CLOSINGCHANNELS_HPP
+#define FM_STATE_PILOT_CONNECTED_CLOSINGCHANNELS_HPP
 
 #include "state/IState.hpp"
+
+#include <vector>
 
 namespace fm
 {
@@ -17,13 +19,13 @@ namespace connected
 
 /**
  * Created by: Bartosz Nawrot
- * Date: 2018-12-09
+ * Date: 2018-12-27
  * Description:
  */
-class Spectating : public IState
+class ClosingChannels : public IState
 {
 public:
-    Spectating(IState&);
+    ClosingChannels(IState&, const std::vector<long>&);
 
     std::unique_ptr<IState> start() override;
 
@@ -35,6 +37,8 @@ public:
 
 private:
     std::unique_ptr<IState> handleMessage(const com::fleetmgr::interfaces::facade::control::ControlMessage&);
+
+    std::vector<long> channelsToClose;
 };
 
 } // connected
@@ -45,4 +49,4 @@ private:
 
 } // fm
 
-#endif // FM_STATE_PILOT_CONNECTED_SPECTATING_HPP
+#endif // FM_STATE_PILOT_CONNECTED_CLOSINGCHANNELS_HPP

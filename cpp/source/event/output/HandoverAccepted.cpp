@@ -11,10 +11,10 @@ HandoverAccepted::HandoverAccepted(const std::vector<uint8_t>& _data) :
 
 const std::vector<uint8_t>& HandoverAccepted::getData() const
 {
-    return *data;
+    return data;
 }
 
 std::string HandoverAccepted::toString() const
 {
-    return "HANDOVER_ACCEPTED: data size: " + data->size();
+    return "HANDOVER_ACCEPTED: data size: " + data.size();
 }
