@@ -1,20 +1,20 @@
-#include "event/output/OperationStarted.hpp"
+#include "event/output/ReleaseControl.hpp"
 
 using namespace fm;
 using namespace fm::event::output;
 
-OperationStarted::OperationStarted(com::fleetmgr::interfaces::Role _role) :
-    FacadeEvent(OPERATION_STARTED),
-    role(_role)
+ReleaseControl::ReleaseControl(long _channelId) :
+    FacadeEvent(RELEASE_CONTROL),
+    channelId(_channelId)
 {
 }
 
-com::fleetmgr::interfaces::Role OperationStarted::getRole() const
+long ReleaseControl::getChannelId() const
 {
     return role;
 }
 
-std::string OperationStarted::toString() const
+std::string ReleaseControl::toString() const
 {
-    return "OPERATION_STARTED: " + com::fleetmgr::interfaces::Role_Name(role);
+    return "RELEASE_CONTROL: channel id: " + std::to_string(channelId);
 }

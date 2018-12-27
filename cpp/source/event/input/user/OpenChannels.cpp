@@ -8,13 +8,13 @@ using namespace fm::event::input::user;
 
 using namespace com::fleetmgr::interfaces;
 
-OpenChannels::OpenChannels(std::vector<ChannelRequest> _channels) :
+OpenChannels::OpenChannels(const std::vector<ChannelRequest>& _channels) :
     UserEvent(OPEN_CHANNELS),
     channels(_channels)
 {
 }
 
-std::vector<ChannelRequest> OpenChannels::getChannels() const
+const std::vector<ChannelRequest>& OpenChannels::getChannels() const
 {
     return channels;
 }

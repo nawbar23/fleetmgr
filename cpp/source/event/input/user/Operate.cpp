@@ -8,7 +8,7 @@ using namespace fm::event::input::user;
 
 using namespace com::fleetmgr::interfaces;
 
-Operate::Operate(long _deviceId, std::shared_ptr<std::vector<ChannelRequest>> _channels) :
+Operate::Operate(long _deviceId, const std::vector<ChannelRequest>& _channels) :
     UserEvent(OPERATE),
     deviceId(_deviceId),
     channels(_channels)
@@ -20,7 +20,7 @@ long Operate::getDeviceId() const
     return deviceId;
 }
 
-std::shared_ptr<std::vector<ChannelRequest>> Operate::getChannels() const
+const std::vector<ChannelRequest>& Operate::getChannels() const
 {
     return channels;
 }

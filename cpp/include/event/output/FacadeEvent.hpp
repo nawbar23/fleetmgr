@@ -22,26 +22,22 @@ class FacadeEvent
 public:
     enum Type
     {
+        ERROR,
         ATTACHED,
         RELEASED,
-        ERROR,
-        MESSAGE,
-        CHANNELS_OPENED,
         OPERATION_STARTED,
+        OPERATION_UPDATED,
+        CHANNELS_OPENED,
         HANDOVER_ACCEPTED,
         REQUEST_CONTROL,
         RELEASE_CONTROL,
-        HANDOVER_REJECTED,
+        PROCEDURE_REJECTED,
         HANDOVER_DONE,
         CONTROL_RELEASED,
         CHANNELS_CLOSING,
-        CHANNELS_CLOSED,
         OPERATION_ENDED,
         CONNECTION_LOST,
         CONNECTION_RECOVERED,
-        DEVICE_UNREACHABLE,
-        LEADER_UNREACHABLE,
-        DEVICE_RECOVERED,
     };
 
     FacadeEvent(Type);

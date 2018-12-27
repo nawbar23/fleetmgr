@@ -22,16 +22,16 @@ namespace output
 class ProcedureRejected : public FacadeEvent
 {
 public:
-    ProcedureRejected(com::fleetmgr::interfaces::Command, const std::string&);
+    ProcedureRejected(com::fleetmgr::interfaces::facade::control::Command, const std::string&);
 
-    com::fleetmgr::interfaces::Command getCommand() const;
+    com::fleetmgr::interfaces::facade::control::Command getCommand() const;
 
     const std::string& getMessage() const;
 
     std::string toString() const;
 
 private:
-    com::fleetmgr::interfaces::Command procedure;
+    com::fleetmgr::interfaces::facade::control::Command procedure;
     std:: string message;
 };
 

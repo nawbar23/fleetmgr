@@ -1,20 +1,28 @@
-#include "event/output/OperationStarted.hpp"
+#include "event/output/ProcedureRejected.hpp"
 
 using namespace fm;
 using namespace fm::event::output;
 
-OperationStarted::OperationStarted(com::fleetmgr::interfaces::Role _role) :
-    FacadeEvent(OPERATION_STARTED),
-    role(_role)
+using namespace com::fleetmgr::interfaces::facade::control;
+
+ProcedureRejected::ProcedureRejected(Command _procedure, const std::string& _message) :
+    FacadeEvent(PROCEDURE_REJECTED),
+    procedure(_procedure),
+    message(_message)
 {
 }
 
-com::fleetmgr::interfaces::Role OperationStarted::getRole() const
+Command ProcedureRejected::getCommand() const
 {
-    return role;
+    return procedure;
 }
 
-std::string OperationStarted::toString() const
+const std::string& ProcedureRejected::getMessage() const
 {
-    return "OPERATION_STARTED: " + com::fleetmgr::interfaces::Role_Name(role);
+    return message;
+}
+
+std::string ProcedureRejected::toString() const
+{
+    return "PROCEDURE_REJECTED: " + Command_Name(procedure) + ": " + message;
 }
