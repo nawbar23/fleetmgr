@@ -3,13 +3,7 @@ cmake_minimum_required(VERSION 3.2)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -pthread")
 
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
-
 find_package(Boost REQUIRED COMPONENTS system)
-find_package(OpenSSL REQUIRED)
-
-find_package(Protobuf REQUIRED)
-find_package(GRPC REQUIRED)
 
 # set FM SDK directory
 set(_FM_SDK_DIR ${PROJECT_SOURCE_DIR}/../../../cpp)
@@ -52,18 +46,14 @@ endif()
 add_library(_fm_example STATIC ${FILES})
 target_link_libraries(_fm_example
     fm_sdk
-    ${Boost_LIBRARIES}
-    OpenSSL::SSL
-    OpenSSL::Crypto
-    gRPC::grpc++
-    protobuf::libprotobuf
     )
 
 foreach (_target deviceSim pilotSim)
 
-add_executable(${_target} "${_target}.cpp")
-target_link_libraries(${_target}
-    _fm_example
-    )
+    add_executable(${_target} "${_target}.cpp")
+    target_link_libraries(${_target}
+        ${Boost_LIBRARIES}
+        _fm_example
+        )
 
 endforeach()

@@ -4,6 +4,12 @@ project(FmSdk)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -pthread")
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
+
+find_package(Protobuf REQUIRED)
+find_package(GRPC REQUIRED)
+find_package(OpenSSL REQUIRED)
+
 include_directories(include)
 include_directories(generated)
 
@@ -199,3 +205,9 @@ elseif(MSVC)
 endif()
 
 add_library(fm_sdk STATIC ${SOURCES} ${HEADERS})
+target_link_libraries(fm_sdk
+    protobuf::libprotobuf
+    gRPC::grpc++
+    OpenSSL::SSL
+    OpenSSL::Crypto
+    )
