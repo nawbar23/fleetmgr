@@ -124,8 +124,8 @@ void ClientBackend::closeFacadeConnection()
 
     completionQueue.AsyncNext(&releaseTag, &ok, deadline);
 
-    // cleanup reading tasks
-    while (releaseTag == (void*)1)
+    // cleanup reading and sending tasks
+    while (releaseTag == (void*)1 || releaseTag == (void*)2)
     {
         completionQueue.AsyncNext(&releaseTag, &ok, deadline);
     }
