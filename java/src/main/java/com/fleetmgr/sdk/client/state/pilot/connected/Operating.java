@@ -43,13 +43,13 @@ public class Operating extends State {
                 CloseChannels closeChannels = (CloseChannels)event;
                 return new ClosingChannels(this, closeChannels.getChannels());
 
-            case RELEASE:
-                // release is considered as wildcard for closing all channels
-                return new ClosingChannels(this, backend.getChannelsHandler().getChannelsIds());
-
             case REQUEST_CONTROL:
                 RequestControl requestControl = (RequestControl)event;
                 return new RequestingControl(this, requestControl.getChannelId());
+
+            case RELEASE:
+                // release is considered as wildcard for closing all channels
+                return new ClosingChannels(this, backend.getChannelsHandler().getChannelsIds());
 
             default:
                 return defaultEventHandle(event.toString());

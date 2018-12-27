@@ -15,13 +15,13 @@ public class ChannelImpl implements Channel, Socket.Listener {
 
     private Listener listener;
 
-    private boolean owner;
+    private boolean owned;
 
     public ChannelImpl(long id, Socket socket) {
         this.id = id;
         this.socket = socket;
         this.listener = null;
-        this.owner = false;
+        this.owned = false;
     }
 
     @Override
@@ -55,8 +55,8 @@ public class ChannelImpl implements Channel, Socket.Listener {
         socket.disconnect();
     }
 
-    public void setOwner(boolean owner) {
-        this.owner = owner;
+    public void setOwned(boolean owner) {
+        this.owned = owner;
     }
 
     @Override
@@ -71,7 +71,7 @@ public class ChannelImpl implements Channel, Socket.Listener {
 
     @Override
     public boolean isOwned() {
-        return owner;
+        return owned;
     }
 
     @Override
@@ -98,7 +98,7 @@ public class ChannelImpl implements Channel, Socket.Listener {
         return "Channel{" +
                 "id=" + id +
                 ", protocol=" + socket.getProtocol() +
-                ", owner=" + owner +
+                ", owned=" + owned +
                 '}';
     }
 }

@@ -88,14 +88,14 @@ public class ChannelsHandler {
         channels.clear();
     }
 
-    public void trace(String message) {
-        client.trace(message);
-    }
-
     public void setOwned(Collection<Long> owned) {
         for (Long id : owned) {
             trace("Setting channel id: " + id + " as owned");
-            channels.get(id).setOwner(true);
+            channels.get(id).setOwned(true);
         }
+    }
+
+    public void trace(String message) {
+        client.trace(message);
     }
 }
