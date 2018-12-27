@@ -39,6 +39,8 @@ public:
 
     void closeAllChannels();
 
+    void setOwned(const std::vector<long>&);
+
 private:
     ClientBackend& backend;
 

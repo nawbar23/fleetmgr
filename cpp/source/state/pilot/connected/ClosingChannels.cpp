@@ -30,7 +30,6 @@ ClosingChannels::ClosingChannels(IState& state, const std::vector<long>& _toClos
 
 std::unique_ptr<IState> ClosingChannels::start()
 {
-    backend.getChannelsHandler().closeChannels(channelsToClose);
     ClientMessage message;
     message.set_command(Command::REMOVE_CHANNELS);
     for (long c : channelsToClose)

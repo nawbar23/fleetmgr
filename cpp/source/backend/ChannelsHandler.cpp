@@ -98,6 +98,15 @@ void ChannelsHandler::closeAllChannels()
     channels.clear();
 }
 
+void ChannelsHandler::setOwned(const std::vector<long>& owned)
+{
+    for (long id : owned)
+    {
+        trace("Setting channel, id: " + std::to_string(id) + " as owned");
+        channels.find(id)->second.setOwned(true);
+    }
+}
+
 void ChannelsHandler::trace(const std::string& message)
 {
     backend.trace(message);

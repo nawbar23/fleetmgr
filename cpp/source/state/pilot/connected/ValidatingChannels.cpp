@@ -73,6 +73,13 @@ std::unique_ptr<IState> ValidatingChannels::handleMessage(const ControlMessage& 
     case Command::CHANNELS_READY:
         if (message.response() == Response::ACCEPTED)
         {
+            std::vector<long> owned;
+            owned.reserve(message.channelsindication().ids_size());
+            for (int i = 0; i < message.channelsindication().ids_size(); ++i)
+            {
+                owned.push_back(message.channelsindication().ids(i));
+            }
+            backend.getChannelsHandler().setOwned(owned);
             listener.onEvent(std::make_shared<ChannelsOpened>(validated));
             return std::make_unique<Operating>(*this);
         }
