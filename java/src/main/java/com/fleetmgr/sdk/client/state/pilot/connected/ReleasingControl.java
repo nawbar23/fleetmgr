@@ -76,6 +76,7 @@ public class ReleasingControl extends State {
     private State handleMessage(ControlMessage message) {
         switch (message.getCommand()) {
             case CONTROL_RELEASED:
+                backend.getChannelsHandler().setOwned(channelId, false);
                 listener.onEvent(new FacadeEvent(FacadeEvent.Type.CONTROL_RELEASED));
                 send(ClientMessage.newBuilder()
                         .setCommand(Command.CONTROL_RELEASED)

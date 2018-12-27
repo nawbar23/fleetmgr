@@ -81,8 +81,8 @@ public class RequestingControl extends State {
 
             case CONTROL_READY:
                 if (message.getResponse() == Response.ACCEPTED) {
+                    backend.getChannelsHandler().setOwned(channelId, true);
                     listener.onEvent(new FacadeEvent(FacadeEvent.Type.HANDOVER_DONE));
-                    backend.getChannelsHandler().setOwned(Collections.singleton(channelId));
                     return new Operating(this);
 
                 } else {

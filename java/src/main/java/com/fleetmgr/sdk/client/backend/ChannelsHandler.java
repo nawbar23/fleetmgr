@@ -95,6 +95,10 @@ public class ChannelsHandler {
         }
     }
 
+    public void setOwned(long channelId, boolean owned) {
+        channels.get(channelId).setOwned(owned);
+    }
+
     public void trace(String message) {
         client.trace(message);
     }
