@@ -79,6 +79,7 @@ set(SOURCES
     ${PROJECT_SOURCE_DIR}/source/event/input/user/Operate.cpp
     ${PROJECT_SOURCE_DIR}/source/event/input/user/ReleaseAccepted.cpp
     ${PROJECT_SOURCE_DIR}/source/event/input/user/ReleaseRejected.cpp
+    ${PROJECT_SOURCE_DIR}/source/event/input/user/RequestControl.cpp
     ${PROJECT_SOURCE_DIR}/source/event/input/connection/ConnectionEvent.cpp
     ${PROJECT_SOURCE_DIR}/source/event/input/connection/Received.cpp
     ${PROJECT_SOURCE_DIR}/source/event/output/FacadeEvent.cpp
@@ -86,8 +87,8 @@ set(SOURCES
     ${PROJECT_SOURCE_DIR}/source/event/output/ChannelsOpened.cpp
     ${PROJECT_SOURCE_DIR}/source/event/output/Error.cpp
     ${PROJECT_SOURCE_DIR}/source/event/output/HandoverAccepted.cpp
-    ${PROJECT_SOURCE_DIR}/source/event/output/HandoverRejected.cpp
-    ${PROJECT_SOURCE_DIR}/source/event/output/OperationStarted.cpp
+    ${PROJECT_SOURCE_DIR}/source/event/output/ProcedureRejected.cpp
+    ${PROJECT_SOURCE_DIR}/source/event/output/ReleaseControl.cpp
     ${PROJECT_SOURCE_DIR}/source/backend/ClientBackend.cpp
     ${PROJECT_SOURCE_DIR}/source/backend/HeartbeatHandler.cpp
     ${PROJECT_SOURCE_DIR}/source/backend/ChannelsHandler.cpp
@@ -147,6 +148,7 @@ set(HEADERS
     ${PROJECT_SOURCE_DIR}/include/event/input/user/Operate.hpp
     ${PROJECT_SOURCE_DIR}/include/event/input/user/ReleaseAccepted.hpp
     ${PROJECT_SOURCE_DIR}/include/event/input/user/ReleaseRejected.hpp
+    ${PROJECT_SOURCE_DIR}/include/event/input/user/RequestControl.hpp
     ${PROJECT_SOURCE_DIR}/include/event/input/connection/ConnectionEvent.hpp
     ${PROJECT_SOURCE_DIR}/include/event/input/connection/Received.hpp
     ${PROJECT_SOURCE_DIR}/include/event/output/FacadeEvent.hpp
@@ -154,8 +156,8 @@ set(HEADERS
     ${PROJECT_SOURCE_DIR}/include/event/output/ChannelsOpened.hpp
     ${PROJECT_SOURCE_DIR}/include/event/output/Error.hpp
     ${PROJECT_SOURCE_DIR}/include/event/output/HandoverAccepted.hpp
-    ${PROJECT_SOURCE_DIR}/include/event/output/HandoverRejected.hpp
-    ${PROJECT_SOURCE_DIR}/include/event/output/OperationStarted.hpp
+    ${PROJECT_SOURCE_DIR}/include/event/output/ProcedureRejected.hpp
+    ${PROJECT_SOURCE_DIR}/include/event/output/ReleaseControl.hpp
     ${PROJECT_SOURCE_DIR}/include/backend/ClientBackend.hpp
     ${PROJECT_SOURCE_DIR}/include/backend/HeartbeatHandler.hpp
     ${PROJECT_SOURCE_DIR}/include/backend/ChannelsHandler.hpp

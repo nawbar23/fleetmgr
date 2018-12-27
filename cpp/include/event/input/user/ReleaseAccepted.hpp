@@ -26,14 +26,14 @@ namespace user
 class ReleaseAccepted : public UserEvent
 {
 public:
-    ReleaseAccepted(std::shared_ptr<std::vector<uint8_t>>);
+    ReleaseAccepted(const std::vector<uint8_t>&);
 
     const std::vector<uint8_t>& getData() const;
 
     std::string toString() const override;
 
 private:
-    std::shared_ptr<std::vector<uint8_t>> data;
+    std::vector<uint8_t> data;
 };
 
 } // user

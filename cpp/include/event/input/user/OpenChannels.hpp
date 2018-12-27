@@ -6,7 +6,6 @@
 #include "common/channel_management.pb.h"
 
 #include <vector>
-#include <memory>
 
 namespace fm
 {
@@ -28,14 +27,14 @@ namespace user
 class OpenChannels : public UserEvent
 {
 public:
-    OpenChannels(std::shared_ptr<std::vector<com::fleetmgr::interfaces::ChannelRequest>>);
+    OpenChannels(const std::vector<com::fleetmgr::interfaces::ChannelRequest>&);
 
-    std::shared_ptr<std::vector<com::fleetmgr::interfaces::ChannelRequest>> getChannels() const;
+    const std::vector<com::fleetmgr::interfaces::ChannelRequest>& getChannels() const;
 
     std::string toString() const override;
 
 private:
-    std::shared_ptr<std::vector<com::fleetmgr::interfaces::ChannelRequest>> channels;
+    std::vector<com::fleetmgr::interfaces::ChannelRequest> channels;
 };
 
 } // user

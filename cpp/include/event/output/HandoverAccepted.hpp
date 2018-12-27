@@ -23,14 +23,14 @@ namespace output
 class HandoverAccepted : public FacadeEvent
 {
 public:
-    HandoverAccepted(std::shared_ptr<std::vector<uint8_t>>);
+    HandoverAccepted(const std::vector<uint8_t>&);
 
-    const std::vector<uint8_t> getData() const;
+    const std::vector<uint8_t>& getData() const;
 
     std::string toString() const;
 
 private:
-    std::shared_ptr<std::vector<uint8_t>> data;
+    std::vector<uint8_t> data;
 };
 
 } // output

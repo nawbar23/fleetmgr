@@ -4,7 +4,6 @@
 #include "event/input/user/UserEvent.hpp"
 
 #include <vector>
-#include <memory>
 
 namespace fm
 {
@@ -26,14 +25,14 @@ namespace user
 class CloseChannels : public UserEvent
 {
 public:
-    CloseChannels(std::shared_ptr<std::vector<long>>);
+    CloseChannels(const std::vector<long>&);
 
     const std::vector<long>& getChannels() const;
 
     std::string toString() const override;
 
 private:
-    std::shared_ptr<std::vector<long>> channels;
+    std::vector<long> channels;
 };
 
 } // user

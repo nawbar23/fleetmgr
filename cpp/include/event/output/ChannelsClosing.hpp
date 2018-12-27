@@ -25,14 +25,14 @@ namespace output
 class ChannelsClosing : public FacadeEvent
 {
 public:
-    ChannelsClosing(std::shared_ptr<std::vector<traffic::IChannel*>>);
+    ChannelsClosing(const std::vector<traffic::IChannel*>&);
 
-    std::shared_ptr<std::vector<traffic::IChannel*>> getChannels() const;
+    const std::vector<traffic::IChannel*>& getChannels() const;
 
     std::string toString() const;
 
 private:
-    std::shared_ptr<std::vector<traffic::IChannel*>> channels;
+    std::vector<traffic::IChannel*> channels;
 };
 
 } // output

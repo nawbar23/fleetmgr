@@ -28,18 +28,18 @@ namespace user
 class Operate : public UserEvent
 {
 public:
-    Operate(long, std::shared_ptr<std::vector<com::fleetmgr::interfaces::ChannelRequest>>);
+    Operate(long, const std::vector<com::fleetmgr::interfaces::ChannelRequest>&);
 
     long getDeviceId() const;
 
-    std::shared_ptr<std::vector<com::fleetmgr::interfaces::ChannelRequest>> getChannels() const;
+    const std::vector<com::fleetmgr::interfaces::ChannelRequest>& getChannels() const;
 
     std::string toString() const override;
 
 private:
     long deviceId;
 
-    std::shared_ptr<std::vector<com::fleetmgr::interfaces::ChannelRequest>> channels;
+    std::vector<com::fleetmgr::interfaces::ChannelRequest> channels;
 };
 
 } // user
