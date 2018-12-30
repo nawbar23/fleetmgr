@@ -34,26 +34,19 @@ set(FILES
     ${PROJECT_SOURCE_DIR}/example/TimerThread.hpp
     )
 
-if(${CMAKE_GENERATOR} MATCHES "Unix Makefiles")
-    message(STATUS ${CMAKE_BUILD_TOOL})
-    set(CMAKE_MAKE_PROGRAM "${CMAKE_MAKE_PROGRAM} -j4")
-    message(STATUS "Added arguments to CMAKE_BUILD_TOOL: ${CMAKE_MAKE_PROGRAM}")
-elseif(MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
-    message(STATUS "Added parallel build arguments to CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
-endif()
+set(CMAKE_MAKE_PROGRAM "${CMAKE_MAKE_PROGRAM} -j4")
 
-add_library(_fm_example STATIC ${FILES})
-target_link_libraries(_fm_example
+add_library(fm_example STATIC ${FILES})
+target_link_libraries(fm_example
     fm_sdk
     )
 
 foreach (_target deviceSim pilotSim)
 
-    add_executable(${_target} "${_target}.cpp")
-    target_link_libraries(${_target}
+    add_executable("1_${_target}" "${_target}.cpp")
+    target_link_libraries("1_${_target}"
         ${Boost_LIBRARIES}
-        _fm_example
+        fm_example
         )
 
 endforeach()

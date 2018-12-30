@@ -13,65 +13,6 @@ find_package(OpenSSL REQUIRED)
 include_directories(include)
 include_directories(generated)
 
-#[[
-# Protocol Buffers root directory
-set(PROTO_PATH "${CMAKE_SOURCE_DIR}/../proto")
-
-# Protocol Buffers objects to be generated
-set(PROTOS
-    "common/channel_management"
-    "common/channel_validation"
-    "common/connection_state"
-    "common/handover_data"
-    "common/location"
-    "common/role"
-    "core/attach"
-    "core/list_devices"
-    "core/operate"
-    "facade/control/facade_service"
-    "facade/control/heartbeat"
-    "facade/control/setup"
-    )
-
-find_package(Protobuf REQUIRED)
-
-set(GENERATED_PROTOBUF_PATH "${CMAKE_BINARY_DIR}/generated")
-file(MAKE_DIRECTORY ${GENERATED_PROTOBUF_PATH})
-include_directories(${GENERATED_PROTOBUF_PATH})
-
-set(GENERATED_PROTOBUF_SOURCES)
-set(GENERATED_PROTOBUF_HEADERS)
-
-foreach(FIL ${PROTOS})
-    list(APPEND ${GENERATED_PROTOBUF_SOURCES}
-        "${GENERATED_PROTOBUF_PATH}/${FIL}.pb.cc"
-        "${GENERATED_PROTOBUF_PATH}/${FIL}.grpc.pb.cc")
-
-    list(APPEND ${GENERATED_PROTOBUF_HEADERS}
-        "${GENERATED_PROTOBUF_PATH}/${FIL}.pb.h"
-        "${GENERATED_PROTOBUF_PATH}/${FIL}.grpc.pb.h")
-
-    message(STATUS "To gen: ${PROTO_PATH}/${FIL}.proto")
-
-    add_custom_command(
-        OUTPUT "${GENERATED_PROTOBUF_PATH}/${FIL}.pb.h"
-        "${GENERATED_PROTOBUF_PATH}/${FIL}.pb.cc"
-        "${GENERATED_PROTOBUF_PATH}/${FIL}.grpc.pb.cc"
-        "${GENERATED_PROTOBUF_PATH}/${FIL}.grpc.pb.h"
-        COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
-        ARGS "--proto_path=${PROTO_PATH}"
-        "--cpp_out=${GENERATED_PROTOBUF_PATH}"
-        "${PROTO_PATH}/${FIL}.proto"
-        COMMAND ${PROTOBUF_PROTOC_EXECUTABLE}
-        ARGS "--proto_path=${PROTO_PATH}"
-        "--grpc_out=${GENERATED_PROTOBUF_PATH}"
-        "--plugin=protoc-gen-grpc=/usr/local/bin/GRPC_CPP_PLUGIN"
-        "${PROTO_PATH}/${FIL}.proto"
-        COMMENT "Generating: ${FIL}"
-        )
-endforeach()
-]]
-
 set(SOURCES
     ${PROJECT_SOURCE_DIR}/source/IClient.cpp
     ${PROJECT_SOURCE_DIR}/source/Device.cpp
@@ -124,7 +65,7 @@ set(SOURCES
     ${PROJECT_SOURCE_DIR}/source/traffic/IChannel.cpp
     ${PROJECT_SOURCE_DIR}/source/traffic/ChannelImpl.cpp
     ${PROJECT_SOURCE_DIR}/source/traffic/socket/ISocket.cpp
-    # TODO genetated files should be automatically generated and added to sources :)
+    # genetated files
     ${PROJECT_SOURCE_DIR}/generated/common/channel_management.pb.cc
     ${PROJECT_SOURCE_DIR}/generated/common/channel_validation.pb.cc
     ${PROJECT_SOURCE_DIR}/generated/common/connection_state.pb.cc
@@ -195,14 +136,7 @@ set(HEADERS
     ${PROJECT_SOURCE_DIR}/include/traffic/socket/ISocket.hpp
     )
 
-if(${CMAKE_GENERATOR} MATCHES "Unix Makefiles")
-    message(STATUS ${CMAKE_BUILD_TOOL})
-    set(CMAKE_MAKE_PROGRAM "${CMAKE_MAKE_PROGRAM} -j4")
-    message(STATUS "Added arguments to CMAKE_BUILD_TOOL: ${CMAKE_MAKE_PROGRAM}")
-elseif(MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
-    message(STATUS "Added parallel build arguments to CMAKE_CXX_FLAGS: ${CMAKE_CXX_FLAGS}")
-endif()
+set(CMAKE_MAKE_PROGRAM "${CMAKE_MAKE_PROGRAM} -j4")
 
 add_library(fm_sdk STATIC ${SOURCES} ${HEADERS})
 target_link_libraries(fm_sdk
