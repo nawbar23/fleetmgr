@@ -1,6 +1,6 @@
 package com.fleetmgr.sdk.client.traffic;
 
-import org.slf4j.event.Level;
+import java.util.logging.Level;
 
 import java.io.IOException;
 

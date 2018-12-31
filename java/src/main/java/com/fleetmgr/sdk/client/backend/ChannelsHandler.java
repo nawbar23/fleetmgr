@@ -6,7 +6,7 @@ import com.fleetmgr.sdk.client.traffic.Channel;
 import com.fleetmgr.sdk.client.traffic.ChannelImpl;
 import com.fleetmgr.sdk.client.traffic.socket.Socket;
 import com.fleetmgr.sdk.client.traffic.socket.UdpSocket;
-import org.slf4j.event.Level;
+import java.util.logging.Level;
 
 import java.io.IOException;
 import java.util.*;

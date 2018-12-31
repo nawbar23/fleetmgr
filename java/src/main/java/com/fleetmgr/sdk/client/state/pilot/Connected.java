@@ -1,6 +1,6 @@
 package com.fleetmgr.sdk.client.state.pilot;
 
-import org.slf4j.event.Level;
+import java.util.logging.Level;
 import com.fleetmgr.interfaces.ChannelResponse;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;

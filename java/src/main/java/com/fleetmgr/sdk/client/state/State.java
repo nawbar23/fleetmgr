@@ -1,6 +1,6 @@
 package com.fleetmgr.sdk.client.state;
 
-import org.slf4j.event.Level;
+import java.util.logging.Level;
 import com.fleetmgr.interfaces.facade.control.Response;
 import com.fleetmgr.sdk.client.Client;
 import com.fleetmgr.sdk.client.backend.ClientBackend;

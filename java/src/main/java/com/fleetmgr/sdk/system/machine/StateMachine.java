@@ -1,7 +1,7 @@
 package com.fleetmgr.sdk.system.machine;
 
 import com.fleetmgr.sdk.system.capsule.Capsule;
-import org.slf4j.event.Level;
+import java.util.logging.Level;
 
 import java.util.Deque;
 import java.util.concurrent.ExecutorService;
@@ -42,14 +42,14 @@ public abstract class StateMachine<Event> extends Capsule {
     }
 
     public void defer(Event event) {
-        log(Level.DEBUG,"Deferring: " + event +  " @ " + state);
+        log(Level.FINE,"Deferring: " + event +  " @ " + state);
         deferred.add(event);
     }
 
     public void recall() {
         if (!deferred.isEmpty()) {
             Event event = deferred.poll();
-            log(Level.DEBUG, "Recalling: " + event +  " @ " + state + ", remaining queue: " + deferred);
+            log(Level.FINE, "Recalling: " + event +  " @ " + state + ", remaining queue: " + deferred);
             notifyEvent(event);
         }
     }

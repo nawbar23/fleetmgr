@@ -1,6 +1,6 @@
 package com.fleetmgr.sdk.client.state.device.connected;
 
-import org.slf4j.event.Level;
+import java.util.logging.Level;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.connection.Received;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;

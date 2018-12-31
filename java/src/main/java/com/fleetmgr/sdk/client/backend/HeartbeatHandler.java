@@ -1,6 +1,6 @@
 package com.fleetmgr.sdk.client.backend;
 
-import org.slf4j.event.Level;
+import java.util.logging.Level;
 import com.fleetmgr.sdk.client.Client;
 import com.fleetmgr.sdk.client.Constants;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;

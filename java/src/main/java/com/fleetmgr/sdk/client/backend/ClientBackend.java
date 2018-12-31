@@ -1,6 +1,6 @@
 package com.fleetmgr.sdk.client.backend;
 
-import org.slf4j.event.Level;
+import java.util.logging.Level;
 import com.fleetmgr.interfaces.Location;
 import com.fleetmgr.interfaces.facade.control.ClientMessage;
 import com.fleetmgr.interfaces.facade.control.ControlMessage;
