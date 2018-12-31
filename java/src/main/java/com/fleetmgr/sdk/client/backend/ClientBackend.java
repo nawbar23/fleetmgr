@@ -1,5 +1,6 @@
 package com.fleetmgr.sdk.client.backend;
 
+import org.slf4j.event.Level;
 import com.fleetmgr.interfaces.Location;
 import com.fleetmgr.interfaces.facade.control.ClientMessage;
 import com.fleetmgr.interfaces.facade.control.ControlMessage;
@@ -126,7 +127,7 @@ public class ClientBackend implements StreamObserver<ControlMessage> {
     }
 
     public void trace(String message) {
-        client.trace(message);
+        client.log(Level.INFO, message);
     }
 
     @SuppressWarnings("SameParameterValue")

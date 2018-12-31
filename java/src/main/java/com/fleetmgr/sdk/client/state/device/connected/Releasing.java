@@ -1,5 +1,6 @@
 package com.fleetmgr.sdk.client.state.device.connected;
 
+import org.slf4j.event.Level;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.connection.Received;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;
@@ -56,7 +57,7 @@ public class Releasing extends State {
                 }
 
             case HEARTBEAT:
-                trace("Heartbeat ignored during release procedure");
+                log(Level.INFO, "Heartbeat ignored during release procedure");
                 return null;
 
             default:

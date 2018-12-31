@@ -1,5 +1,6 @@
 package com.fleetmgr.sdk.client.state;
 
+import org.slf4j.event.Level;
 import com.fleetmgr.interfaces.facade.control.Response;
 import com.fleetmgr.sdk.client.Client;
 import com.fleetmgr.sdk.client.backend.ClientBackend;
@@ -47,7 +48,7 @@ public abstract class State implements
             return notifyEvent((UserEvent)event);
 
         } else {
-            trace("Unexpected event type");
+            log(Level.INFO, "Unexpected event type");
             return null;
         }
     }
@@ -61,7 +62,7 @@ public abstract class State implements
     }
 
     protected State defaultEventHandle(String eventName) {
-        trace("Unexpected: " + eventName + " @ " + toString());
+        log(Level.INFO, "Unexpected: " + eventName + " @ " + toString());
         return null;
     }
 
@@ -78,7 +79,7 @@ public abstract class State implements
             backend.getHeartbeatHandler().handleHeartbeat(message);
 
         } else {
-            trace("Unexpected ControlMessage received:\n" + message + " @ " + toString());
+            log(Level.INFO, "Unexpected ControlMessage received:\n" + message + " @ " + toString());
         }
         return null;
     }
@@ -89,7 +90,7 @@ public abstract class State implements
                         message.getCommand() == Command.RELEASE);
     }
 
-    protected void trace(String message) {
-        listener.trace(message);
+    protected void log(Level level, String message) {
+        listener.log(level, message);
     }
 }

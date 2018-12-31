@@ -1,5 +1,6 @@
 package com.fleetmgr.sdk.client.traffic;
 
+import org.slf4j.event.Level;
 import com.fleetmgr.interfaces.Result;
 import com.fleetmgr.interfaces.ValidateChannelRequest;
 import com.fleetmgr.interfaces.ValidateChannelResponse;
@@ -89,8 +90,8 @@ public class ChannelImpl implements Channel, Socket.Listener {
     }
 
     @Override
-    public void trace(String message) {
-        listener.trace("[" + toString() + "]: " + message);
+    public void log(Level level, String message) {
+        listener.log(level, "[" + toString() + "]: " + message);
     }
 
     @Override

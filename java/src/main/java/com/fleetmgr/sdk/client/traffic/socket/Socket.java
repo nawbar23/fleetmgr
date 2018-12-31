@@ -1,5 +1,6 @@
 package com.fleetmgr.sdk.client.traffic.socket;
 
+import org.slf4j.event.Level;
 import com.fleetmgr.interfaces.Protocol;
 
 import java.io.IOException;
@@ -14,7 +15,7 @@ public abstract class Socket {
     public interface Listener {
         void onReceived(byte[] data, int size);
         void onClosed();
-        void trace(String message);
+        void log(Level level, String message);
     }
 
     protected Listener listener;

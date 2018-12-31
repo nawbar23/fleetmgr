@@ -1,5 +1,6 @@
 package com.fleetmgr.sdk.client.state.pilot;
 
+import org.slf4j.event.Level;
 import com.fleetmgr.interfaces.ChannelResponse;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;
@@ -8,7 +9,6 @@ import com.fleetmgr.sdk.client.state.pilot.connected.Recovering;
 import com.fleetmgr.sdk.client.state.pilot.connected.Released;
 import com.fleetmgr.sdk.client.state.pilot.connected.ValidatingChannels;
 import com.fleetmgr.sdk.client.state.State;
-import com.fleetmgr.interfaces.Role;
 
 import java.util.List;
 
@@ -47,7 +47,7 @@ public class Connected extends State {
     private State onNewState(State newState) {
         boolean wasRecovering = internalState instanceof Recovering;
         while (newState != null) {
-            trace("Connected transition: " + toString() + " -> Connected." + newState.toString());
+            log(Level.INFO, "Connected transition: " + toString() + " -> Connected." + newState.toString());
             internalState = newState;
             newState = (State)internalState.start();
         }

@@ -1,5 +1,6 @@
 package com.fleetmgr.sdk.client.state.device;
 
+import org.slf4j.event.Level;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
 import com.fleetmgr.sdk.client.event.input.user.UserEvent;
 import com.fleetmgr.sdk.client.state.device.connected.Ready;
@@ -43,7 +44,7 @@ public class Connected extends State {
     private State onNewState(State newState) {
         boolean wasRecovering = internalState instanceof Recovering;
         while (newState != null) {
-            trace("Connected transition: " + toString() + " -> Connected." + newState.toString());
+            log(Level.INFO, "Connected transition: " + toString() + " -> Connected." + newState.toString());
             internalState = newState;
             newState = (State)internalState.start();
         }

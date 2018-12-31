@@ -6,6 +6,7 @@ import com.fleetmgr.sdk.client.traffic.Channel;
 import com.fleetmgr.sdk.client.traffic.ChannelImpl;
 import com.fleetmgr.sdk.client.traffic.socket.Socket;
 import com.fleetmgr.sdk.client.traffic.socket.UdpSocket;
+import org.slf4j.event.Level;
 
 import java.io.IOException;
 import java.util.*;
@@ -51,7 +52,7 @@ public class ChannelsHandler {
         Map<Long, Channel> opened = new HashMap<>();
         for (ChannelResponse c : toValidate) {
             try {
-                trace("Opening channel, id: " + c.getId());
+                log(Level.INFO, "Opening channel, id: " + c.getId());
 
                 Socket socket = new UdpSocket(executor);
                 ChannelImpl channel = new ChannelImpl(c.getId(), socket);
@@ -60,7 +61,7 @@ public class ChannelsHandler {
                 channels.put(c.getId(), channel);
                 opened.put(c.getId(), channel);
 
-                trace("Channel id: " + c.getId() + " validated");
+                log(Level.INFO, "Channel id: " + c.getId() + " validated");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -70,19 +71,19 @@ public class ChannelsHandler {
 
     public void closeChannels(Collection<Long> channels) {
         for (Long c : channels) {
-            trace("Closing channel, id: " + c);
+            log(Level.INFO, "Closing channel, id: " + c);
             ChannelImpl s = this.channels.remove(c);
             if (s != null) {
                 s.close();
             } else {
-                trace("Warning, trying to close not existing channel, id: " + c);
+                log(Level.INFO, "Warning, trying to close not existing channel, id: " + c);
             }
         }
     }
 
     public void closeAllChannels() {
         for (ChannelImpl c : channels.values()) {
-            trace("Closing channel id: " + c.getId());
+            log(Level.INFO, "Closing channel id: " + c.getId());
             c.close();
         }
         channels.clear();
@@ -90,7 +91,7 @@ public class ChannelsHandler {
 
     public void setOwned(Collection<Long> owned) {
         for (Long id : owned) {
-            trace("Setting channel id: " + id + " as owned");
+            log(Level.INFO, "Setting channel id: " + id + " as owned");
             channels.get(id).setOwned(true);
         }
     }
@@ -99,7 +100,7 @@ public class ChannelsHandler {
         channels.get(channelId).setOwned(owned);
     }
 
-    public void trace(String message) {
-        client.trace(message);
+    public void log(Level level, String message) {
+        client.log(level, message);
     }
 }

@@ -1,5 +1,6 @@
 package com.fleetmgr.sdk.client.state.pilot.connected;
 
+import org.slf4j.event.Level;
 import com.fleetmgr.interfaces.ChannelIndicationList;
 import com.fleetmgr.interfaces.facade.control.ClientMessage;
 import com.fleetmgr.interfaces.facade.control.Command;
@@ -86,7 +87,7 @@ public class ClosingChannels extends State {
                 return new Released(this);
 
             case HEARTBEAT:
-                trace("Heartbeat ignored");
+                log(Level.INFO, "Heartbeat ignored");
                 return null;
 
             default:

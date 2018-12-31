@@ -1,6 +1,7 @@
 package com.fleetmgr.sdk.system.machine;
 
 import com.fleetmgr.sdk.system.capsule.Capsule;
+import org.slf4j.event.Level;
 
 import java.util.Deque;
 import java.util.concurrent.ExecutorService;
@@ -25,10 +26,10 @@ public abstract class StateMachine<Event> extends Capsule {
 
     public void notifyEvent(Event event) {
         execute(() -> {
-            trace("Handling: " + event + " @ " + state);
+            log(Level.INFO,"Handling: " + event + " @ " + state);
             State<Event> newState = state.handleEvent(event);
             while (newState != null) {
-                trace("Transition: " + state + " -> " + newState);
+                log(Level.INFO,"Transition: " + state + " -> " + newState);
                 state = newState;
                 newState = state.start();
             }
@@ -41,25 +42,21 @@ public abstract class StateMachine<Event> extends Capsule {
     }
 
     public void defer(Event event) {
-        trace("Deferring: " + event +  " @ " + state);
+        log(Level.DEBUG,"Deferring: " + event +  " @ " + state);
         deferred.add(event);
     }
 
     public void recall() {
         if (!deferred.isEmpty()) {
             Event event = deferred.poll();
-            trace("Recalling: " + event +  " @ " + state + ", remaining queue: " + deferred);
+            log(Level.DEBUG, "Recalling: " + event +  " @ " + state + ", remaining queue: " + deferred);
             notifyEvent(event);
         }
-    }
-
-    public final Deque<Event> getDeffered() {
-        return deferred;
     }
 
     public String getStateName() {
         return state.toString();
     }
 
-    protected abstract void trace(String message);
+    protected abstract void log(Level level, String message);
 }

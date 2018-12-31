@@ -1,5 +1,6 @@
 package com.fleetmgr.sdk.client.backend;
 
+import org.slf4j.event.Level;
 import com.fleetmgr.sdk.client.Client;
 import com.fleetmgr.sdk.client.Constants;
 import com.fleetmgr.sdk.client.event.input.connection.ConnectionEvent;
@@ -30,7 +31,7 @@ public class HeartbeatHandler {
     }
 
     public void start() {
-        client.trace("Starting heartbeat verification task");
+        client.log(Level.INFO, "Starting heartbeat verification task");
 
         lastReception.set(System.currentTimeMillis());
 
@@ -40,7 +41,7 @@ public class HeartbeatHandler {
     }
 
     public void end() {
-        client.trace("Ending heartbeat verification task");
+        client.log(Level.INFO, "Ending heartbeat verification task");
         if (timer != null) {
             timer.cancel();
             timer = null;
