@@ -1,12 +1,12 @@
-#ifndef FM_TIMER_ITIMER_HPP
-#define FM_TIMER_ITIMER_HPP
+#ifndef FM_SYSTEM_ITIMER_HPP
+#define FM_SYSTEM_ITIMER_HPP
 
 #include <functional>
 
 namespace fm
 {
 
-namespace timer
+namespace system
 {
 
 /**
@@ -28,8 +28,8 @@ public:
     virtual void kill() = 0;
 };
 
-} // timer
+} // system
 
 } // fm
 
-#endif // FM_TIMER_ITIMER_HPP
+#endif // FM_SYSTEM_ITIMER_HPP

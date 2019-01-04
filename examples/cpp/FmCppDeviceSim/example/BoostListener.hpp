@@ -28,7 +28,7 @@ public:
 
     std::unique_ptr<com::fleetmgr::interfaces::Location> getLocation() override;
 
-    std::shared_ptr<fm::timer::ITimer> createTimer() override;
+    std::shared_ptr<fm::system::ITimer> createTimer() override;
 
     std::shared_ptr<fm::traffic::socket::ISocket> createSocket(const com::fleetmgr::interfaces::Protocol) override;
 

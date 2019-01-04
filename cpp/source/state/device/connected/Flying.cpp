@@ -27,7 +27,7 @@ Flying::Flying(IState& state, const std::vector<ChannelResponse>& _initialChanne
 {
 }
 
-std::unique_ptr<IState> Flying::start()
+IState::State Flying::start()
 {
     attachChannels(initialChannels);
     return nullptr;
@@ -38,7 +38,7 @@ std::string Flying::toString() const
     return "Flying";
 }
 
-std::unique_ptr<IState> Flying::handleUserEvent(const UserEvent& event)
+IState::State Flying::handleUserEvent(const UserEvent& event)
 {
     switch (event.getType())
     {
@@ -47,7 +47,7 @@ std::unique_ptr<IState> Flying::handleUserEvent(const UserEvent& event)
     }
 }
 
-std::unique_ptr<IState> Flying::handleConnectionEvent(const ConnectionEvent& event)
+IState::State Flying::handleConnectionEvent(const ConnectionEvent& event)
 {
     switch (event.getType())
     {
@@ -59,7 +59,7 @@ std::unique_ptr<IState> Flying::handleConnectionEvent(const ConnectionEvent& eve
     }
 }
 
-std::unique_ptr<IState> Flying::handleMessage(const ControlMessage& message)
+IState::State Flying::handleMessage(const ControlMessage& message)
 {
     switch (message.command())
     {

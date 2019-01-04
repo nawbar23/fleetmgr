@@ -25,12 +25,12 @@ Disconnected::Disconnected(IClient& client, IClient::Listener& listener, backend
 {
 }
 
-std::unique_ptr<IState> Disconnected::start()
+IState::State Disconnected::start()
 {
     return nullptr;
 }
 
-std::unique_ptr<IState> Disconnected::handleUserEvent(const UserEvent& event)
+IState::State Disconnected::handleUserEvent(const UserEvent& event)
 {
     switch (event.getType())
     {

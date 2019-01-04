@@ -30,7 +30,7 @@ Connecting::Connecting(IState& state, long _deviceId, const std::vector<ChannelR
 {
 }
 
-std::unique_ptr<IState> Connecting::start()
+IState::State Connecting::start()
 {
     try
     {
@@ -61,12 +61,12 @@ std::unique_ptr<IState> Connecting::start()
     }
 }
 
-std::unique_ptr<IState> Connecting::handleUserEvent(const UserEvent& event)
+IState::State Connecting::handleUserEvent(const UserEvent& event)
 {
     return defaultEventHandle(event.toString());
 }
 
-std::unique_ptr<IState> Connecting::handleConnectionEvent(const ConnectionEvent& event)
+IState::State Connecting::handleConnectionEvent(const ConnectionEvent& event)
 {
     switch (event.getType())
     {
@@ -78,7 +78,7 @@ std::unique_ptr<IState> Connecting::handleConnectionEvent(const ConnectionEvent&
     }
 }
 
-std::unique_ptr<IState> Connecting::handleMessage(const ControlMessage& message)
+IState::State Connecting::handleMessage(const ControlMessage& message)
 {
     switch (message.command())
     {

@@ -33,18 +33,13 @@ Operating::Operating(IState& state) :
 {
 }
 
-std::unique_ptr<IState> Operating::start()
+IState::State Operating::start()
 {
-    // TODO recall deferred events
+    client.recall();
     return nullptr;
 }
 
-std::string Operating::toString() const
-{
-    return "Operating";
-}
-
-std::unique_ptr<IState> Operating::handleUserEvent(const UserEvent& event)
+IState::State Operating::handleUserEvent(const UserEvent& event)
 {
     switch (event.getType())
     {
@@ -74,7 +69,7 @@ std::unique_ptr<IState> Operating::handleUserEvent(const UserEvent& event)
     }
 }
 
-std::unique_ptr<IState> Operating::handleConnectionEvent(const ConnectionEvent& event)
+IState::State Operating::handleConnectionEvent(const ConnectionEvent& event)
 {
     switch (event.getType())
     {
@@ -89,13 +84,18 @@ std::unique_ptr<IState> Operating::handleConnectionEvent(const ConnectionEvent& 
     }
 }
 
-std::unique_ptr<IState> Operating::handleMessage(const ControlMessage& message)
+std::string Operating::toString() const
+{
+    return "Operating";
+}
+
+IState::State Operating::handleMessage(const ControlMessage& message)
 {
     switch (message.command())
     {
     case Command::OPERATION_UPDATED:
         listener.onEvent(std::make_shared<FacadeEvent>(FacadeEvent::OPERATION_UPDATED));
-        // TODO recall deferred events
+        client.recall();
         return nullptr;
 
     case Command::RELEASE_CONTROL:

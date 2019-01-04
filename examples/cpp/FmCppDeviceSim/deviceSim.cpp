@@ -9,7 +9,7 @@ int main(int, char**)
 //    const std::string host = "edge.zhjixouahfpdviebd.com";
 //    const int port = 443;
 
-    const std::string host = "192.168.1.52";
+    const std::string host = "192.168.1.69";
     const int port = 14010;
 
     const std::string facadeCertPath = "../../../cpp/grpc_facade.crt";

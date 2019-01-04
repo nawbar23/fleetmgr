@@ -26,19 +26,19 @@ class Connecting : public IState
 public:
     Connecting(IState&, long, const std::vector<com::fleetmgr::interfaces::ChannelRequest>&);
 
-    std::unique_ptr<IState> start() override;
+    State start() override;
 
-    std::unique_ptr<IState> handleUserEvent(const event::input::user::UserEvent&) override;
+    State handleUserEvent(const event::input::user::UserEvent&) override;
 
-    std::unique_ptr<IState> handleConnectionEvent(const event::input::connection::ConnectionEvent&) override;
+    State handleConnectionEvent(const event::input::connection::ConnectionEvent&) override;
 
     std::string toString() const override;
-
-    std::unique_ptr<IState> handleMessage(const com::fleetmgr::interfaces::facade::control::ControlMessage&);
 
 private:
     long deviceId;
     std::vector<com::fleetmgr::interfaces::ChannelRequest> channels;
+
+    State handleMessage(const com::fleetmgr::interfaces::facade::control::ControlMessage&);
 };
 
 } // pilot

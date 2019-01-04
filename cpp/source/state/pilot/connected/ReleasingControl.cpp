@@ -20,9 +20,27 @@ ReleasingControl::ReleasingControl(IState& state, long _channelId) :
 {
 }
 
-std::unique_ptr<IState> ReleasingControl::start()
+IState::State ReleasingControl::start()
 {
     return nullptr;
+}
+
+IState::State ReleasingControl::handleUserEvent(const UserEvent& event)
+{
+    switch (event.getType())
+    {
+    default:
+        return defaultEventHandle(event.toString());
+    }
+}
+
+IState::State ReleasingControl::handleConnectionEvent(const ConnectionEvent& event)
+{
+    switch (event.getType())
+    {
+    default:
+        return defaultEventHandle(event.toString());
+    }
 }
 
 std::string ReleasingControl::toString() const
@@ -30,25 +48,7 @@ std::string ReleasingControl::toString() const
     return "ReleasingControl";
 }
 
-std::unique_ptr<IState> ReleasingControl::handleUserEvent(const UserEvent& event)
-{
-    switch (event.getType())
-    {
-    default:
-        return defaultEventHandle(event.toString());
-    }
-}
-
-std::unique_ptr<IState> ReleasingControl::handleConnectionEvent(const ConnectionEvent& event)
-{
-    switch (event.getType())
-    {
-    default:
-        return defaultEventHandle(event.toString());
-    }
-}
-
-std::unique_ptr<IState> ReleasingControl::handleMessage(const ControlMessage& message)
+IState::State ReleasingControl::handleMessage(const ControlMessage& message)
 {
     switch (message.command())
     {

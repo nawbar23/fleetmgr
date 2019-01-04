@@ -21,9 +21,32 @@ Released::Released(IState& state) :
 {
 }
 
-std::unique_ptr<IState> Released::start()
+IState::State Released::start()
 {
     return nullptr;
+}
+
+IState::State Released::handleUserEvent(const UserEvent& event)
+{
+    switch (event.getType())
+    {
+    default:
+        return defaultEventHandle(event.toString());
+    }
+}
+
+IState::State Released::handleConnectionEvent(const ConnectionEvent& event)
+{
+    switch (event.getType())
+    {
+    default:
+        return defaultEventHandle(event.toString());
+    }
+}
+
+IState::State Released::createOuterState()
+{
+    return std::make_unique<Disconnecting>(*this);
 }
 
 std::string Released::toString() const
@@ -31,30 +54,7 @@ std::string Released::toString() const
     return "Released";
 }
 
-std::unique_ptr<IState> Released::handleUserEvent(const UserEvent& event)
-{
-    switch (event.getType())
-    {
-    default:
-        return defaultEventHandle(event.toString());
-    }
-}
-
-std::unique_ptr<IState> Released::handleConnectionEvent(const ConnectionEvent& event)
-{
-    switch (event.getType())
-    {
-    default:
-        return defaultEventHandle(event.toString());
-    }
-}
-
-std::unique_ptr<IState> Released::createOuterState()
-{
-    return std::make_unique<Disconnecting>(*this);
-}
-
-std::unique_ptr<IState> Released::handleMessage(const ControlMessage& message)
+IState::State Released::handleMessage(const ControlMessage& message)
 {
     switch (message.command())
     {

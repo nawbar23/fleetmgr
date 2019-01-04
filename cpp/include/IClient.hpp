@@ -9,7 +9,8 @@
 
 #include "traffic/socket/ISocket.hpp"
 
-#include "timer/ITimer.hpp"
+#include "system/IStateMachine.hpp"
+#include "system/ITimer.hpp"
 
 #include "common/channel_management.pb.h"
 #include "common/location.pb.h"
@@ -36,7 +37,7 @@ namespace backend
  * Date: 2018-11-25
  * Description:
  */
-class IClient
+class IClient : public system::IStateMachine<event::input::IInputEvent>
 {
 public:
     class Listener
@@ -52,18 +53,14 @@ public:
 
         virtual std::unique_ptr<com::fleetmgr::interfaces::Location> getLocation() = 0;
 
-        virtual std::shared_ptr<timer::ITimer> createTimer() = 0;
+        virtual std::shared_ptr<system::ITimer> createTimer() = 0;
 
         virtual std::shared_ptr<traffic::socket::ISocket> createSocket(const com::fleetmgr::interfaces::Protocol) = 0;
     };
 
     virtual ~IClient();
 
-    void notifyEvent(const std::shared_ptr<const event::input::IInputEvent>);
-
     void trace(const std::string& message);
-
-    std::string getStateName() const;
 
     virtual std::string toString() const = 0;
 
@@ -72,16 +69,13 @@ protected:
 
     IClient(Listener&, core::https::IHttpsClient&, const std::string&);
 
-    void setState(std::unique_ptr<state::IState>);
+    void execute(Task task) override;
 
 private:
     IClient() = delete;
     IClient(IClient&) = delete;
 
     Listener& listener;
-
-    std::mutex stateLock;
-    std::unique_ptr<state::IState> state;
 };
 
 } // fm

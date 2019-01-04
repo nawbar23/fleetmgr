@@ -46,7 +46,7 @@ std::unique_ptr<Location> BoostListener::getLocation()
     return location;
 }
 
-std::shared_ptr<fm::timer::ITimer> BoostListener::createTimer()
+std::shared_ptr<fm::system::ITimer> BoostListener::createTimer()
 {
     //std::cout << "AsioListener::createTimer" << std::endl;
     return std::make_shared<Timer>(timerThread);

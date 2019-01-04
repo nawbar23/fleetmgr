@@ -22,18 +22,18 @@ class Connected : public IState
 public:
     Connected(IState&);
 
-    std::unique_ptr<IState> start() override;
+    State start() override;
 
-    std::unique_ptr<IState> handleUserEvent(const event::input::user::UserEvent&) override;
+    State handleUserEvent(const event::input::user::UserEvent&) override;
 
-    std::unique_ptr<IState> handleConnectionEvent(const event::input::connection::ConnectionEvent&) override;
+    State handleConnectionEvent(const event::input::connection::ConnectionEvent&) override;
 
     std::string toString() const override;
 
 private:
-    std::unique_ptr<state::IState> internalState;
+    State internalState;
 
-    std::unique_ptr<IState> onNewState(std::unique_ptr<IState>);
+    State onNewState(State);
 };
 
 } // device

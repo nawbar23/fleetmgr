@@ -27,7 +27,7 @@ ValidatingChannels::ValidatingChannels(IState& state, const std::vector<ChannelR
 {
 }
 
-std::unique_ptr<IState> ValidatingChannels::start()
+IState::State ValidatingChannels::start()
 {
     validated = backend.getChannelsHandler().validateChannels(toValidate);
     ClientMessage response;
@@ -40,12 +40,7 @@ std::unique_ptr<IState> ValidatingChannels::start()
     return nullptr;
 }
 
-std::string ValidatingChannels::toString() const
-{
-    return "ValidatingChannels";
-}
-
-std::unique_ptr<IState> ValidatingChannels::handleUserEvent(const UserEvent& event)
+IState::State ValidatingChannels::handleUserEvent(const UserEvent& event)
 {
     switch (event.getType())
     {
@@ -54,7 +49,7 @@ std::unique_ptr<IState> ValidatingChannels::handleUserEvent(const UserEvent& eve
     }
 }
 
-std::unique_ptr<IState> ValidatingChannels::handleConnectionEvent(const ConnectionEvent& event)
+IState::State ValidatingChannels::handleConnectionEvent(const ConnectionEvent& event)
 {
     switch (event.getType())
     {
@@ -66,7 +61,12 @@ std::unique_ptr<IState> ValidatingChannels::handleConnectionEvent(const Connecti
     }
 }
 
-std::unique_ptr<IState> ValidatingChannels::handleMessage(const ControlMessage& message)
+std::string ValidatingChannels::toString() const
+{
+    return "ValidatingChannels";
+}
+
+IState::State ValidatingChannels::handleMessage(const ControlMessage& message)
 {
     switch (message.command())
     {

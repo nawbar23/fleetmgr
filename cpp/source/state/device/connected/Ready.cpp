@@ -24,17 +24,12 @@ Ready::Ready(IState& state) :
 {
 }
 
-std::unique_ptr<IState> Ready::start()
+IState::State Ready::start()
 {
     return nullptr;
 }
 
-std::string Ready::toString() const
-{
-    return "Ready";
-}
-
-std::unique_ptr<IState> Ready::handleUserEvent(const UserEvent& event)
+IState::State Ready::handleUserEvent(const UserEvent& event)
 {
     switch (event.getType())
     {
@@ -46,7 +41,7 @@ std::unique_ptr<IState> Ready::handleUserEvent(const UserEvent& event)
     }
 }
 
-std::unique_ptr<IState> Ready::handleConnectionEvent(const ConnectionEvent& event)
+IState::State Ready::handleConnectionEvent(const ConnectionEvent& event)
 {
     switch (event.getType())
     {
@@ -58,7 +53,12 @@ std::unique_ptr<IState> Ready::handleConnectionEvent(const ConnectionEvent& even
     }
 }
 
-std::unique_ptr<IState> Ready::handleMessage(const ControlMessage& message)
+std::string Ready::toString() const
+{
+    return "Ready";
+}
+
+IState::State Ready::handleMessage(const ControlMessage& message)
 {
     switch (message.command())
     {

@@ -61,7 +61,7 @@ set(SOURCES
     ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/ValidatingChannels.cpp
     ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/OpeningChannels.cpp
     ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/ClosingChannels.cpp
-    ${PROJECT_SOURCE_DIR}/source/timer/ITimer.cpp
+    ${PROJECT_SOURCE_DIR}/source/system/ITimer.cpp
     ${PROJECT_SOURCE_DIR}/source/traffic/IChannel.cpp
     ${PROJECT_SOURCE_DIR}/source/traffic/ChannelImpl.cpp
     ${PROJECT_SOURCE_DIR}/source/traffic/socket/ISocket.cpp
@@ -130,7 +130,9 @@ set(HEADERS
     ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/ValidatingChannels.hpp
     ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/OpeningChannels.hpp
     ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/ClosingChannels.hpp
-    ${PROJECT_SOURCE_DIR}/include/timer/ITimer.hpp
+    ${PROJECT_SOURCE_DIR}/include/system/ITimer.hpp
+    ${PROJECT_SOURCE_DIR}/include/system/IStateMachine.hpp
+    ${PROJECT_SOURCE_DIR}/include/system/IState.hpp
     ${PROJECT_SOURCE_DIR}/include/traffic/IChannel.hpp
     ${PROJECT_SOURCE_DIR}/include/traffic/ChannelImpl.hpp
     ${PROJECT_SOURCE_DIR}/include/traffic/socket/ISocket.hpp
@@ -139,6 +141,7 @@ set(HEADERS
 set(CMAKE_MAKE_PROGRAM "${CMAKE_MAKE_PROGRAM} -j4")
 
 add_library(fm_sdk STATIC ${SOURCES} ${HEADERS})
+
 target_link_libraries(fm_sdk
     protobuf::libprotobuf
     gRPC::grpc++

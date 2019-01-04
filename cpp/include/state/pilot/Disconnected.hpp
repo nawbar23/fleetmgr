@@ -24,9 +24,9 @@ public:
 
     Disconnected(IClient&, IClient::Listener&, backend::ClientBackend&);
 
-    std::unique_ptr<IState> start() override;
+    State start() override;
 
-    std::unique_ptr<IState> handleUserEvent(const event::input::user::UserEvent&) override;
+    State handleUserEvent(const event::input::user::UserEvent&) override;
 
     std::string toString() const override;
 };

@@ -15,8 +15,7 @@ using event::input::connection::ConnectionEvent;
 IState::~IState()
 {
 }
-
-std::unique_ptr<IState> IState::handleEvent(const std::shared_ptr<const event::input::IInputEvent> event)
+IState::State IState::handleEvent(const std::shared_ptr<const event::input::IInputEvent> event)
 {
     switch (event->getInputEventType())
     {
@@ -42,17 +41,17 @@ IState::IState(IClient& _client, IClient::Listener& _listener, backend::ClientBa
 {
 }
 
-std::unique_ptr<IState> IState::handleUserEvent(const UserEvent& event)
+IState::State IState::handleUserEvent(const UserEvent& event)
 {
     return defaultEventHandle(event.toString());
 }
 
-std::unique_ptr<IState> IState::handleConnectionEvent(const ConnectionEvent& event)
+IState::State IState::handleConnectionEvent(const ConnectionEvent& event)
 {
     return defaultEventHandle(event.toString());
 }
 
-std::unique_ptr<IState> IState::createOuterState()
+IState::State IState::createOuterState()
 {
     return nullptr;
 }
@@ -62,13 +61,13 @@ void IState::send(const ClientMessage& message)
     backend.send(message);
 }
 
-std::unique_ptr<IState> IState::defaultEventHandle(const std::string& eventName)
+IState::State IState::defaultEventHandle(const std::string& eventName)
 {
     trace("Unexpected: " + eventName + " @ " + toString());
     return nullptr;
 }
 
-std::unique_ptr<IState> IState::defaultMessageHandle(const ControlMessage& message)
+IState::State IState::defaultMessageHandle(const ControlMessage& message)
 {
     if (message.command() == Command::HEARTBEAT && message.has_heartbeat())
     {

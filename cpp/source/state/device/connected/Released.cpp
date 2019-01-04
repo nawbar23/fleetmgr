@@ -21,7 +21,7 @@ Released::Released(IState& state) :
 {
 }
 
-std::unique_ptr<IState> Released::start()
+IState::State Released::start()
 {
     return nullptr;
 }
@@ -31,12 +31,12 @@ std::string Released::toString() const
     return "Released";
 }
 
-std::unique_ptr<IState> Released::handleUserEvent(const UserEvent& event)
+IState::State Released::handleUserEvent(const UserEvent& event)
 {
     return defaultEventHandle(event.toString());
 }
 
-std::unique_ptr<IState> Released::handleConnectionEvent(const ConnectionEvent& event)
+IState::State Released::handleConnectionEvent(const ConnectionEvent& event)
 {
     switch (event.getType())
     {
@@ -48,12 +48,12 @@ std::unique_ptr<IState> Released::handleConnectionEvent(const ConnectionEvent& e
     }
 }
 
-std::unique_ptr<IState> Released::createOuterState()
+IState::State Released::createOuterState()
 {
     return std::make_unique<Disconnecting>(*this);
 }
 
-std::unique_ptr<IState> Released::handleMessage(const ControlMessage& message)
+IState::State Released::handleMessage(const ControlMessage& message)
 {
     return defaultMessageHandle(message);
 }

@@ -19,40 +19,22 @@ IClient::~IClient()
 {
 }
 
-void IClient::notifyEvent(const std::shared_ptr<const event::input::IInputEvent> event)
-{
-    listener.execute([this, event] ()
-    {
-        std::lock_guard<std::mutex> lockGuard(stateLock);
-        listener.trace("Handling: " + event->toString() + " @ " + state->toString());
-        std::unique_ptr<state::IState> newState = state->handleEvent(event);
-        while (nullptr != newState.get())
-        {
-            listener.trace("Transition: " + state->toString() + " -> " + newState->toString());
-            state.swap(newState);
-            newState.reset(state->start().release());
-        }
-    });
-}
-
 void IClient::trace(const std::string& message)
 {
     listener.trace(message);
 }
 
-std::string IClient::getStateName() const
-{
-    return state->toString();
-}
-
 IClient::IClient(Listener& _listener, core::https::IHttpsClient& coreClient, const std::string& _certPath) :
+    IStateMachine([&_listener] (const std::string& msg)
+{
+    _listener.trace(msg);
+}),
     backend(std::make_unique<backend::ClientBackend>(*this, _listener, coreClient, _certPath)),
     listener(_listener)
 {
 }
 
-void IClient::setState(std::unique_ptr<state::IState> _state)
+void IClient::execute(Task task)
 {
-    state.swap(_state);
-    state->start();
+    listener.execute(task);
 }

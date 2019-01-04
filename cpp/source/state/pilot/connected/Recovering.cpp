@@ -19,9 +19,27 @@ Recovering::Recovering(IState& state) :
 {
 }
 
-std::unique_ptr<IState> Recovering::start()
+IState::State Recovering::start()
 {
     return nullptr;
+}
+
+IState::State Recovering::handleUserEvent(const UserEvent& event)
+{
+    switch (event.getType())
+    {
+    default:
+        return defaultEventHandle(event.toString());
+    }
+}
+
+IState::State Recovering::handleConnectionEvent(const ConnectionEvent& event)
+{
+    switch (event.getType())
+    {
+    default:
+        return defaultEventHandle(event.toString());
+    }
 }
 
 std::string Recovering::toString() const
@@ -29,25 +47,7 @@ std::string Recovering::toString() const
     return "Recovering";
 }
 
-std::unique_ptr<IState> Recovering::handleUserEvent(const UserEvent& event)
-{
-    switch (event.getType())
-    {
-    default:
-        return defaultEventHandle(event.toString());
-    }
-}
-
-std::unique_ptr<IState> Recovering::handleConnectionEvent(const ConnectionEvent& event)
-{
-    switch (event.getType())
-    {
-    default:
-        return defaultEventHandle(event.toString());
-    }
-}
-
-std::unique_ptr<IState> Recovering::handleMessage(const ControlMessage& message)
+IState::State Recovering::handleMessage(const ControlMessage& message)
 {
     switch (message.command())
     {

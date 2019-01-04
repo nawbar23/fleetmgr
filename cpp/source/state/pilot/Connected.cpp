@@ -21,7 +21,7 @@ Connected::Connected(IState& state, const std::vector<ChannelResponse>& openedCh
 {
 }
 
-std::unique_ptr<IState> Connected::start()
+IState::State Connected::start()
 {
     backend.getHeartbeatHandler().start();
     internalState->start();
@@ -29,17 +29,17 @@ std::unique_ptr<IState> Connected::start()
     return nullptr;
 }
 
-std::unique_ptr<IState> Connected::handleUserEvent(const UserEvent& event)
+IState::State Connected::handleUserEvent(const UserEvent& event)
 {
-    return onNewState(internalState->handleUserEvent(event));
+    return onNewState(reinterpret_cast<IState*>(internalState.get())->handleUserEvent(event));
 }
 
-std::unique_ptr<IState> Connected::handleConnectionEvent(const ConnectionEvent& event)
+IState::State Connected::handleConnectionEvent(const ConnectionEvent& event)
 {
-    return onNewState(internalState->handleConnectionEvent(event));
+    return onNewState(reinterpret_cast<IState*>(internalState.get())->handleConnectionEvent(event));
 }
 
-std::unique_ptr<IState> Connected::onNewState(std::unique_ptr<IState> newState)
+IState::State Connected::onNewState(IState::State newState)
 {
     while (nullptr != newState.get())
     {
@@ -47,7 +47,7 @@ std::unique_ptr<IState> Connected::onNewState(std::unique_ptr<IState> newState)
         internalState.swap(newState);
         newState.reset(internalState->start().release());
     }
-    return internalState->createOuterState();
+    return reinterpret_cast<IState*>(internalState.get())->createOuterState();
 }
 
 std::string Connected::toString() const

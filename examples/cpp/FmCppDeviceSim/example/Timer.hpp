@@ -1,11 +1,11 @@
 #ifndef TIMER_HPP
 #define TIMER_HPP
 
-#include "timer/ITimer.hpp"
+#include "system/ITimer.hpp"
 
 #include "TimerThread.hpp"
 
-class Timer : public fm::timer::ITimer
+class Timer : public fm::system::ITimer
 {
 public:
     Timer(TimerThread& _timerThread);

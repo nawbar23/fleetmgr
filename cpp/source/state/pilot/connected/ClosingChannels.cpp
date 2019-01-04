@@ -28,7 +28,7 @@ ClosingChannels::ClosingChannels(IState& state, const std::vector<long>& _toClos
 {
 }
 
-std::unique_ptr<IState> ClosingChannels::start()
+IState::State ClosingChannels::start()
 {
     ClientMessage message;
     message.set_command(Command::REMOVE_CHANNELS);
@@ -45,7 +45,7 @@ std::string ClosingChannels::toString() const
     return "ClosingChannels";
 }
 
-std::unique_ptr<IState> ClosingChannels::handleUserEvent(const UserEvent& event)
+IState::State ClosingChannels::handleUserEvent(const UserEvent& event)
 {
     switch (event.getType())
     {
@@ -54,7 +54,7 @@ std::unique_ptr<IState> ClosingChannels::handleUserEvent(const UserEvent& event)
     }
 }
 
-std::unique_ptr<IState> ClosingChannels::handleConnectionEvent(const ConnectionEvent& event)
+IState::State ClosingChannels::handleConnectionEvent(const ConnectionEvent& event)
 {
     switch (event.getType())
     {
@@ -66,7 +66,7 @@ std::unique_ptr<IState> ClosingChannels::handleConnectionEvent(const ConnectionE
     }
 }
 
-std::unique_ptr<IState> ClosingChannels::handleMessage(const ControlMessage& message)
+IState::State ClosingChannels::handleMessage(const ControlMessage& message)
 {
     switch (message.command())
     {

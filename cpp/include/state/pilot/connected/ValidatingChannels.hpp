@@ -34,19 +34,19 @@ class ValidatingChannels : public IState
 public:
     ValidatingChannels(IState&, const std::vector<com::fleetmgr::interfaces::ChannelResponse>&);
 
-    std::unique_ptr<IState> start() override;
+    State start() override;
+
+    State handleUserEvent(const event::input::user::UserEvent&) override;
+
+    State handleConnectionEvent(const event::input::connection::ConnectionEvent&) override;
 
     std::string toString() const override;
-
-    std::unique_ptr<IState> handleUserEvent(const event::input::user::UserEvent&) override;
-
-    std::unique_ptr<IState> handleConnectionEvent(const event::input::connection::ConnectionEvent&) override;
 
 private:
     std::vector<com::fleetmgr::interfaces::ChannelResponse> toValidate;
     std::vector<traffic::IChannel*> validated;
 
-    std::unique_ptr<IState> handleMessage(const com::fleetmgr::interfaces::facade::control::ControlMessage&);
+    State handleMessage(const com::fleetmgr::interfaces::facade::control::ControlMessage&);
 };
 
 } // connected

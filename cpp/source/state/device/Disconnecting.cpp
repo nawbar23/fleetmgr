@@ -20,7 +20,7 @@ Disconnecting::Disconnecting(IState& state) :
 {
 }
 
-std::unique_ptr<IState> Disconnecting::start()
+IState::State Disconnecting::start()
 {
     backend.getHeartbeatHandler().end();
     backend.closeFacadeConnection();
@@ -28,12 +28,12 @@ std::unique_ptr<IState> Disconnecting::start()
     return std::make_unique<Disconnected>(*this);
 }
 
-std::unique_ptr<IState> Disconnecting::handleUserEvent(const UserEvent& event)
+IState::State Disconnecting::handleUserEvent(const UserEvent& event)
 {
     return defaultEventHandle(event.toString());
 }
 
-std::unique_ptr<IState> Disconnecting::handleConnectionEvent(const ConnectionEvent& event)
+IState::State Disconnecting::handleConnectionEvent(const ConnectionEvent& event)
 {
     return defaultEventHandle(event.toString());
 }

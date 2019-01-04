@@ -21,7 +21,7 @@ Releasing::Releasing(IState& state) :
 {
 }
 
-std::unique_ptr<IState> Releasing::start()
+IState::State Releasing::start()
 {
     ClientMessage message;
     message.set_command(RELEASE);
@@ -34,12 +34,12 @@ std::string Releasing::toString() const
     return "Releasing";
 }
 
-std::unique_ptr<IState> Releasing::handleUserEvent(const UserEvent& event)
+IState::State Releasing::handleUserEvent(const UserEvent& event)
 {
     return defaultEventHandle(event.toString());
 }
 
-std::unique_ptr<IState> Releasing::handleConnectionEvent(const ConnectionEvent& event)
+IState::State Releasing::handleConnectionEvent(const ConnectionEvent& event)
 {
     switch (event.getType())
     {
@@ -51,7 +51,7 @@ std::unique_ptr<IState> Releasing::handleConnectionEvent(const ConnectionEvent& 
     }
 }
 
-std::unique_ptr<IState> Releasing::handleMessage(const ControlMessage& message)
+IState::State Releasing::handleMessage(const ControlMessage& message)
 {
     switch (message.command())
     {

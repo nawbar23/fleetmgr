@@ -27,16 +27,16 @@ class ClosingChannels : public IState
 public:
     ClosingChannels(IState&, const std::vector<long>&);
 
-    std::unique_ptr<IState> start() override;
+    State start() override;
+
+    State handleUserEvent(const event::input::user::UserEvent&) override;
+
+    State handleConnectionEvent(const event::input::connection::ConnectionEvent&) override;
 
     std::string toString() const override;
 
-    std::unique_ptr<IState> handleUserEvent(const event::input::user::UserEvent&) override;
-
-    std::unique_ptr<IState> handleConnectionEvent(const event::input::connection::ConnectionEvent&) override;
-
 private:
-    std::unique_ptr<IState> handleMessage(const com::fleetmgr::interfaces::facade::control::ControlMessage&);
+    State handleMessage(const com::fleetmgr::interfaces::facade::control::ControlMessage&);
 
     std::vector<long> channelsToClose;
 };

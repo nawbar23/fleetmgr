@@ -168,7 +168,7 @@ void ClientBackend::proceedReader()
     if (ok && tag == readTag)
     {
         using event::input::connection::Received;
-        client.notifyEvent(std::make_shared<Received>(toRead));
+        client.notifyEvent(std::make_shared<const Received>(toRead));
 
         toRead = std::make_shared<ControlMessage>();
         stream->Read(toRead.get(), readTag);

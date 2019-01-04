@@ -11,6 +11,8 @@
 
 #include "facade/control/facade_service.pb.h"
 
+#include "system/IState.hpp"
+
 #include <memory>
 
 namespace fm
@@ -24,20 +26,20 @@ namespace state
  * Date: 2018-11-25
  * Description:
  */
-class IState
+class IState : public system::IState<event::input::IInputEvent>
 {
 public:
+    typedef std::unique_ptr<system::IState<event::input::IInputEvent>> State;
+
     virtual ~IState();
 
-    virtual std::unique_ptr<IState> start() = 0;
+    State handleEvent(const std::shared_ptr<const event::input::IInputEvent>) override;
 
-    std::unique_ptr<IState> handleEvent(const std::shared_ptr<const event::input::IInputEvent>);
+    virtual State handleUserEvent(const event::input::user::UserEvent&);
 
-    virtual std::unique_ptr<IState> handleUserEvent(const event::input::user::UserEvent&);
+    virtual State handleConnectionEvent(const event::input::connection::ConnectionEvent&);
 
-    virtual std::unique_ptr<IState> handleConnectionEvent(const event::input::connection::ConnectionEvent&);
-
-    virtual std::unique_ptr<IState> createOuterState();
+    virtual State createOuterState();
 
     virtual std::string toString() const = 0;
 
@@ -53,9 +55,9 @@ protected:
 
     void send(const com::fleetmgr::interfaces::facade::control::ClientMessage&);
 
-    std::unique_ptr<IState> defaultEventHandle(const std::string& eventName);
+    State defaultEventHandle(const std::string& eventName);
 
-    std::unique_ptr<IState> defaultMessageHandle(const com::fleetmgr::interfaces::facade::control::ControlMessage&);
+    State defaultMessageHandle(const com::fleetmgr::interfaces::facade::control::ControlMessage&);
 
     void trace(const std::string& message);
 };

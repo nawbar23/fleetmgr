@@ -27,7 +27,7 @@ OpeningChannels::OpeningChannels(IState& state, const std::vector<ChannelRequest
 {
 }
 
-std::unique_ptr<IState> OpeningChannels::start()
+IState::State OpeningChannels::start()
 {
     ClientMessage message;
     message.set_command(Command::ADD_CHANNELS);
@@ -39,12 +39,7 @@ std::unique_ptr<IState> OpeningChannels::start()
     return nullptr;
 }
 
-std::string OpeningChannels::toString() const
-{
-    return "OpeningChannels";
-}
-
-std::unique_ptr<IState> OpeningChannels::handleUserEvent(const UserEvent& event)
+IState::State OpeningChannels::handleUserEvent(const UserEvent& event)
 {
     switch (event.getType())
     {
@@ -53,7 +48,7 @@ std::unique_ptr<IState> OpeningChannels::handleUserEvent(const UserEvent& event)
     }
 }
 
-std::unique_ptr<IState> OpeningChannels::handleConnectionEvent(const ConnectionEvent& event)
+IState::State OpeningChannels::handleConnectionEvent(const ConnectionEvent& event)
 {
     switch (event.getType())
     {
@@ -65,7 +60,12 @@ std::unique_ptr<IState> OpeningChannels::handleConnectionEvent(const ConnectionE
     }
 }
 
-std::unique_ptr<IState> OpeningChannels::handleMessage(const ControlMessage& message)
+std::string OpeningChannels::toString() const
+{
+    return "OpeningChannels";
+}
+
+IState::State OpeningChannels::handleMessage(const ControlMessage& message)
 {
     switch (message.command())
     {

@@ -22,9 +22,27 @@ RequestingControl::RequestingControl(IState& state, long _channelId) :
 {
 }
 
-std::unique_ptr<IState> RequestingControl::start()
+IState::State RequestingControl::start()
 {
     return nullptr;
+}
+
+IState::State RequestingControl::handleUserEvent(const UserEvent& event)
+{
+    switch (event.getType())
+    {
+    default:
+        return defaultEventHandle(event.toString());
+    }
+}
+
+IState::State RequestingControl::handleConnectionEvent(const ConnectionEvent& event)
+{
+    switch (event.getType())
+    {
+    default:
+        return defaultEventHandle(event.toString());
+    }
 }
 
 std::string RequestingControl::toString() const
@@ -32,25 +50,7 @@ std::string RequestingControl::toString() const
     return "RequestingControl";
 }
 
-std::unique_ptr<IState> RequestingControl::handleUserEvent(const UserEvent& event)
-{
-    switch (event.getType())
-    {
-    default:
-        return defaultEventHandle(event.toString());
-    }
-}
-
-std::unique_ptr<IState> RequestingControl::handleConnectionEvent(const ConnectionEvent& event)
-{
-    switch (event.getType())
-    {
-    default:
-        return defaultEventHandle(event.toString());
-    }
-}
-
-std::unique_ptr<IState> RequestingControl::handleMessage(const ControlMessage& message)
+IState::State RequestingControl::handleMessage(const ControlMessage& message)
 {
     switch (message.command())
     {
