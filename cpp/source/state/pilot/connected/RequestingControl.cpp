@@ -79,12 +79,13 @@ IState::State RequestingControl::handleMessage(const ControlMessage& message)
         if (message.response() == Response::ACCEPTED)
         {
             listener.onEvent(std::make_shared<HandoverAccepted>(message.handoverdata().handoverdata()));
+            return nullptr;
         }
         else
         {
             listener.onEvent(std::make_shared<ProcedureRejected>(message.command(), message.message()));
+            return std::make_unique<Operating>(*this);
         }
-        return std::make_unique<Operating>(*this);
 
     case Command::CONTROL_READY:
         if (message.response() == Response::ACCEPTED)

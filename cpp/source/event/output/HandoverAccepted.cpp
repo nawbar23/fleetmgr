@@ -5,7 +5,7 @@ using namespace fm::event::output;
 
 HandoverAccepted::HandoverAccepted(const std::string& _data) :
     FacadeEvent(HANDOVER_ACCEPTED),
-    data(_data.begin(), _data.end())
+    data()
 {
 }
 
