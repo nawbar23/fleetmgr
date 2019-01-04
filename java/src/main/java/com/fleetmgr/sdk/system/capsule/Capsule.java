@@ -81,7 +81,6 @@ public class Capsule {
         lock.lock();
         Pair<Runnable, Long> polled = queue.poll();
         if (polled != null) {
-            processing.set(true);
             executor.execute(polled.getKey());
         }
         else {
