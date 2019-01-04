@@ -7,6 +7,9 @@
 #include "event/output/HandoverAccepted.hpp"
 #include "event/output/ProcedureRejected.hpp"
 
+#include "backend/ClientBackend.hpp"
+#include "backend/ChannelsHandler.hpp"
+
 using namespace fm;
 using namespace fm::state;
 using namespace fm::state::pilot;
@@ -86,13 +89,14 @@ IState::State RequestingControl::handleMessage(const ControlMessage& message)
     case Command::CONTROL_READY:
         if (message.response() == Response::ACCEPTED)
         {
-
+            backend.getChannelsHandler().setOwned(channelId, true);
+            listener.onEvent(std::make_shared<FacadeEvent>(FacadeEvent::HANDOVER_DONE));
+            return std::make_unique<Operating>(*this);
         }
         else
         {
             return defaultMessageHandle(message);
         }
-        return std::make_unique<Operating>(*this);
 
     default:
         return defaultMessageHandle(message);

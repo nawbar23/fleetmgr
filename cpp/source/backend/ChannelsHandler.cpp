@@ -107,6 +107,11 @@ void ChannelsHandler::setOwned(const std::vector<long>& owned)
     }
 }
 
+void ChannelsHandler::setOwned(long id, bool owned)
+{
+    channels.find(id)->second.setOwned(owned);
+}
+
 void ChannelsHandler::trace(const std::string& message)
 {
     backend.trace(message);

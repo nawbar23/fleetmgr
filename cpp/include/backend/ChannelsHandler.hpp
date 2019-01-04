@@ -41,6 +41,8 @@ public:
 
     void setOwned(const std::vector<long>&);
 
+    void setOwned(long, bool);
+
 private:
     ClientBackend& backend;
 
