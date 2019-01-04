@@ -3,15 +3,19 @@
 #include "core/list_devices.pb.h"
 
 #include "event/input/user/Operate.hpp"
+#include "event/input/user/RequestControl.hpp"
+
+#include "event/output/ProcedureRejected.hpp"
 
 using namespace fm;
 using namespace fm::event;
 
 using namespace com::fleetmgr::interfaces;
 
-using fm::event::input::user::UserEvent;
-using fm::event::input::user::Operate;
-using fm::event::output::FacadeEvent;
+using namespace fm::event::input::user;
+using namespace fm::event::output;
+
+using namespace com::fleetmgr::interfaces::facade::control;
 
 PilotSimulator::PilotSimulator(boost::asio::io_service& ioService) :
     ISimulator(ioService),
@@ -54,15 +58,22 @@ void PilotSimulator::handleEvent(const std::shared_ptr<const FacadeEvent> event)
     {
     case FacadeEvent::CHANNELS_OPENED:
     {
-        std::thread t([this] ()
+        emmitEvent(std::make_shared<RequestControl>(1), 10);
+        break;
+    }
+
+    case FacadeEvent::HANDOVER_ACCEPTED:
+        emmitEvent(std::make_shared<UserEvent>(UserEvent::CONTROL_READY), 0);
+        break;
+
+    case FacadeEvent::PROCEDURE_REJECTED:
+    {
+        const ProcedureRejected& rejected = reinterpret_cast<const ProcedureRejected&>(*event);
+        if (rejected.getCommand() == Command::REQUEST_CONTROL)
         {
-            std::this_thread::sleep_for(std::chrono::seconds(10));
-            execute([this] ()
-            {
-                pilot->notifyEvent(std::make_shared<UserEvent>(UserEvent::RELEASE));
-            });
-        });
-        t.detach();
+            trace("HO request rejected: " + rejected.getMessage());
+            emmitEvent(std::make_shared<UserEvent>(UserEvent::RELEASE), 10);
+        }
         break;
     }
 
@@ -71,4 +82,17 @@ void PilotSimulator::handleEvent(const std::shared_ptr<const FacadeEvent> event)
         done.store(true);
         break;
     }
+}
+
+void PilotSimulator::emmitEvent(std::shared_ptr<const UserEvent> event, long waiting)
+{
+    std::thread t([this, event, waiting] ()
+    {
+        std::this_thread::sleep_for(std::chrono::seconds(waiting));
+        execute([this, event] ()
+        {
+            pilot->notifyEvent(event);
+        });
+    });
+    t.detach();
 }

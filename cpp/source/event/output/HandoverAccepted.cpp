@@ -3,9 +3,9 @@
 using namespace fm;
 using namespace fm::event::output;
 
-HandoverAccepted::HandoverAccepted(const std::vector<uint8_t>& _data) :
+HandoverAccepted::HandoverAccepted(const std::string& _data) :
     FacadeEvent(HANDOVER_ACCEPTED),
-    data(_data)
+    data(_data.begin(), _data.end())
 {
 }
 

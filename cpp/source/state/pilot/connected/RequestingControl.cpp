@@ -1,7 +1,10 @@
 #include "state/pilot/connected/RequestingControl.hpp"
 
+#include "state/pilot/connected/Operating.hpp"
+
 #include "event/input/connection/Received.hpp"
 
+#include "event/output/HandoverAccepted.hpp"
 #include "event/output/ProcedureRejected.hpp"
 
 using namespace fm;
@@ -24,6 +27,10 @@ RequestingControl::RequestingControl(IState& state, long _channelId) :
 
 IState::State RequestingControl::start()
 {
+    ClientMessage clientMessage;
+    clientMessage.set_command(Command::REQUEST_CONTROL);
+    clientMessage.mutable_channelsindication()->add_ids(channelId);
+    send(clientMessage);
     return nullptr;
 }
 
@@ -31,6 +38,14 @@ IState::State RequestingControl::handleUserEvent(const UserEvent& event)
 {
     switch (event.getType())
     {
+    case UserEvent::CONTROL_READY:
+    {
+        ClientMessage clientMessage;
+        clientMessage.set_command(Command::CONTROL_READY);
+        send(clientMessage);
+        break;
+    }
+
     default:
         return defaultEventHandle(event.toString());
     }
@@ -40,6 +55,9 @@ IState::State RequestingControl::handleConnectionEvent(const ConnectionEvent& ev
 {
     switch (event.getType())
     {
+    case ConnectionEvent::RECEIVED:
+        return handleMessage(reinterpret_cast<const Received&>(event).getMessage());
+
     default:
         return defaultEventHandle(event.toString());
     }
@@ -54,6 +72,28 @@ IState::State RequestingControl::handleMessage(const ControlMessage& message)
 {
     switch (message.command())
     {
+    case Command::REQUEST_CONTROL:
+        if (message.response() == Response::ACCEPTED)
+        {
+            listener.onEvent(std::make_shared<HandoverAccepted>(message.handoverdata().handoverdata()));
+        }
+        else
+        {
+            listener.onEvent(std::make_shared<ProcedureRejected>(message.command(), message.message()));
+        }
+        return std::make_unique<Operating>(*this);
+
+    case Command::CONTROL_READY:
+        if (message.response() == Response::ACCEPTED)
+        {
+
+        }
+        else
+        {
+            return defaultMessageHandle(message);
+        }
+        return std::make_unique<Operating>(*this);
+
     default:
         return defaultMessageHandle(message);
     }

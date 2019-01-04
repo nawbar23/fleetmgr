@@ -23,7 +23,7 @@ namespace output
 class HandoverAccepted : public FacadeEvent
 {
 public:
-    HandoverAccepted(const std::vector<uint8_t>&);
+    HandoverAccepted(const std::string&);
 
     const std::vector<uint8_t>& getData() const;
 
