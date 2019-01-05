@@ -3,6 +3,7 @@
 #include "event/input/user/UserEvent.hpp"
 
 using namespace fm;
+using namespace fm::bimpl;
 using namespace fm::event;
 
 using namespace com::fleetmgr::interfaces;
@@ -16,7 +17,7 @@ DeviceSimulator::DeviceSimulator(boost::asio::io_service& ioService) :
 {
 }
 
-void DeviceSimulator::start(BoostHttpsClient& core, const std::string& facadeCertPath)
+void DeviceSimulator::start(HttpsClient& core, const std::string& facadeCertPath)
 {
     device = std::make_unique<fm::Device>(*this, core, facadeCertPath);
     execute([this] ()

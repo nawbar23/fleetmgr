@@ -1,18 +1,21 @@
-#include "BoostTcpSocket.hpp"
+#include "TcpSocket.hpp"
 
 #include <iostream>
 
+using namespace fm;
+using namespace fm::bimpl;
+
 using namespace boost::asio;
 
-BoostTcpSocket::BoostTcpSocket(boost::asio::io_service& _ioService) :
+TcpSocket::TcpSocket(boost::asio::io_service& _ioService) :
     ioService(_ioService),
     socket(ioService)
 {
 }
 
-void BoostTcpSocket::connect(const std::string& host, const int port)
+void TcpSocket::connect(const std::string& host, const int port)
 {
-    //std::cout << "BoostTcpSocket::connect" << std::endl;
+    //std::cout << "TcpSocket::connect" << std::endl;
     ip::tcp::resolver resolver(ioService);
     auto endpoint = resolver.resolve(host, std::to_string(port));
     async_connect(socket, endpoint, [this] (std::error_code ec, ip::tcp::endpoint)
@@ -23,19 +26,19 @@ void BoostTcpSocket::connect(const std::string& host, const int port)
     });
 }
 
-size_t BoostTcpSocket::readBlocking(uint8_t* _buffer, size_t _size)
+size_t TcpSocket::readBlocking(uint8_t* _buffer, size_t _size)
 {
     return socket.read_some(buffer(_buffer, _size));
 }
 
-void BoostTcpSocket::startReading()
+void TcpSocket::startReading()
 {
     doRead();
 }
 
-void BoostTcpSocket::send(const DataPacket dataPacket)
+void TcpSocket::send(const DataPacket dataPacket)
 {
-    //std::cout << "BoostTcpSocket::send" << std::endl;
+    //std::cout << "TcpSocket::send" << std::endl;
     async_write(socket, buffer(dataPacket.first, dataPacket.second),
                 [this](boost::system::error_code ec, std::size_t /*length*/)
     {
@@ -46,15 +49,15 @@ void BoostTcpSocket::send(const DataPacket dataPacket)
     });
 }
 
-void BoostTcpSocket::disconnect()
+void TcpSocket::disconnect()
 {
-    //std::cout << "BoostTcpSocket::disconnect" << std::endl;
+    //std::cout << "TcpSocket::disconnect" << std::endl;
     listener.load()->onClosed();
 }
 
-void BoostTcpSocket::doRead()
+void TcpSocket::doRead()
 {
-    //std::cout << "BoostTcpSocket::doRead" << std::endl;
+    //std::cout << "TcpSocket::doRead" << std::endl;
     socket.async_read_some(buffer(readBuffer.data(), READ_BUFFER_SIZE),
                            [this](boost::system::error_code ec, std::size_t length)
     {

@@ -11,7 +11,7 @@ add_subdirectory(${_FM_SDK_DIR} ${_FM_SDK_DIR}/lib)
 
 include_directories(${_FM_SDK_DIR}/include)
 include_directories(${_FM_SDK_DIR}/generated)
-include_directories(${PROJECT_SOURCE_DIR}/example)
+include_directories(${_FM_SDK_DIR}/bimpl)
 
 set(FILES
     ${PROJECT_SOURCE_DIR}/ISimulator.cpp
@@ -20,18 +20,6 @@ set(FILES
     ${PROJECT_SOURCE_DIR}/DeviceSimulator.hpp
     ${PROJECT_SOURCE_DIR}/PilotSimulator.cpp
     ${PROJECT_SOURCE_DIR}/PilotSimulator.hpp
-    ${PROJECT_SOURCE_DIR}/example/BoostHttpsClient.cpp
-    ${PROJECT_SOURCE_DIR}/example/BoostHttpsClient.hpp
-    ${PROJECT_SOURCE_DIR}/example/BoostListener.cpp
-    ${PROJECT_SOURCE_DIR}/example/BoostListener.hpp
-    ${PROJECT_SOURCE_DIR}/example/BoostTcpSocket.cpp
-    ${PROJECT_SOURCE_DIR}/example/BoostTcpSocket.hpp
-    ${PROJECT_SOURCE_DIR}/example/BoostUdpSocket.cpp
-    ${PROJECT_SOURCE_DIR}/example/BoostUdpSocket.hpp
-    ${PROJECT_SOURCE_DIR}/example/Timer.cpp
-    ${PROJECT_SOURCE_DIR}/example/Timer.hpp
-    ${PROJECT_SOURCE_DIR}/example/TimerThread.cpp
-    ${PROJECT_SOURCE_DIR}/example/TimerThread.hpp
     )
 
 set(CMAKE_MAKE_PROGRAM "${CMAKE_MAKE_PROGRAM} -j4")

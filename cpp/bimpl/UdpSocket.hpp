@@ -1,5 +1,5 @@
-#ifndef BOOSTUDPSOCKET_HPP
-#define BOOSTUDPSOCKET_HPP
+#ifndef FM_BIMPL_UDPSOCKET_HPP
+#define FM_BIMPL_UDPSOCKET_HPP
 
 #include "traffic/socket/ISocket.hpp"
 
@@ -9,10 +9,21 @@
 #include <deque>
 #include <vector>
 
-class BoostUdpSocket : public fm::traffic::socket::ISocket
+namespace fm
+{
+
+namespace bimpl
+{
+
+/**
+ * Created by: Bartosz Nawrot
+ * Date: 2018-01-05
+ * Description:
+ */
+class UdpSocket : public traffic::socket::ISocket
 {
 public:
-    BoostUdpSocket(boost::asio::io_service&);
+    UdpSocket(boost::asio::io_service&);
 
     void connect(const std::string&, const int) override;
 
@@ -37,4 +48,8 @@ private:
     void doRead();
 };
 
-#endif // BOOSTUDPSOCKET_HPP
+} // bimpl
+
+} // fm
+
+#endif // FM_BIMPL_UDPSOCKET_HPP

@@ -8,6 +8,7 @@
 #include "event/output/ProcedureRejected.hpp"
 
 using namespace fm;
+using namespace fm::bimpl;
 using namespace fm::event;
 
 using namespace com::fleetmgr::interfaces;
@@ -23,7 +24,7 @@ PilotSimulator::PilotSimulator(boost::asio::io_service& ioService) :
 {
 }
 
-void PilotSimulator::start(BoostHttpsClient& core, const std::string& facadeCertPath)
+void PilotSimulator::start(HttpsClient& core, const std::string& facadeCertPath)
 {
     pilot = std::make_unique<fm::Pilot>(*this, core, facadeCertPath);
     ListDevicesResponse response = pilot->listConnectedDevices();

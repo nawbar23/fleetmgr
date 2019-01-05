@@ -5,6 +5,7 @@
 #include <time.h>
 
 using namespace fm;
+using namespace fm::bimpl;
 using namespace fm::event;
 
 using fm::event::input::user::UserEvent;
@@ -39,7 +40,7 @@ void ISimulator::ChannelListener::onClosed(fm::traffic::IChannel* channel)
 }
 
 ISimulator::ISimulator(boost::asio::io_service& ioService) :
-    BoostListener(ioService),
+    Listener(ioService),
     done(false)
 {
 }

@@ -2,6 +2,9 @@
 
 #include <cassert>
 
+using namespace fm;
+using namespace fm::bimpl;
+
 void TimerThread::timerThreadWorker()
 {
     ScopedLock lock(sync);

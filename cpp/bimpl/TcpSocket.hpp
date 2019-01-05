@@ -1,5 +1,5 @@
-#ifndef BOOSTTCPSOCKET_HPP
-#define BOOSTTCPSOCKET_HPP
+#ifndef FM_BIMPL_TCPSOCKET_HPP
+#define FM_BIMPL_TCPSOCKET_HPP
 
 #include "traffic/socket/ISocket.hpp"
 
@@ -7,10 +7,21 @@
 
 #include <array>
 
-class BoostTcpSocket : public fm::traffic::socket::ISocket
+namespace fm
+{
+
+namespace bimpl
+{
+
+/**
+ * Created by: Bartosz Nawrot
+ * Date: 2018-01-05
+ * Description:
+ */
+class TcpSocket : public traffic::socket::ISocket
 {
 public:
-    BoostTcpSocket(boost::asio::io_service&);
+    TcpSocket(boost::asio::io_service&);
 
     void connect(const std::string&, const int) override;
 
@@ -36,4 +47,8 @@ private:
     void doRead();
 };
 
-#endif // BOOSTTCPSOCKET_HPP
+} // bimpl
+
+} // fm
+
+#endif // FM_BIMPL_TCPSOCKET_HPP

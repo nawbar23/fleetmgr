@@ -1,8 +1,8 @@
 #ifndef ISIMULATOR_HPP
 #define ISIMULATOR_HPP
 
-#include "BoostHttpsClient.hpp"
-#include "BoostListener.hpp"
+#include "HttpsClient.hpp"
+#include "Listener.hpp"
 
 #include "traffic/IChannel.hpp"
 
@@ -13,7 +13,7 @@
 #include <deque>
 #include <mutex>
 
-class ISimulator : public BoostListener
+class ISimulator : public fm::bimpl::Listener
 {
 public:
     class ChannelListener : public fm::traffic::IChannel::Listener

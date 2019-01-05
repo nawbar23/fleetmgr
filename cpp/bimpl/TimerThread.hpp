@@ -1,5 +1,5 @@
-#ifndef TIMERTHREAD_HPP
-#define TIMERTHREAD_HPP
+#ifndef FM_BIMPL_TIMERTHREAD_HPP
+#define FM_BIMPL_TIMERTHREAD_HPP
 
 // by doug65536
 // https://codereview.stackexchange.com/questions/127552/portable-periodic-one-shot-timer-thread-follow-up
@@ -18,6 +18,12 @@
 #include <mutex>
 #include <condition_variable>
 #endif
+
+namespace fm
+{
+
+namespace bimpl
+{
 
 class TimerThread
 {
@@ -269,4 +275,8 @@ TimerThread::timer_id TimerThread::setTimeout(
                       timeout);
 }
 
-#endif // TIMERTHREAD_HPP
+} // bimpl
+
+} // fm
+
+#endif // FM_BIMPL_TIMERTHREAD_HPP

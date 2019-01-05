@@ -1,6 +1,6 @@
 #include "PilotSimulator.hpp"
 
-#include "BoostHttpsClient.hpp"
+#include "HttpsClient.hpp"
 
 int main(int, char**)
 {
@@ -16,7 +16,7 @@ int main(int, char**)
 
     std::cout << "Staring Pilot simulation..." << std::endl;
 
-    BoostHttpsClient core(host, port, apiKey);
+    fm::bimpl::HttpsClient core(host, port, apiKey);
 
     boost::asio::io_service ioService;
 

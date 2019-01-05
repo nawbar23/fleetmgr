@@ -6,12 +6,16 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -pthread")
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
+option(USE_BOOST "Use Boost implementations." ON)
+
 find_package(Protobuf REQUIRED)
 find_package(GRPC REQUIRED)
 find_package(OpenSSL REQUIRED)
+find_package(Boost REQUIRED)
 
 include_directories(include)
 include_directories(generated)
+include_directories(bimpl)
 
 set(SOURCES
     ${PROJECT_SOURCE_DIR}/source/IClient.cpp
@@ -138,11 +142,27 @@ set(HEADERS
     ${PROJECT_SOURCE_DIR}/include/traffic/socket/ISocket.hpp
     )
 
+set(BOOST_FILES
+    ${PROJECT_SOURCE_DIR}/bimpl/HttpsClient.cpp
+    ${PROJECT_SOURCE_DIR}/bimpl/HttpsClient.hpp
+    ${PROJECT_SOURCE_DIR}/bimpl/Listener.cpp
+    ${PROJECT_SOURCE_DIR}/bimpl/Listener.hpp
+    ${PROJECT_SOURCE_DIR}/bimpl/TcpSocket.cpp
+    ${PROJECT_SOURCE_DIR}/bimpl/TcpSocket.hpp
+    ${PROJECT_SOURCE_DIR}/bimpl/UdpSocket.cpp
+    ${PROJECT_SOURCE_DIR}/bimpl/UdpSocket.hpp
+    ${PROJECT_SOURCE_DIR}/bimpl/Timer.cpp
+    ${PROJECT_SOURCE_DIR}/bimpl/Timer.hpp
+    ${PROJECT_SOURCE_DIR}/bimpl/TimerThread.cpp
+    ${PROJECT_SOURCE_DIR}/bimpl/TimerThread.hpp
+    )
+
 set(CMAKE_MAKE_PROGRAM "${CMAKE_MAKE_PROGRAM} -j4")
 
-add_library(fm_sdk STATIC ${SOURCES} ${HEADERS})
+add_library(fm_sdk STATIC ${SOURCES} ${HEADERS} ${BOOST_FILES})
 
 target_link_libraries(fm_sdk
+    ${Boost_LIBRARIES}
     protobuf::libprotobuf
     gRPC::grpc++
     OpenSSL::SSL

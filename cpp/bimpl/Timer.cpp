@@ -3,6 +3,9 @@
 #include <exception>
 #include <iostream>
 
+using namespace fm;
+using namespace fm::bimpl;
+
 Timer::Timer(TimerThread& _timerThread):
     timerThread(_timerThread),
     running(false)

@@ -1,11 +1,22 @@
-#ifndef TIMER_HPP
-#define TIMER_HPP
+#ifndef FM_BIMPL_TIMER_HPP
+#define FM_BIMPL_TIMER_HPP
 
 #include "system/ITimer.hpp"
 
 #include "TimerThread.hpp"
 
-class Timer : public fm::system::ITimer
+namespace fm
+{
+
+namespace bimpl
+{
+
+/**
+ * Created by: Bartosz Nawrot
+ * Date: 2018-01-05
+ * Description:
+ */
+class Timer : public system::ITimer
 {
 public:
     Timer(TimerThread& _timerThread);
@@ -24,4 +35,8 @@ private:
     bool running;
 };
 
-#endif // TIMER_HPP
+} // bimpl
+
+} // fm
+
+#endif // FM_BIMPL_TIMER_HPP
