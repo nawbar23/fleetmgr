@@ -66,6 +66,10 @@ void PilotSimulator::handleEvent(const std::shared_ptr<const FacadeEvent> event)
         emmitEvent(std::make_shared<UserEvent>(UserEvent::CONTROL_READY), 0);
         break;
 
+    case FacadeEvent::HANDOVER_DONE:
+        emmitEvent(std::make_shared<UserEvent>(UserEvent::RELEASE), 5);
+        break;
+
     case FacadeEvent::PROCEDURE_REJECTED:
     {
         const ProcedureRejected& rejected = reinterpret_cast<const ProcedureRejected&>(*event);

@@ -46,7 +46,7 @@ IState::State RequestingControl::handleUserEvent(const UserEvent& event)
         ClientMessage clientMessage;
         clientMessage.set_command(Command::CONTROL_READY);
         send(clientMessage);
-        break;
+        return nullptr;
     }
 
     default:
