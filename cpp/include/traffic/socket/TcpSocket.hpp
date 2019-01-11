@@ -1,5 +1,5 @@
-#ifndef FM_BIMPL_TCPSOCKET_HPP
-#define FM_BIMPL_TCPSOCKET_HPP
+#ifndef FM_TRAFFIC_SOCKET_TCPSOCKET_HPP
+#define FM_TRAFFIC_SOCKET_TCPSOCKET_HPP
 
 #include "traffic/socket/ISocket.hpp"
 
@@ -10,7 +10,10 @@
 namespace fm
 {
 
-namespace bimpl
+namespace traffic
+{
+
+namespace socket
 {
 
 /**
@@ -47,8 +50,10 @@ private:
     void doRead();
 };
 
-} // bimpl
+} // socket
+
+} // traffic
 
 } // fm
 
-#endif // FM_BIMPL_TCPSOCKET_HPP
+#endif // FM_TRAFFIC_SOCKET_TCPSOCKET_HPP

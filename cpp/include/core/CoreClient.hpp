@@ -1,7 +1,7 @@
 #ifndef FM_CORE_CORECLIENT_HPP
 #define FM_CORE_CORECLIENT_HPP
 
-#include "https/IHttpsClient.hpp"
+#include "https/HttpsClient.hpp"
 
 #include "core/attach.pb.h"
 #include "core/operate.pb.h"
@@ -23,7 +23,7 @@ namespace core
 class CoreClient
 {
 public:
-    CoreClient(https::IHttpsClient& _client);
+    CoreClient(const std::string&, const int, const std::string&);
 
     com::fleetmgr::interfaces::AttachResponse attach();
 
@@ -32,7 +32,7 @@ public:
     com::fleetmgr::interfaces::ListDevicesResponse listDevices();
 
 private:
-   https::IHttpsClient& client;
+   https::HttpsClient client;
 
    google::protobuf::util::JsonParseOptions options;
 };

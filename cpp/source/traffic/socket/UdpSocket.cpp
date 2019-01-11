@@ -1,9 +1,9 @@
-#include "UdpSocket.hpp"
+#include "traffic/socket/UdpSocket.hpp"
 
 #include <iostream>
 
 using namespace fm;
-using namespace fm::bimpl;
+using namespace fm::traffic::socket;
 
 using namespace boost::asio;
 

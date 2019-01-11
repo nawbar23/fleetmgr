@@ -11,8 +11,12 @@ using namespace fm::state;
 
 using namespace com::fleetmgr::interfaces;
 
-Pilot::Pilot(Listener& listener, core::https::IHttpsClient& coreClient, const std::string& _certPath) :
-    IClient(listener, coreClient, _certPath)
+Pilot::Pilot(const std::string& coreAddress,
+             const int corePort,
+             const std::string& key,
+             Listener& listener,
+             boost::asio::io_service& ioService) :
+    IClient(coreAddress, corePort, key, listener, ioService)
 {
     setState(std::make_unique<pilot::Disconnected>(*this, listener, *backend.get()));
 }

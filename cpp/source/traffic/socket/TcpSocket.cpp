@@ -1,9 +1,9 @@
-#include "TcpSocket.hpp"
+#include "traffic/socket/TcpSocket.hpp"
 
 #include <iostream>
 
 using namespace fm;
-using namespace fm::bimpl;
+using namespace fm::traffic::socket;
 
 using namespace boost::asio;
 

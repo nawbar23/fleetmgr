@@ -10,10 +10,12 @@
 #include "traffic/socket/ISocket.hpp"
 
 #include "system/IStateMachine.hpp"
-#include "system/ITimer.hpp"
+#include "system/Timer.hpp"
 
 #include "common/channel_management.pb.h"
 #include "common/location.pb.h"
+
+#include <boost/asio.hpp>
 
 #include <memory>
 #include <mutex>
@@ -47,15 +49,9 @@ public:
 
         virtual void onEvent(const std::shared_ptr<const event::output::FacadeEvent>) = 0;
 
-        virtual void execute(std::function<void(void)>) = 0;
-
-        virtual void trace(const std::string&) = 0;
-
         virtual std::unique_ptr<com::fleetmgr::interfaces::Location> getLocation() = 0;
 
-        virtual std::shared_ptr<system::ITimer> createTimer() = 0;
-
-        virtual std::shared_ptr<traffic::socket::ISocket> createSocket(const com::fleetmgr::interfaces::Protocol) = 0;
+        virtual void trace(const std::string&) = 0;
     };
 
     virtual ~IClient();
@@ -67,9 +63,7 @@ public:
 protected:
     std::unique_ptr<backend::ClientBackend> backend;
 
-    IClient(Listener&, core::https::IHttpsClient&, const std::string&);
-
-    void execute(Task task) override;
+    IClient(const std::string&, const int, const std::string&, Listener&, boost::asio::io_service&);
 
 private:
     IClient() = delete;

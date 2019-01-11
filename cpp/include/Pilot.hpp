@@ -16,7 +16,7 @@ namespace fm
 class Pilot : public IClient
 {
 public:
-    Pilot(Listener&, core::https::IHttpsClient&, const std::string&);
+    Pilot(const std::string&, const int, const std::string&, Listener&, boost::asio::io_service&);
 
     std::string toString() const override;
 

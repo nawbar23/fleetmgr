@@ -1,4 +1,4 @@
-#include "HttpsClient.hpp"
+#include "core/https/HttpsClient.hpp"
 
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
@@ -20,10 +20,12 @@ namespace ssl = net::ssl;       // from <boost/asio/ssl.hpp>
 using tcp = net::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
 
 using namespace fm;
-using namespace fm::bimpl;
+using namespace fm::core::https;
 
-HttpsClient::HttpsClient(const std::string& host, const int port, const std::string& apiKey) :
-    fm::core::https::IHttpsClient(host, port, apiKey)
+HttpsClient::HttpsClient(const std::string& _host, const int _port, const std::string& _apiKey) :
+    host(_host),
+    port(_port),
+    apiKey(_apiKey)
 {
 }
 
@@ -128,3 +130,4 @@ std::string HttpsClient::execute(const std::string& path, Method method, const s
         throw std::runtime_error(ss.str());
     }
 }
+

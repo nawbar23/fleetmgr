@@ -13,6 +13,8 @@
 #include "facade/control/facade_service.grpc.pb.h"
 #include <grpc++/grpc++.h>
 
+#include <boost/asio.hpp>
+
 #include <memory>
 #include <thread>
 
@@ -30,7 +32,7 @@ namespace backend
 class ClientBackend
 {
 public:
-    ClientBackend(IClient&, IClient::Listener&, core::https::IHttpsClient&, const std::string&);
+    ClientBackend(IClient&, IClient::Listener&, boost::asio::io_service&, core::CoreClient*);
 
     core::CoreClient& getCore();
 
@@ -54,13 +56,13 @@ public:
 private:
     IClient& client;
     IClient::Listener& listener;
+
+    boost::asio::io_service& ioService;
     
-    core::CoreClient core;
+    std::unique_ptr<core::CoreClient> core;
 
     HeartbeatHandler heartbeatHandler;
     ChannelsHandler channelsHandler;
-    
-    const std::string certPath;
 
     std::shared_ptr<grpc::Channel> channel;
 

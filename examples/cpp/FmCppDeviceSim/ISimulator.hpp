@@ -1,9 +1,6 @@
 #ifndef ISIMULATOR_HPP
 #define ISIMULATOR_HPP
 
-#include "HttpsClient.hpp"
-#include "Listener.hpp"
-
 #include "traffic/IChannel.hpp"
 
 #include "Device.hpp"
@@ -13,7 +10,7 @@
 #include <deque>
 #include <mutex>
 
-class ISimulator : public fm::bimpl::Listener
+class ISimulator : public fm::IClient::Listener
 {
 public:
     class ChannelListener : public fm::traffic::IChannel::Listener
@@ -38,7 +35,13 @@ public:
 
     void onEvent(const std::shared_ptr<const fm::event::output::FacadeEvent> event) override;
 
+    std::unique_ptr<com::fleetmgr::interfaces::Location> getLocation() override;
+
+    void trace(const std::string&) override;
+
 protected:
+    boost::asio::io_service& ioService;
+
     std::atomic<bool> done;
 
     virtual void handleEvent(const std::shared_ptr<const fm::event::output::FacadeEvent> event) = 0;

@@ -1,8 +1,7 @@
-#ifndef FM_CORE_HTTPS_IHTTPSCLIENT_HPP
-#define FM_CORE_HTTPS_IHTTPSCLIENT_HPP
+#ifndef FM_CORE_HTTPS_HTTPSCLIENT_HPP
+#define FM_CORE_HTTPS_HTTPSCLIENT_HPP
 
 #include <string>
-#include <exception>
 
 namespace fm
 {
@@ -17,7 +16,7 @@ namespace https {
  * Date: 2018-11-27
  * Description:
  */
-class IHttpsClient
+class HttpsClient
 {
 public:
     enum Method
@@ -28,11 +27,9 @@ public:
         DELETE,
     };
 
-    IHttpsClient(const std::string&, const int, const std::string&);
+    HttpsClient(const std::string&, const int, const std::string&);
 
-    virtual ~IHttpsClient();
-
-    virtual std::string execute(const std::string&, const Method, const std::string&) = 0;
+    std::string execute(const std::string&, const Method, const std::string&);
 
 protected:
     const std::string host;

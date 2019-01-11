@@ -15,14 +15,13 @@ find_package(Boost REQUIRED)
 
 include_directories(include)
 include_directories(generated)
-include_directories(bimpl)
 
 set(SOURCES
     ${PROJECT_SOURCE_DIR}/source/IClient.cpp
     ${PROJECT_SOURCE_DIR}/source/Device.cpp
     ${PROJECT_SOURCE_DIR}/source/Pilot.cpp
     ${PROJECT_SOURCE_DIR}/source/core/CoreClient.cpp
-    ${PROJECT_SOURCE_DIR}/source/core/https/IHttpsClient.cpp
+    ${PROJECT_SOURCE_DIR}/source/core/https/HttpsClient.cpp
     ${PROJECT_SOURCE_DIR}/source/event/input/IInputEvent.cpp
     ${PROJECT_SOURCE_DIR}/source/event/input/user/UserEvent.cpp
     ${PROJECT_SOURCE_DIR}/source/event/input/user/CloseChannels.cpp
@@ -65,10 +64,12 @@ set(SOURCES
     ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/ValidatingChannels.cpp
     ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/OpeningChannels.cpp
     ${PROJECT_SOURCE_DIR}/source/state/pilot/connected/ClosingChannels.cpp
-    ${PROJECT_SOURCE_DIR}/source/system/ITimer.cpp
+    ${PROJECT_SOURCE_DIR}/source/system/Timer.cpp
     ${PROJECT_SOURCE_DIR}/source/traffic/IChannel.cpp
     ${PROJECT_SOURCE_DIR}/source/traffic/ChannelImpl.cpp
     ${PROJECT_SOURCE_DIR}/source/traffic/socket/ISocket.cpp
+    ${PROJECT_SOURCE_DIR}/source/traffic/socket/TcpSocket.cpp
+    ${PROJECT_SOURCE_DIR}/source/traffic/socket/UdpSocket.cpp
     # genetated files
     ${PROJECT_SOURCE_DIR}/generated/common/channel_management.pb.cc
     ${PROJECT_SOURCE_DIR}/generated/common/channel_validation.pb.cc
@@ -91,7 +92,7 @@ set(HEADERS
     ${PROJECT_SOURCE_DIR}/include/Pilot.hpp
     ${PROJECT_SOURCE_DIR}/include/Constants.hpp
     ${PROJECT_SOURCE_DIR}/include/core/CoreClient.hpp
-    ${PROJECT_SOURCE_DIR}/include/core/https/IHttpsClient.hpp
+    ${PROJECT_SOURCE_DIR}/include/core/https/HttpsClient.hpp
     ${PROJECT_SOURCE_DIR}/include/event/input/IInputEvent.hpp
     ${PROJECT_SOURCE_DIR}/include/event/input/user/UserEvent.hpp
     ${PROJECT_SOURCE_DIR}/include/event/input/user/CloseChannels.hpp
@@ -134,27 +135,14 @@ set(HEADERS
     ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/ValidatingChannels.hpp
     ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/OpeningChannels.hpp
     ${PROJECT_SOURCE_DIR}/include/state/pilot/connected/ClosingChannels.hpp
-    ${PROJECT_SOURCE_DIR}/include/system/ITimer.hpp
+    ${PROJECT_SOURCE_DIR}/include/system/Timer.hpp
     ${PROJECT_SOURCE_DIR}/include/system/IStateMachine.hpp
     ${PROJECT_SOURCE_DIR}/include/system/IState.hpp
     ${PROJECT_SOURCE_DIR}/include/traffic/IChannel.hpp
     ${PROJECT_SOURCE_DIR}/include/traffic/ChannelImpl.hpp
     ${PROJECT_SOURCE_DIR}/include/traffic/socket/ISocket.hpp
-    )
-
-set(BOOST_FILES
-    ${PROJECT_SOURCE_DIR}/bimpl/HttpsClient.cpp
-    ${PROJECT_SOURCE_DIR}/bimpl/HttpsClient.hpp
-    ${PROJECT_SOURCE_DIR}/bimpl/Listener.cpp
-    ${PROJECT_SOURCE_DIR}/bimpl/Listener.hpp
-    ${PROJECT_SOURCE_DIR}/bimpl/TcpSocket.cpp
-    ${PROJECT_SOURCE_DIR}/bimpl/TcpSocket.hpp
-    ${PROJECT_SOURCE_DIR}/bimpl/UdpSocket.cpp
-    ${PROJECT_SOURCE_DIR}/bimpl/UdpSocket.hpp
-    ${PROJECT_SOURCE_DIR}/bimpl/Timer.cpp
-    ${PROJECT_SOURCE_DIR}/bimpl/Timer.hpp
-    ${PROJECT_SOURCE_DIR}/bimpl/TimerThread.cpp
-    ${PROJECT_SOURCE_DIR}/bimpl/TimerThread.hpp
+    ${PROJECT_SOURCE_DIR}/include/traffic/socket/TcpSocket.hpp
+    ${PROJECT_SOURCE_DIR}/include/traffic/socket/UdpSocket.hpp
     )
 
 set(CMAKE_MAKE_PROGRAM "${CMAKE_MAKE_PROGRAM} -j4")

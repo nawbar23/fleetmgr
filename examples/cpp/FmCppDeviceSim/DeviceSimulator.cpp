@@ -3,7 +3,6 @@
 #include "event/input/user/UserEvent.hpp"
 
 using namespace fm;
-using namespace fm::bimpl;
 using namespace fm::event;
 
 using namespace com::fleetmgr::interfaces;
@@ -17,10 +16,12 @@ DeviceSimulator::DeviceSimulator(boost::asio::io_service& ioService) :
 {
 }
 
-void DeviceSimulator::start(HttpsClient& core, const std::string& facadeCertPath)
+void DeviceSimulator::start(const std::string& coreAddress,
+                            const int corePort,
+                            const std::string& key)
 {
-    device = std::make_unique<fm::Device>(*this, core, facadeCertPath);
-    execute([this] ()
+    device = std::make_unique<fm::Device>(coreAddress, corePort, key, *this, ioService);
+    ioService.post([this] ()
     {
         device->notifyEvent(std::make_shared<const UserEvent>(UserEvent::ATTACH));
     });
@@ -31,7 +32,7 @@ void DeviceSimulator::handleEvent(const std::shared_ptr<const FacadeEvent> event
     switch (event->getType())
     {
     case FacadeEvent::OPERATION_ENDED:
-        execute([this] ()
+        ioService.post([this] ()
         {
             device->notifyEvent(std::make_shared<UserEvent>(UserEvent::RELEASE));
         });

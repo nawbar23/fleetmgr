@@ -5,12 +5,13 @@
 #include <time.h>
 
 using namespace fm;
-using namespace fm::bimpl;
 using namespace fm::event;
 
 using fm::event::input::user::UserEvent;
 using fm::event::output::FacadeEvent;
 using fm::event::output::ChannelsOpened;
+
+using com::fleetmgr::interfaces::Location;
 
 ISimulator::ChannelListener::ChannelListener(std::unordered_map<long, fm::traffic::IChannel*>& _channels, std::mutex& _channelsLock) :
     channels(_channels),
@@ -39,8 +40,8 @@ void ISimulator::ChannelListener::onClosed(fm::traffic::IChannel* channel)
     }
 }
 
-ISimulator::ISimulator(boost::asio::io_service& ioService) :
-    Listener(ioService),
+ISimulator::ISimulator(boost::asio::io_service& _ioService) :
+    ioService(_ioService),
     done(false)
 {
 }
@@ -68,6 +69,20 @@ void ISimulator::onEvent(const std::shared_ptr<const FacadeEvent> event)
         break;
     }
     handleEvent(event);
+}
+
+std::unique_ptr<Location> ISimulator::getLocation()
+{
+    std::unique_ptr<Location> location = std::make_unique<Location>();
+    location->set_latitude(50.0);
+    location->set_longitude(20.0);
+    location->set_altitude(400.0);
+    return location;
+}
+
+void ISimulator::trace(const std::string& message)
+{
+    std::cout << "Client trace: [" << message << "]" << std::endl;
 }
 
 void ISimulator::addChannels(const ChannelsOpened& event)

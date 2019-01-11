@@ -1,7 +1,5 @@
 #include "PilotSimulator.hpp"
 
-#include "HttpsClient.hpp"
-
 int main(int, char**)
 {
     const std::string apiKey = "ApiKey at+ya8GFZpVrCAKHKMi4DhiP5YS14uk6OR+NHR85Tdf7ocxdO4BoMSmoqAEjVexyoeh1hzNfpcrZX1aQOQa/ijCj0gY+F5//QQOJZRGWQUFLUP3WlkyVFzKhD26Faane";
@@ -12,11 +10,7 @@ int main(int, char**)
     const std::string host = "192.168.1.69";
     const int port = 14010;
 
-    const std::string facadeCertPath = "../../../cpp/grpc_facade.crt";
-
     std::cout << "Staring Pilot simulation..." << std::endl;
-
-    fm::bimpl::HttpsClient core(host, port, apiKey);
 
     boost::asio::io_service ioService;
 
@@ -24,7 +18,7 @@ int main(int, char**)
 
     try
     {
-        simulator.start(core, facadeCertPath);
+        simulator.start(host, port, apiKey);
     }
     catch (std::exception& e)
     {

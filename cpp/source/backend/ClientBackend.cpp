@@ -6,6 +6,9 @@
 #include "backend/HeartbeatHandler.hpp"
 #include "backend/ChannelsHandler.hpp"
 
+#include "traffic/socket/TcpSocket.hpp"
+#include "traffic/socket/UdpSocket.hpp"
+
 #include "event/input/connection/Received.hpp"
 
 #include "traffic/ChannelImpl.hpp"
@@ -17,27 +20,28 @@
 
 using namespace fm;
 using namespace fm::backend;
+using namespace fm::traffic::socket;
 
 using namespace com::fleetmgr::interfaces;
 using namespace com::fleetmgr::interfaces::facade::control;
 
-ClientBackend::ClientBackend(IClient& _client, IClient::Listener& _listener, core::https::IHttpsClient& coreClient, const std::string& _certPath) :
+ClientBackend::ClientBackend(IClient& _client, IClient::Listener& _listener, boost::asio::io_service& _ioService, core::CoreClient* _core) :
     client(_client),
     listener(_listener),
-    core(coreClient),
+    ioService(_ioService),
+    core(_core),
     heartbeatHandler(*this),
     channelsHandler(*this),
     channel(nullptr),
     stub(nullptr),
     stream(nullptr),
-    keepReader(false),
-    certPath(_certPath)
+    keepReader(false)
 {
 }
 
 core::CoreClient& ClientBackend::getCore()
 {
-    return core;
+    return *core;
 }
 
 HeartbeatHandler& ClientBackend::getHeartbeatHandler()
@@ -55,9 +59,19 @@ std::unique_ptr<Location> ClientBackend::getLocation()
     return listener.getLocation();
 }
 
-std::shared_ptr<traffic::socket::ISocket> ClientBackend::createSocket(const Protocol protocol)
+std::shared_ptr<ISocket> ClientBackend::createSocket(const Protocol protocol)
 {
-    return listener.createSocket(protocol);
+    switch (protocol)
+    {
+    case Protocol::TCP:
+        return std::make_unique<TcpSocket>(ioService);
+
+    case Protocol::UDP:
+        return std::make_unique<UdpSocket>(ioService);
+
+    default:
+        throw std::runtime_error("Unexpected Protocol type");
+    }
 }
 
 void ClientBackend::openFacadeConnection(const std::string& host, const int port)
@@ -67,7 +81,7 @@ void ClientBackend::openFacadeConnection(const std::string& host, const int port
     std::string address = host + ":" + std::to_string(port);
 
     std::string cert;
-    readCert(certPath, cert);
+    readCert("grpc_facade.crt", cert);
 
     grpc::SslCredentialsOptions sslOpts;
     sslOpts.pem_root_certs = cert;
@@ -100,7 +114,7 @@ void ClientBackend::openFacadeConnection(const std::string& host, const int port
         stream->Read(toRead.get(), readTag);
 
         keepReader.store(true);
-        listener.execute(std::bind(&ClientBackend::proceedReader, this));
+        ioService.post(std::bind(&ClientBackend::proceedReader, this));
     }
     else
     {
@@ -176,7 +190,7 @@ void ClientBackend::proceedReader()
 
     if (keepReader.load())
     {
-        listener.execute(std::bind(&ClientBackend::proceedReader, this));
+        ioService.post(std::bind(&ClientBackend::proceedReader, this));
     }
 }
 

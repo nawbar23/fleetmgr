@@ -1,7 +1,5 @@
 #include "DeviceSimulator.hpp"
 
-#include "HttpsClient.hpp"
-
 int main(int, char**)
 {
     const std::string apiKey = "ApiKey ft0aiBWIiLTZspHjc3n8oL07lhsGh3FrGoFYLhVHjJs208uN0xoWZESNQRO7x8XuP+CsAP0fxx5H6Z3zB9J2O/fUFuXeL0ymjseAc/PmFvV8YUVEzZM7bdpOUGw5PXfU";
@@ -12,16 +10,12 @@ int main(int, char**)
     const std::string host = "192.168.1.69";
     const int port = 14010;
 
-    const std::string facadeCertPath = "../../../cpp/grpc_facade.crt";
-
     std::cout << "Staring Device simulation..." << std::endl;
-
-    fm::bimpl::HttpsClient core(host, port, apiKey);
 
     boost::asio::io_service ioService;
 
     DeviceSimulator simulator(ioService);
-    simulator.start(core, facadeCertPath);
+    simulator.start(host, port, apiKey);
 
     while (not simulator.isDone())
     {

@@ -8,7 +8,6 @@
 #include "event/output/ProcedureRejected.hpp"
 
 using namespace fm;
-using namespace fm::bimpl;
 using namespace fm::event;
 
 using namespace com::fleetmgr::interfaces;
@@ -24,9 +23,11 @@ PilotSimulator::PilotSimulator(boost::asio::io_service& ioService) :
 {
 }
 
-void PilotSimulator::start(HttpsClient& core, const std::string& facadeCertPath)
+void PilotSimulator::start(const std::string& coreAddress,
+                           const int corePort,
+                           const std::string& key)
 {
-    pilot = std::make_unique<fm::Pilot>(*this, core, facadeCertPath);
+    pilot = std::make_unique<fm::Pilot>(coreAddress, corePort, key, *this, ioService);
     ListDevicesResponse response = pilot->listConnectedDevices();
     if (response.devices_size() > 0)
     {
@@ -42,7 +43,7 @@ void PilotSimulator::start(HttpsClient& core, const std::string& facadeCertPath)
         channelsReq.set_id(11);
         channels.push_back(channelsReq);
         std::shared_ptr<const Operate> o = std::make_shared<const Operate>(deviceId, channels);
-        execute([this, o] ()
+        ioService.post([this, o] ()
         {
             pilot->notifyEvent(o);
         });
@@ -94,7 +95,7 @@ void PilotSimulator::emmitEvent(std::shared_ptr<const UserEvent> event, long wai
     std::thread t([this, event, waiting] ()
     {
         std::this_thread::sleep_for(std::chrono::seconds(waiting));
-        execute([this, event] ()
+        ioService.post([this, event] ()
         {
             pilot->notifyEvent(event);
         });

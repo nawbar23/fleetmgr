@@ -2,6 +2,9 @@
 #define FM_SYSTEM_ISTATEMACHINE_HPP
 
 #include "system/IState.hpp"
+#include "system/Timer.hpp"
+
+#include <boost/asio.hpp>
 
 #include <functional>
 #include <memory>
@@ -25,11 +28,11 @@ class IStateMachine
 {
 public:
     typedef std::function<void(void)> Task;
-
     typedef std::function<void(const std::string&)> Log;
 
-    IStateMachine(Log _log) :
+    IStateMachine(Log _log, boost::asio::io_service& _ioService) :
         log(_log),
+        ioService(_ioService),
         processing(false)
     {
     }
@@ -58,6 +61,16 @@ public:
         }
     }
 
+    std::shared_ptr<Timer> executeAfter(Task, size_t)
+    {
+        return std::make_shared<Timer>(nullptr);
+    }
+
+    std::shared_ptr<Timer> executeEvery(Task, size_t, size_t)
+    {
+        return std::make_shared<Timer>(nullptr);
+    }
+
     void defer(const std::shared_ptr<const _Event> event)
     {
         log("Deffering: " + event->toString() + " @ " + state->toString());
@@ -81,8 +94,6 @@ public:
     }
 
 protected:
-    virtual void execute(Task task) = 0;
-
     void setState(std::unique_ptr<IState<_Event>> _state)
     {
         state.swap(_state);
@@ -92,12 +103,19 @@ protected:
 private:
     Log log;
 
+    boost::asio::io_service& ioService;
+
     std::mutex lock;
     std::deque<Task> queue;
     std::atomic<bool> processing;
 
     std::unique_ptr<IState<_Event>> state;
     std::deque<std::shared_ptr<const _Event>> deferred;
+
+    void execute(Task task)
+    {
+        ioService.post(task);
+    }
 
     void proceed()
     {
